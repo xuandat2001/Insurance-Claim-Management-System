@@ -38,6 +38,19 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- Add Supabase PostgreSQL driver -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.19</version> <!-- or the latest version -->
+        </dependency>
+
+        <!-- Add EclipseLink JPA provider -->
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>org.eclipse.persistence.jpa</artifactId>
+            <version>4.0.1</version> <!-- or the latest version -->
+        </dependency>
     </dependencies>
 
     <build>
