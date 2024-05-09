@@ -17,4 +17,6 @@ module org.example.asm2_insurance_claim_management_system {
     opens org.example.asm2_insurance_claim_management_system.Customers to javafx.fxml, org.hibernate.orm.core;
     exports org.example.asm2_insurance_claim_management_system.Providers;
     opens org.example.asm2_insurance_claim_management_system.Providers to javafx.fxml, org.hibernate.orm.core;
+    exports org.example.asm2_insurance_claim_management_system.InsuranceCard;
+    opens org.example.asm2_insurance_claim_management_system.InsuranceCard to javafx.fxml, org.hibernate.orm.core;
 }

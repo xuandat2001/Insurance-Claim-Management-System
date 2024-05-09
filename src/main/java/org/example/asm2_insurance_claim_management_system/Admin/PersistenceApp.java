@@ -1,6 +1,8 @@
 package org.example.asm2_insurance_claim_management_system.Admin;
 
-import org.example.asm2_insurance_claim_management_system.Login.authentication;
+import org.example.asm2_insurance_claim_management_system.Customers.PolicyHolder;
+import org.example.asm2_insurance_claim_management_system.Login.Authentication;
+
 
 import java.util.List;
 import java.util.Scanner;
@@ -13,10 +15,12 @@ public class PersistenceApp {
         System.out.println("Enter your password : ");
         String password = scanner.nextLine();
 
-        authentication login = new authentication();
+        Authentication login = new Authentication();
         Admin admin = Admin.getInstance();
         if (login.authenticate(admin.listOfAdmin(),userName,password ) != null){
             System.out.println("Login successfully");
+            PolicyHolder policyHolder = new PolicyHolder();
+            policyHolder.create();
         }
         else {
             System.out.println("Username and Password are not correct");

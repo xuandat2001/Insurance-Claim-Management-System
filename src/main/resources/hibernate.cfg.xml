@@ -14,5 +14,11 @@
 
         <!-- Entity Mappings -->
         <mapping class="org.example.asm2_insurance_claim_management_system.Admin.Admin"/>
+        <mapping class="org.example.asm2_insurance_claim_management_system.Customers.Customer"/>
+        <mapping class="org.example.asm2_insurance_claim_management_system.Customers.PolicyHolder"/>
+        <mapping class="org.example.asm2_insurance_claim_management_system.Customers.PolicyOwner"/>
+        <mapping class="org.example.asm2_insurance_claim_management_system.Customers.Dependent"/>
+        <mapping class="org.example.asm2_insurance_claim_management_system.InsuranceCard.InsuranceCard"/>
+
     </session-factory>
 </hibernate-configuration>

@@ -4,7 +4,7 @@ import org.example.asm2_insurance_claim_management_system.Interface.UserAuthenti
 
 import java.util.List;
 
-public class authentication {
+public class Authentication {
     public UserAuthentication authenticate(List<? extends UserAuthentication>listOfUser, String userName, String password){
             for (UserAuthentication userAuthentication : listOfUser) {
                 if (userAuthentication.getId().equals(userName) && userAuthentication.getPassword().equals(password)){

@@ -2,8 +2,10 @@ package org.example.asm2_insurance_claim_management_system.Customers;
 
 import jakarta.persistence.*;
 @Entity
-@Table(name = "Customer")
-public abstract class  customer {
+@Table(name = "customers")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "customer_type")
+public abstract class  Customer {
     @Id
     @Column(name = "CustomerId")
     private String customerId;

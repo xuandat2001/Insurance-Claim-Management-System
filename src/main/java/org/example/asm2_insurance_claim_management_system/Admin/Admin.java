@@ -12,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Admin")
-public class Admin implements Serializable, UserAuthentication, CRUDoperation {
+public class Admin implements Serializable, UserAuthentication {
     @Id
     @Column(name = "AdminId")
     private String AdminId;
@@ -78,25 +78,6 @@ public class Admin implements Serializable, UserAuthentication, CRUDoperation {
         return password;
     }
 
-    @Override
-    public boolean create() {
-        return false;
-    }
-
-    @Override
-    public boolean update() {
-        return false;
-    }
-
-    @Override
-    public boolean delete() {
-        return false;
-    }
-
-    @Override
-    public boolean view() {
-        return false;
-    }
 
     // Other methods and fields remain unchanged...
 }

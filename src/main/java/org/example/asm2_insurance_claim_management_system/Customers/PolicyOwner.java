@@ -1,8 +1,10 @@
 package org.example.asm2_insurance_claim_management_system.Customers;
 import jakarta.persistence.*;
+import org.example.asm2_insurance_claim_management_system.Interface.CRUDoperation;
+
 @Entity
-@Table(name = "PolicyOwner")
-public class PolicyOwner extends customer {
+@DiscriminatorValue("PolicyOwner") // Discriminator value for PolicyOwner
+public class PolicyOwner extends Customer implements CRUDoperation {
     @Id
     @Column(name = "PolicyOwnerId")
     private String policyOwnerId;
@@ -31,5 +33,25 @@ public class PolicyOwner extends customer {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    @Override
+    public boolean create() {
+        return false;
+    }
+
+    @Override
+    public boolean update() {
+        return false;
+    }
+
+    @Override
+    public boolean delete() {
+        return false;
+    }
+
+    @Override
+    public boolean view() {
+        return false;
     }
 }
