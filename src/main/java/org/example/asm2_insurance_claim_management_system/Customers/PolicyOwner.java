@@ -5,27 +5,19 @@ import org.example.asm2_insurance_claim_management_system.Interface.CRUDoperatio
 @Entity
 @DiscriminatorValue("PolicyOwner") // Discriminator value for PolicyOwner
 public class PolicyOwner extends Customer implements CRUDoperation {
-    @Id
-    @Column(name = "PolicyOwnerId")
-    private String policyOwnerId;
+
 
     @Column(name = "Location")
     private String location;
 
     public PolicyOwner(String policyOwnerId, String location) {
-        this.policyOwnerId = policyOwnerId;
+
         this.location = location;
     }
 
     public PolicyOwner() {}
 
-    public String getPolicyOwnerId() {
-        return policyOwnerId;
-    }
 
-    public void setPolicyOwnerId(String policyOwnerId) {
-        this.policyOwnerId = policyOwnerId;
-    }
 
     public String getLocation() {
         return location;

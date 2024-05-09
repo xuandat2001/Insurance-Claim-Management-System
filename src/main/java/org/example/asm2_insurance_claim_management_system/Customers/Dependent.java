@@ -3,9 +3,7 @@ import jakarta.persistence.*;
 @Entity
 @DiscriminatorValue("Dependent") // Discriminator value for Dependent
 public class Dependent extends Customer{
-    @Id
-    @Column(name = "DependentId")
-    private String dependentId;
+
 
     @Column(name = "PolicyHolderId")
     private String policyHolderId;
@@ -13,7 +11,7 @@ public class Dependent extends Customer{
     private String policyOwnerId;
 
     public Dependent(String dependentId, String policyHolderId, String policyOwnerId) {
-        this.dependentId = dependentId;
+
         this.policyHolderId = policyHolderId;
         this.policyOwnerId = policyOwnerId;
     }
@@ -22,13 +20,7 @@ public class Dependent extends Customer{
 
     }
 
-    public String getDependentId() {
-        return dependentId;
-    }
 
-    public void setDependentId(String dependentId) {
-        this.dependentId = dependentId;
-    }
 
     public String getPolicyHolderId() {
         return policyHolderId;

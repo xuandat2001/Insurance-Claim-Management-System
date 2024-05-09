@@ -1,6 +1,7 @@
 package org.example.asm2_insurance_claim_management_system.InsuranceCard;
 
 import jakarta.persistence.*;
+import org.example.asm2_insurance_claim_management_system.Customers.PolicyHolder;
 
 import java.time.LocalDate;
 
@@ -17,7 +18,8 @@ public class InsuranceCard {
     private String policyOwnerId;
     @Column(name = "CardHolder")
     private String cardHolder;
-
+    @OneToOne(mappedBy = "insuranceCard")
+    private PolicyHolder policyHolder;
     public InsuranceCard(String cardNumber, LocalDate expirationDate, String policyOwnerId, String cardHolder) {
         this.cardNumber = cardNumber;
         this.expirationDate = expirationDate;

@@ -14,38 +14,28 @@ import java.util.Scanner;
 @Entity
 @DiscriminatorValue("PolicyHolder") // Discriminator value for PolicyHolder
 public class PolicyHolder extends Customer  implements CRUDoperation {
-    @Id
-    @Column(name = "PolicyHolderId")
-    private String policyHolderId;
 
-    @Column(name = "insuranceCardNumber")
-    private String insuranceCardNumber;
+    @OneToOne
+    @JoinColumn(name = "insuranceCardNumber") // foreign key referencing InsuranceCard's primary key
+    private InsuranceCard insuranceCard;
 
     @Column(name = "PolicyOwnerId")
     private String policyOwnerId;
 
-    public PolicyHolder(String policyHolderId, String insuranceCardNumber, String policyOwnerId) {
-        this.policyHolderId = policyHolderId;
-        this.insuranceCardNumber = insuranceCardNumber;
+    public PolicyHolder(InsuranceCard insuranceCard, String policyOwnerId) {
+        this.insuranceCard = insuranceCard;
         this.policyOwnerId = policyOwnerId;
     }
 
     public PolicyHolder() {}
 
-    public String getPolicyHolderId() {
-        return policyHolderId;
+
+    public InsuranceCard getInsuranceCard() {
+        return insuranceCard;
     }
 
-    public void setPolicyHolderId(String policyHolderId) {
-        this.policyHolderId = policyHolderId;
-    }
-
-    public String getInsuranceCardNumber() {
-        return insuranceCardNumber;
-    }
-
-    public void setInsuranceCardNumber(String insuranceCardNumber) {
-        this.insuranceCardNumber = insuranceCardNumber;
+    public void setInsuranceCard(InsuranceCard insuranceCard) {
+        this.insuranceCard = insuranceCard;
     }
 
     public String getPolicyOwnerId() {
@@ -86,9 +76,11 @@ public class PolicyHolder extends Customer  implements CRUDoperation {
 
         // Obtain a Hibernate Session
         Session session = sessionFactory.openSession();
-        Customer customer = new PolicyHolder(userName, password, fullName);
-        PolicyHolder policyHolder = new PolicyHolder();
         InsuranceCard insuranceCard = new InsuranceCard(cardNum, ExpirationDate, policyOwnerId, userName);
+        Customer customer = new PolicyHolder(userName, insuranceCard, fullName);
+
+        PolicyHolder policyHolder = new PolicyHolder(userName,insuranceCard,policyOwnerId);
+
 
         try {
             // Begin a transaction
