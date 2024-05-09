@@ -2,6 +2,7 @@ package org.example.asm2_insurance_claim_management_system.InsuranceCard;
 
 import jakarta.persistence.*;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyHolder;
+import org.example.asm2_insurance_claim_management_system.Customers.PolicyOwner;
 
 import java.time.LocalDate;
 
@@ -14,18 +15,13 @@ public class InsuranceCard {
     @Column(name = "expirationDate")
     private LocalDate expirationDate;
 
-    @Column(name = "PolicyOwnerId")
-    private String policyOwnerId;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "PolicyOwnerId") // foreign key referencing InsuranceCard's primary key
+    private PolicyOwner policyOwner;
     @Column(name = "CardHolder")
     private String cardHolder;
-    @OneToOne(mappedBy = "insuranceCard")
-    private PolicyHolder policyHolder;
-    public InsuranceCard(String cardNumber, LocalDate expirationDate, String policyOwnerId, String cardHolder) {
-        this.cardNumber = cardNumber;
-        this.expirationDate = expirationDate;
-        this.policyOwnerId = policyOwnerId;
-        this.cardHolder = cardHolder;
-    }
+
+
 
     public InsuranceCard() {
 
@@ -47,13 +43,7 @@ public class InsuranceCard {
         this.expirationDate = expirationDate;
     }
 
-    public String getPolicyOwnerId() {
-        return policyOwnerId;
-    }
 
-    public void setPolicyOwnerId(String policyOwnerId) {
-        this.policyOwnerId = policyOwnerId;
-    }
 
     public String getCardHolder() {
         return cardHolder;

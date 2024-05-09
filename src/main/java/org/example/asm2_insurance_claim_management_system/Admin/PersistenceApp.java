@@ -20,7 +20,10 @@ public class PersistenceApp {
         if (login.authenticate(admin.listOfAdmin(),userName,password ) != null){
             System.out.println("Login successfully");
             PolicyHolder policyHolder = new PolicyHolder();
-            policyHolder.create();
+            //policyHolder.create();
+            //policyHolder.update();
+            //policyHolder.delete();
+            policyHolder.view();
         }
         else {
             System.out.println("Username and Password are not correct");

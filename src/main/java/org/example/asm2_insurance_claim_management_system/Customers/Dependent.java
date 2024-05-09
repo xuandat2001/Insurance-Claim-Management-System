@@ -1,40 +1,39 @@
 package org.example.asm2_insurance_claim_management_system.Customers;
 import jakarta.persistence.*;
+import org.example.asm2_insurance_claim_management_system.InsuranceCard.InsuranceCard;
+
 @Entity
-@DiscriminatorValue("Dependent") // Discriminator value for Dependent
-public class Dependent extends Customer{
+@Table(name = "Dependent")
+@PrimaryKeyJoinColumn(name = "DependentId")// Discriminator value for Dependent
+public class Dependent extends Customer {
 
 
-    @Column(name = "PolicyHolderId")
-    private String policyHolderId;
-    @Column(name = "PolicyOwnerId")
-    private String policyOwnerId;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "PolicyHolderId") // foreign key referencing InsuranceCard's primary key
+    private PolicyHolder policyHolder;
 
-    public Dependent(String dependentId, String policyHolderId, String policyOwnerId) {
-
-        this.policyHolderId = policyHolderId;
-        this.policyOwnerId = policyOwnerId;
-    }
-
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "PolicyOwnerId") // foreign key referencing InsuranceCard's primary key
+    private PolicyOwner policyOwner;
     public Dependent() {
 
     }
 
-
-
-    public String getPolicyHolderId() {
-        return policyHolderId;
+    public PolicyHolder getPolicyHolder() {
+        return policyHolder;
     }
 
-    public void setPolicyHolderId(String policyHolderId) {
-        this.policyHolderId = policyHolderId;
+    public void setPolicyHolder(PolicyHolder policyHolder) {
+        this.policyHolder = policyHolder;
     }
 
-    public String getPolicyOwnerId() {
-        return policyOwnerId;
+    public PolicyOwner getPolicyOwner() {
+        return policyOwner;
     }
 
-    public void setPolicyOwnerId(String policyOwnerId) {
-        this.policyOwnerId = policyOwnerId;
+    public void setPolicyOwner(PolicyOwner policyOwner) {
+        this.policyOwner = policyOwner;
     }
 }
+
+

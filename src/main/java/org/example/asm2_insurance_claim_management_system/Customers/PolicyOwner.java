@@ -3,7 +3,8 @@ import jakarta.persistence.*;
 import org.example.asm2_insurance_claim_management_system.Interface.CRUDoperation;
 
 @Entity
-@DiscriminatorValue("PolicyOwner") // Discriminator value for PolicyOwner
+@Table(name = "PolicyOwner")
+@PrimaryKeyJoinColumn(name = "PolicyOwnerId") // Discriminator value for PolicyOwner
 public class PolicyOwner extends Customer implements CRUDoperation {
 
 

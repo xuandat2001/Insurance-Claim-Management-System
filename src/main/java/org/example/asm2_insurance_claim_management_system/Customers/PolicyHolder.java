@@ -12,22 +12,21 @@ import java.util.List;
 import java.util.Scanner;
 
 @Entity
-@DiscriminatorValue("PolicyHolder") // Discriminator value for PolicyHolder
+@Table(name = "PolicyHolder")
+@PrimaryKeyJoinColumn(name = "PolicyHolderId") // Discriminator value for PolicyHolder
 public class PolicyHolder extends Customer  implements CRUDoperation {
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
     @JoinColumn(name = "insuranceCardNumber") // foreign key referencing InsuranceCard's primary key
     private InsuranceCard insuranceCard;
 
-    @Column(name = "PolicyOwnerId")
-    private String policyOwnerId;
+    @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
+    @JoinColumn(name = "PolicyOwnerId") // foreign key referencing InsuranceCard's primary key
+    private PolicyOwner policyOwner;
 
-    public PolicyHolder(InsuranceCard insuranceCard, String policyOwnerId) {
-        this.insuranceCard = insuranceCard;
-        this.policyOwnerId = policyOwnerId;
+    public PolicyHolder() {
+        super();
     }
-
-    public PolicyHolder() {}
 
 
     public InsuranceCard getInsuranceCard() {
@@ -38,12 +37,23 @@ public class PolicyHolder extends Customer  implements CRUDoperation {
         this.insuranceCard = insuranceCard;
     }
 
-    public String getPolicyOwnerId() {
-        return policyOwnerId;
+    public PolicyOwner getPolicyOwner() {
+        return policyOwner;
     }
 
-    public void setPolicyOwnerId(String policyOwnerId) {
-        this.policyOwnerId = policyOwnerId;
+    public void setPolicyOwner(PolicyOwner policyOwner) {
+        this.policyOwner = policyOwner;
+    }
+
+    @Override
+    public String toString() {
+        return "PolicyHolder{" +
+                "insuranceCard=" + insuranceCard +
+                ", policyOwner=" + policyOwner +
+                ", customerId='" + customerId + '\'' +
+                ", password='" + password + '\'' +
+                ", fullName='" + fullName + '\'' +
+                '}';
     }
 
     @Override
@@ -76,20 +86,120 @@ public class PolicyHolder extends Customer  implements CRUDoperation {
 
         // Obtain a Hibernate Session
         Session session = sessionFactory.openSession();
-        InsuranceCard insuranceCard = new InsuranceCard(cardNum, ExpirationDate, policyOwnerId, userName);
-        Customer customer = new PolicyHolder(userName, insuranceCard, fullName);
+        PolicyOwner policyOwner = new PolicyOwner();
+        List<PolicyOwner>policyOwnerListList = session.createQuery("FROM PolicyOwner ", PolicyOwner.class).getResultList();
+        InsuranceCard insuranceCard = new InsuranceCard();
+        insuranceCard.setCardNumber(cardNum);
+        insuranceCard.setExpirationDate(ExpirationDate);
+        insuranceCard.setCardHolder(userName);
 
-        PolicyHolder policyHolder = new PolicyHolder(userName,insuranceCard,policyOwnerId);
+        PolicyHolder policyHolder = new PolicyHolder();
+        policyHolder.setCustomerId(userName);
+        policyHolder.setPassword(password);
+        policyHolder.setFullName(fullName);
 
+
+// Set InsuranceCard for PolicyHolder
+        policyHolder.setInsuranceCard(insuranceCard);
 
         try {
             // Begin a transaction
             session.beginTransaction();
 
             // Perform a query
-            session.save(customer); // or session.persist(policyHolder)
-            session.save(insuranceCard);// or session.persist(insuranceCard)
+            session.save(insuranceCard);
             session.save(policyHolder);// or session.persist(policyHolder)
+
+            // Commit the transaction
+            session.getTransaction().commit();
+            System.out.println("Create Successfully");
+            return true;
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            // Close the session and session factory
+            session.close();
+            sessionFactory.close();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean update() {
+        SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+        Session session = null;
+        Scanner scanner = new Scanner(System.in);
+
+        try {
+            session = sessionFactory.openSession();
+            System.out.println("Set your ID(username): ");
+            String userName = scanner.nextLine();
+            System.out.println("Enter your new password: ");
+            String newPassword = scanner.nextLine();
+            System.out.println("Enter your new FullName: ");
+            String newFullName = scanner.nextLine();
+
+            session.beginTransaction();
+
+            // Retrieve the entity to update
+            PolicyHolder policyHolder = session.get(PolicyHolder.class, userName);
+            if (policyHolder == null) {
+                System.out.println("Customer with username " + userName + " not found.");
+                return false;
+            }
+
+            // Make modifications to the entity
+            policyHolder.setPassword(newPassword);
+            policyHolder.setFullName(newFullName);
+
+            // Commit the transaction
+            session.getTransaction().commit();
+            System.out.println("Update Sucessfully");
+            return true; // Update successful
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
+                session.getTransaction().rollback();
+            }
+            ex.printStackTrace(); // Print error details
+            return false; // Update failed
+        } finally {
+            // Close the session and session factory
+            if (session != null) {
+                session.close();
+            }
+            sessionFactory.close();
+        }
+    }
+    // Create a Hibernate SessionFactory
+
+    @Override
+    public boolean delete() {
+
+        SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+
+        // Obtain a Hibernate Session
+        Session session = sessionFactory.openSession();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the ID(username) of the record you want to delete: ");
+        String userName = scanner.nextLine();
+        try {
+            // Begin a transaction
+            session.beginTransaction();
+
+            // Load the entity you want to delete
+            PolicyHolder policyHolder = session.get(PolicyHolder.class, userName);
+
+            // Check if the entity exists
+            if (policyHolder != null) {
+                // Delete the entity
+                session.delete(policyHolder);
+                System.out.println("Record deleted successfully.");
+            } else {
+                System.out.println("Record with ID " + userName + " not found.");
+            }
 
             // Commit the transaction
             session.getTransaction().commit();
@@ -106,17 +216,39 @@ public class PolicyHolder extends Customer  implements CRUDoperation {
     }
 
     @Override
-    public boolean update() {
-        return false;
-    }
-
-    @Override
-    public boolean delete() {
-        return false;
-    }
-
-    @Override
     public boolean view() {
+        // Create a Hibernate SessionFactory
+        SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+
+        // Obtain a Hibernate Session
+        Session session = sessionFactory.openSession();
+
+        List<PolicyHolder>policyHolderList;
+        try {
+            // Begin a transaction
+            session.beginTransaction();
+
+            // Perform a query
+            policyHolderList = session.createQuery("FROM PolicyHolder ", PolicyHolder.class).getResultList();
+            for (PolicyHolder policyHolder : policyHolderList ){
+                System.out.println("PolicyHolder ID: " + policyHolder.getCustomerId());
+                System.out.println("Full Name: " + policyHolder.getFullName());
+                System.out.println("Password: " + policyHolder.getPassword());
+            }
+
+            // Commit the transaction
+            session.getTransaction().commit();
+            return true;
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            // Close the session and session factory
+            session.close();
+            sessionFactory.close();
+        }
+
         return false;
     }
 }
