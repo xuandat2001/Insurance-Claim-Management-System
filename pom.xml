@@ -39,18 +39,27 @@
             <scope>test</scope>
         </dependency>
         <!-- Add Supabase PostgreSQL driver -->
+        <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.19</version> <!-- or the latest version -->
+            <version>42.7.3</version>
         </dependency>
 
-        <!-- Add EclipseLink JPA provider -->
+
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
         <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>org.eclipse.persistence.jpa</artifactId>
-            <version>4.0.1</version> <!-- or the latest version -->
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>6.3.1.Final</version>
+           
         </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version> <!-- or the latest version -->
+        </dependency>
+
     </dependencies>
 
     <build>
