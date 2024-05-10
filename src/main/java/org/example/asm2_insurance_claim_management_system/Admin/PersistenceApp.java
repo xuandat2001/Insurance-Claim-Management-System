@@ -22,8 +22,8 @@ public class PersistenceApp {
             PolicyHolder policyHolder = new PolicyHolder();
             //policyHolder.create();
             //policyHolder.update();
-            //policyHolder.delete();
-            policyHolder.view();
+            policyHolder.delete();
+            //policyHolder.view();
         }
         else {
             System.out.println("Username and Password are not correct");

@@ -88,16 +88,21 @@ public class PolicyHolder extends Customer  implements CRUDoperation {
         Session session = sessionFactory.openSession();
         PolicyOwner policyOwner = new PolicyOwner();
         List<PolicyOwner>policyOwnerListList = session.createQuery("FROM PolicyOwner ", PolicyOwner.class).getResultList();
+        for (PolicyOwner testPolicyOwner: policyOwnerListList){
+            if (testPolicyOwner.getCustomerId().equals(policyOwnerId)){
+                policyOwner = testPolicyOwner;
+            }
+        }
         InsuranceCard insuranceCard = new InsuranceCard();
         insuranceCard.setCardNumber(cardNum);
         insuranceCard.setExpirationDate(ExpirationDate);
         insuranceCard.setCardHolder(userName);
-
+        insuranceCard.setPolicyOwner(policyOwner);
         PolicyHolder policyHolder = new PolicyHolder();
         policyHolder.setCustomerId(userName);
         policyHolder.setPassword(password);
         policyHolder.setFullName(fullName);
-
+        policyHolder.setPolicyOwner(policyOwner);
 
 // Set InsuranceCard for PolicyHolder
         policyHolder.setInsuranceCard(insuranceCard);
@@ -203,6 +208,8 @@ public class PolicyHolder extends Customer  implements CRUDoperation {
 
             // Commit the transaction
             session.getTransaction().commit();
+            System.out.println("Delete Successfully");
+            return true;
         } catch (Exception ex) {
             // Rollback the transaction in case of an exception
             session.getTransaction().rollback();

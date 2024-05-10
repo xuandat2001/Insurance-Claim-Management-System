@@ -15,7 +15,7 @@ public class InsuranceCard {
     @Column(name = "expirationDate")
     private LocalDate expirationDate;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne
     @JoinColumn(name = "PolicyOwnerId") // foreign key referencing InsuranceCard's primary key
     private PolicyOwner policyOwner;
     @Column(name = "CardHolder")
@@ -25,6 +25,14 @@ public class InsuranceCard {
 
     public InsuranceCard() {
 
+    }
+
+    public PolicyOwner getPolicyOwner() {
+        return policyOwner;
+    }
+
+    public void setPolicyOwner(PolicyOwner policyOwner) {
+        this.policyOwner = policyOwner;
     }
 
     public String getCardNumber() {
