@@ -20,7 +20,7 @@ public class PolicyHolder extends Customer  implements CRUDoperation {
     @JoinColumn(name = "insuranceCardNumber") // foreign key referencing InsuranceCard's primary key
     private InsuranceCard insuranceCard;
 
-    @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
+    @ManyToOne
     @JoinColumn(name = "PolicyOwnerId") // foreign key referencing InsuranceCard's primary key
     private PolicyOwner policyOwner;
 
@@ -82,8 +82,8 @@ public class PolicyHolder extends Customer  implements CRUDoperation {
         } catch (Exception e) {
             System.out.println("Invalid date format. Please enter date in YYYY-MM-DD format.");
         }
-        SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
-
+//        SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         // Obtain a Hibernate Session
         Session session = sessionFactory.openSession();
         PolicyOwner policyOwner = new PolicyOwner();
