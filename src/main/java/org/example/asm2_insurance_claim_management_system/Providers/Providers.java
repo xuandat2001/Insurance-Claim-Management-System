@@ -2,6 +2,7 @@ package org.example.asm2_insurance_claim_management_system.Providers;
 import jakarta.persistence.*;
 @Entity
 @Table(name = "Provider")
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Providers {
     @Id
     @Column(name = "ProviderId")
@@ -13,11 +14,11 @@ public abstract class Providers {
     @Column(name = "ProviderName")
     private String providerName;
 
-    public String getPolicyOwnerId() {
+    public String getProviderId() {
         return providerId;
     }
 
-    public void setPolicyOwnerId(String providerId) {
+    public void setProviderId(String providerId) {
         this.providerId = providerId;
     }
 
