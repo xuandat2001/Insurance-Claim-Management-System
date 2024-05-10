@@ -12,7 +12,6 @@ public boolean retrieveClaim();
 
 public boolean updateInfo();
 
-public boolean viewClaim();
 
 
 

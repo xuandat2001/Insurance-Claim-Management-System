@@ -18,7 +18,7 @@ import java.util.Scanner;
 
 @Entity
 @Table(name = "Claim")
-public class Claim implements SuperCustomer {
+public class Claim {
     @Id
     @Column(name = "ClaimId")
     private String claimId;
@@ -127,84 +127,5 @@ public class Claim implements SuperCustomer {
         this.claimAmount = claimAmount;
     }
 
-    @Override
-    public boolean createClaim() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter the claimID (6 character): ");
-        String claimID = scanner.nextLine();
-        System.out.println("Enter the Policy Holder ID: ");
-        String policyHolderID = scanner.nextLine();
-        System.out.println("Enter the claim amount: ");
-        double claimAmount = scanner.nextDouble();
 
-
-        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
-        Session session = sessionFactory.openSession();
-
-        PolicyHolder policyHolder = new PolicyHolder();
-        List<PolicyHolder> policyHolderList = session.createQuery("FROM PolicyHolder ", PolicyHolder.class).getResultList();
-        for (PolicyHolder testPolicyHolder : policyHolderList) {
-            if (testPolicyHolder.getCustomerId().equals(policyHolderID)) {
-                policyHolder = testPolicyHolder;
-            } else {
-                System.out.println("Policy Holder does not exist");
-            }
-        }
-        InsuranceCard insuranceCard = new InsuranceCard();
-        insuranceCard = policyHolder.getInsuranceCard();
-
-
-        Claim claim = new Claim();
-        claim.setClaimId(claimID);
-        claim.setClaimDate(LocalDate.now());
-        claim.setStatus(Status.NEW);
-        claim.setInsuranceCard(insuranceCard);
-        claim.setPolicyHolder(policyHolder);
-        claim.setClaimAmount(claimAmount);
-
-        try {
-            session.beginTransaction();
-            session.save(claim);
-            session.getTransaction().commit();
-            System.out.println("Create claim successfully");
-            return true;
-
-
-        } catch (Exception ex) {
-            // Rollback the transaction in case of an exception
-            session.getTransaction().rollback();
-            ex.printStackTrace();
-        } finally {
-            // Close the session and session factory
-            session.close();
-            sessionFactory.close();
-        }
-        return false;
-
-    }
-
-    @Override
-    public boolean fileClaim() {
-        return false;
-    }
-
-    @Override
-    public boolean updateClaim() {
-        return false;
-    }
-
-    @Override
-    public boolean retrieveClaim() {
-        return false;
-    }
-
-    @Override
-    public boolean updateInfo() {
-        return false;
-    }
-
-    @Override
-    public boolean viewClaim() {
-        return false;
-    }
 }

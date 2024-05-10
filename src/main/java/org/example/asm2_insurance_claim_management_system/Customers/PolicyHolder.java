@@ -1,11 +1,15 @@
 package org.example.asm2_insurance_claim_management_system.Customers;
+
 import jakarta.persistence.*;
-import org.example.asm2_insurance_claim_management_system.Admin.Admin;
+import org.example.asm2_insurance_claim_management_system.Claim.Claim;
+import org.example.asm2_insurance_claim_management_system.Claim.Status;
 import org.example.asm2_insurance_claim_management_system.InsuranceCard.InsuranceCard;
 import org.example.asm2_insurance_claim_management_system.Interface.CRUDoperation;
+import org.example.asm2_insurance_claim_management_system.Interface.SuperCustomer;
+import org.example.asm2_insurance_claim_management_system.Interface.UserAuthentication;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
+
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.util.List;
@@ -14,9 +18,9 @@ import java.util.Scanner;
 @Entity
 @Table(name = "PolicyHolder")
 @PrimaryKeyJoinColumn(name = "PolicyHolderId") // Discriminator value for PolicyHolder
-public class PolicyHolder extends Customer  implements CRUDoperation {
+public class PolicyHolder extends Customer implements CRUDoperation, SuperCustomer, UserAuthentication {
 
-    @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "insuranceCardNumber") // foreign key referencing InsuranceCard's primary key
     private InsuranceCard insuranceCard;
 
@@ -87,12 +91,11 @@ public class PolicyHolder extends Customer  implements CRUDoperation {
         // Obtain a Hibernate Session
         Session session = sessionFactory.openSession();
         PolicyOwner policyOwner = new PolicyOwner();
-        List<PolicyOwner>policyOwnerListList = session.createQuery("FROM PolicyOwner ", PolicyOwner.class).getResultList();
-        for (PolicyOwner testPolicyOwner: policyOwnerListList){
-            if (testPolicyOwner.getCustomerId().equals(policyOwnerId)){
+        List<PolicyOwner> policyOwnerListList = session.createQuery("FROM PolicyOwner ", PolicyOwner.class).getResultList();
+        for (PolicyOwner testPolicyOwner : policyOwnerListList) {
+            if (testPolicyOwner.getId().equals(policyOwnerId)) {
                 policyOwner = testPolicyOwner;
-            }
-            else{
+            } else {
                 System.out.println("Policy Owner does not exist");
             }
         }
@@ -136,7 +139,8 @@ public class PolicyHolder extends Customer  implements CRUDoperation {
 
     @Override
     public boolean update() {
-        SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+//        SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         Session session = null;
         Scanner scanner = new Scanner(System.in);
 
@@ -186,7 +190,8 @@ public class PolicyHolder extends Customer  implements CRUDoperation {
     @Override
     public boolean delete() {
 
-        SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+//        SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
 
         // Obtain a Hibernate Session
         Session session = sessionFactory.openSession();
@@ -228,20 +233,21 @@ public class PolicyHolder extends Customer  implements CRUDoperation {
     @Override
     public boolean view() {
         // Create a Hibernate SessionFactory
-        SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+//        SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
 
         // Obtain a Hibernate Session
         Session session = sessionFactory.openSession();
 
-        List<PolicyHolder>policyHolderList;
+        List<PolicyHolder> policyHolderList;
         try {
             // Begin a transaction
             session.beginTransaction();
 
             // Perform a query
             policyHolderList = session.createQuery("FROM PolicyHolder ", PolicyHolder.class).getResultList();
-            for (PolicyHolder policyHolder : policyHolderList ){
-                System.out.println("PolicyHolder ID: " + policyHolder.getCustomerId());
+            for (PolicyHolder policyHolder : policyHolderList) {
+                System.out.println("PolicyHolder ID: " + policyHolder.getId());
                 System.out.println("Full Name: " + policyHolder.getFullName());
                 System.out.println("Password: " + policyHolder.getPassword());
             }
@@ -261,4 +267,153 @@ public class PolicyHolder extends Customer  implements CRUDoperation {
 
         return false;
     }
+
+    @Override
+    public boolean createClaim() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the claimID (6 character): ");
+        String claimID = scanner.nextLine();
+        System.out.println("Enter the Policy Holder ID: ");
+        String policyHolderID = scanner.nextLine();
+        System.out.println("Enter the claim amount: ");
+        double claimAmount = scanner.nextDouble();
+
+
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        Session session = sessionFactory.openSession();
+
+        PolicyHolder policyHolder = new PolicyHolder();
+        List<PolicyHolder> policyHolderList = session.createQuery("FROM PolicyHolder ", PolicyHolder.class).getResultList();
+        for (PolicyHolder testPolicyHolder : policyHolderList) {
+            if (testPolicyHolder.getId().equals(policyHolderID)) {
+                policyHolder = testPolicyHolder;
+            } else {
+                System.out.println("Policy Holder does not exist");
+            }
+        }
+        InsuranceCard insuranceCard = new InsuranceCard();
+        insuranceCard = policyHolder.getInsuranceCard();
+
+
+        Claim claim = new Claim();
+        claim.setClaimId(claimID);
+        claim.setClaimDate(LocalDate.now());
+        claim.setStatus(Status.NEW);
+        claim.setInsuranceCard(insuranceCard);
+        claim.setPolicyHolder(policyHolder);
+        claim.setClaimAmount(claimAmount);
+        // List of document
+
+        try {
+            session.beginTransaction();
+            session.save(claim);
+            session.getTransaction().commit();
+            System.out.println("Create claim successfully");
+            return true;
+
+
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            // Close the session and session factory
+            session.close();
+            sessionFactory.close();
+        }
+        return false;
+
+    }
+
+    @Override
+    public boolean fileClaim() {
+        return false;
+    }
+
+    @Override
+    public boolean updateClaim() {
+
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        Session session = null;
+        Scanner scanner = new Scanner(System.in);
+
+        try {
+            session = sessionFactory.openSession();
+
+            System.out.println("Enter the Claim ID:");
+            String claimID = scanner.nextLine();
+            System.out.println("Enter the new Claim Amount: ");
+            double claimAmount = scanner.nextDouble();
+            // List of document
+
+            session.beginTransaction();
+            Claim claim = session.get(Claim.class, claimID);
+            if (claimID == null) {
+                System.out.println("Claim with claim ID" + claimID + "is not found");
+                return false;
+            }
+
+            claim.setClaimAmount(claimAmount);
+
+            session.getTransaction().commit();
+            System.out.println("Update Sucessfully");
+            return true; // Update successful
+
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
+                session.getTransaction().rollback();
+            }
+            ex.printStackTrace(); // Print error details
+            return false; // Update failed
+        } finally {
+            // Close the session and session factory
+            if (session != null) {
+                session.close();
+            }
+            sessionFactory.close();
+        }
+
+
+    }
+
+
+    @Override
+    public boolean retrieveClaim() {
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        Session session = sessionFactory.openSession();
+
+        try {
+            session.beginTransaction();
+            List<Claim> claimList = session.createQuery("FROM Claim ", Claim.class).getResultList();
+            for (Claim claim : claimList) {
+                if (this.getId().equals(claim.getPolicyHolder())) {
+                    System.out.println("Claim ID: " + claim.getClaimId());
+                    System.out.println("Claim Date: " + claim.getClaimDate());
+                    System.out.println("Claim Amount: " + claim.getClaimAmount());
+                    System.out.println("List of Document: " + claim.getListOfDocument());
+                    System.out.println("Claim Status: " + claim.getStatus());
+                    System.out.println("Card Number: " + claim.getInsuranceCard());
+                    System.out.println("Policy Holder: " + claim.getPolicyHolder());
+                    System.out.println("Dependent: " + claim.getDependent());
+                }
+            }
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            // Close the session and session factory
+            session.close();
+            sessionFactory.close();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateInfo() {
+        return false;
+    }
+
+
 }

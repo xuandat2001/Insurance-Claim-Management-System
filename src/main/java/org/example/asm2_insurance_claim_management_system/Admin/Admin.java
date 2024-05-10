@@ -1,7 +1,6 @@
 package org.example.asm2_insurance_claim_management_system.Admin;
 
 import jakarta.persistence.*;
-import org.example.asm2_insurance_claim_management_system.Interface.CRUDoperation;
 import org.example.asm2_insurance_claim_management_system.Interface.UserAuthentication;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

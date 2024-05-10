@@ -193,7 +193,7 @@ public class PolicyOwner extends Customer implements CRUDoperation {
             // Perform a query
             policyOwnerList = session.createQuery("FROM PolicyOwner ", PolicyOwner.class).getResultList();
             for (PolicyOwner policyOwner : policyOwnerList ){
-                System.out.println("PolicyOwner ID: " + policyOwner.getCustomerId());
+                System.out.println("PolicyOwner ID: " + policyOwner.getId());
                 System.out.println("Full Name: " + policyOwner.getFullName());
                 System.out.println("Password: " + policyOwner.getPassword());
                 System.out.println("Location: " + policyOwner.getLocation());

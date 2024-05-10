@@ -2,6 +2,7 @@ package org.example.asm2_insurance_claim_management_system.Customers;
 import jakarta.persistence.*;
 import org.example.asm2_insurance_claim_management_system.InsuranceCard.InsuranceCard;
 import org.example.asm2_insurance_claim_management_system.Interface.CRUDoperation;
+import org.example.asm2_insurance_claim_management_system.Interface.UserAuthentication;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -12,7 +13,7 @@ import java.util.Scanner;
 @Entity
 @Table(name = "Dependent")
 @PrimaryKeyJoinColumn(name = "DependentId")// Discriminator value for Dependent
-public class Dependent extends Customer implements CRUDoperation {
+public class Dependent extends Customer implements CRUDoperation, UserAuthentication {
 
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -51,9 +52,9 @@ public class Dependent extends Customer implements CRUDoperation {
         String password = scanner.nextLine();
         System.out.println("Set your full name : ");
         String fullName = scanner.nextLine();
-        System.out.println("Enter the PolicyOwner Id : ");
+        System.out.println("Enter the PolicyOwner Id: ");
         String policyOwnerId = scanner.nextLine();
-        System.out.println("Enter the PolicyHoler Id : ");
+        System.out.println("Enter the PolicyHoler Id: ");
         String policyHolderId = scanner.nextLine();
         SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
         Dependent dependent = new Dependent();
@@ -62,7 +63,7 @@ public class Dependent extends Customer implements CRUDoperation {
         PolicyOwner policyOwner = new PolicyOwner();
         List<PolicyOwner> policyOwnerList = session.createQuery("FROM PolicyOwner ", PolicyOwner.class).getResultList();
         for (PolicyOwner testPolicyOwner: policyOwnerList){
-            if (testPolicyOwner.getCustomerId().equals(policyOwnerId)){
+            if (testPolicyOwner.getId().equals(policyOwnerId)){
                 policyOwner = testPolicyOwner;
             }
             else {
@@ -73,7 +74,7 @@ public class Dependent extends Customer implements CRUDoperation {
         List<PolicyHolder>policyHolderList = session.createQuery("FROM PolicyHolder ", PolicyHolder.class).getResultList();
 
         for (PolicyHolder testPolicyHolder: policyHolderList){
-            if (testPolicyHolder.getCustomerId().equals(policyHolderId)){
+            if (testPolicyHolder.getId().equals(policyHolderId)){
                 policyHolder = testPolicyHolder;
             }
             else {
@@ -216,7 +217,7 @@ public class Dependent extends Customer implements CRUDoperation {
             // Perform a query
             dependentList = session.createQuery("FROM Dependent ", Dependent.class).getResultList();
             for (Dependent dependent : dependentList ){
-                System.out.println("Dependent ID: " + dependent.getCustomerId());
+                System.out.println("Dependent ID: " + dependent.getId());
                 System.out.println("Full Name: " + dependent.getFullName());
                 System.out.println("Password: " + dependent.getPassword());
             }
@@ -235,6 +236,11 @@ public class Dependent extends Customer implements CRUDoperation {
         }
 
         return false;
+    }
+
+    @Override
+    public String getId() {
+        return customerId;
     }
 }
 
