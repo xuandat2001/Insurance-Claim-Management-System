@@ -1,5 +1,6 @@
 package org.example.asm2_insurance_claim_management_system.Admin;
 
+import org.example.asm2_insurance_claim_management_system.Claim.Claim;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyHolder;
 import org.example.asm2_insurance_claim_management_system.Login.Authentication;
 
@@ -20,10 +21,12 @@ public class PersistenceApp {
         if (login.authenticate(admin.listOfAdmin(),userName,password ) != null){
             System.out.println("Login successfully");
             PolicyHolder policyHolder = new PolicyHolder();
-            //policyHolder.create();
+//            policyHolder.create();
             //policyHolder.update();
-            policyHolder.delete();
+//            policyHolder.delete();
             //policyHolder.view();
+            Claim claim = new Claim();
+            claim.createClaim();
         }
         else {
             System.out.println("Username and Password are not correct");

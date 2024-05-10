@@ -19,6 +19,7 @@
         <mapping class="org.example.asm2_insurance_claim_management_system.Customers.PolicyOwner"/>
         <mapping class="org.example.asm2_insurance_claim_management_system.Customers.Dependent"/>
         <mapping class="org.example.asm2_insurance_claim_management_system.InsuranceCard.InsuranceCard"/>
+        <mapping class="org.example.asm2_insurance_claim_management_system.Claim.Claim"/>
 
     </session-factory>
 </hibernate-configuration>

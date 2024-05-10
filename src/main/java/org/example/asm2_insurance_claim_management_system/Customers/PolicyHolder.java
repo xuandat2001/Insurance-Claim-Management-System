@@ -92,6 +92,9 @@ public class PolicyHolder extends Customer  implements CRUDoperation {
             if (testPolicyOwner.getCustomerId().equals(policyOwnerId)){
                 policyOwner = testPolicyOwner;
             }
+            else{
+                System.out.println("Policy Owner does not exist");
+            }
         }
         InsuranceCard insuranceCard = new InsuranceCard();
         insuranceCard.setCardNumber(cardNum);
@@ -104,7 +107,7 @@ public class PolicyHolder extends Customer  implements CRUDoperation {
         policyHolder.setFullName(fullName);
         policyHolder.setPolicyOwner(policyOwner);
 
-// Set InsuranceCard for PolicyHolder
+        // Set InsuranceCard for PolicyHolder
         policyHolder.setInsuranceCard(insuranceCard);
 
         try {
