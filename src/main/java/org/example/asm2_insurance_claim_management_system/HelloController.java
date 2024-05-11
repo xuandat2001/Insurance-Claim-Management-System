@@ -4,10 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -28,6 +25,7 @@ public class HelloController {
 
     @FXML
     private Button createPolicyHolderButton;
+
     @FXML
     protected void onLoginButtonClick() {
     String userName = textField.getText();
@@ -35,7 +33,12 @@ public class HelloController {
     Authentication login = new Authentication();
     Admin admin = Admin.getInstance();
     if (login.authenticate(admin.listOfAdmin(), userName, password) != null){
-        System.out.println("Login successfully (Admin)");
+        Alert alertSucess = new Alert(Alert.AlertType.INFORMATION);
+        alertSucess.setTitle("Successful");
+        alertSucess.setHeaderText(null);
+        alertSucess.setContentText("Login Successfully");
+        alertSucess.showAndWait();
+
         try {
             // Load the Admin.fxml file
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Admin.fxml"));
@@ -56,7 +59,37 @@ public class HelloController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }else{
+        // If the credentials are incorrect, show an alert message
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Login Error");
+        alert.setHeaderText(null);
+        alert.setContentText("Wrong username or password. Please try again.");
+        alert.showAndWait();
     }
 
     }
+    @FXML protected void OnCreatePolicyHolderButton(){
+        try {
+            // Load the Admin.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("createPolicyHolder.fxml"));
+
+            // Load the root element (in this case, VBox)
+            VBox adminRoot = loader.load();
+
+            // Create a new stage for the Admin UI
+            Stage adminStage = new Stage();
+            adminStage.setTitle("Admin Page");
+            adminStage.setScene(new Scene(adminRoot, 400, 320));
+
+            // Show the Admin UI stage
+            adminStage.show();
+
+            // Close the current stage (the one containing the button)
+            createPolicyHolderButton.getScene().getWindow().hide();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

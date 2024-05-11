@@ -9,5 +9,5 @@
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
     <Label text="Admin Page" />
-    <Button  text="Create PolicyHolder" />
+    <Button fx:id="createPolicyHolderButton" text="Create PolicyHolder" onAction="#OnCreatePolicyHolderButton" />
 </VBox>

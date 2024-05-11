@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.PolicyHolderController">
+   <padding>
+      <Insets bottom="10" left="10" right="10" top="10" />
+   </padding>
+   <Label text="Set your ID(username)" />
+   <TextField fx:id="textFieldId" />
+   <Label text="Set your password" />
+   <TextField fx:id="textFieldPassword" />
+   <Label text="Set your FullName" />
+   <TextField fx:id="textFieldFullName" />
+   <Label  text="Set Insurance Card Number(6 digits)" />
+   <TextField fx:id="textCardNum" />
+   <Label text="Set your Policy Owner(6 digits)" />
+   <TextField fx:id="textFieldPolicyOwner" />
+   <Label text="Enter a date (YYYY-MM-DD)" />
+   <TextField fx:id="textFieldDate" />
+   <Button fx:id="savePolicyHolderButton" mnemonicParsing="false" onAction="#create" text="Create" />
+</VBox>
