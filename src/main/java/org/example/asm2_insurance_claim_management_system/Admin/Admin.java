@@ -59,11 +59,12 @@ public class Admin implements Serializable, UserAuthentication {
             // Rollback the transaction in case of an exception
             session.getTransaction().rollback();
             ex.printStackTrace();
-        } finally {
-            // Close the session and session factory
-            session.close();
-            sessionFactory.close();
         }
+//        finally {
+//            // Close the session and session factory
+//            session.close();
+//            sessionFactory.close();
+//        }
         return adminList;
     }
 

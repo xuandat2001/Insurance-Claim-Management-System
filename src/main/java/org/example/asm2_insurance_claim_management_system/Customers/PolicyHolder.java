@@ -1,6 +1,7 @@
 package org.example.asm2_insurance_claim_management_system.Customers;
 
 import jakarta.persistence.*;
+import org.example.asm2_insurance_claim_management_system.Admin.Admin;
 import org.example.asm2_insurance_claim_management_system.Claim.Claim;
 import org.example.asm2_insurance_claim_management_system.Claim.Status;
 import org.example.asm2_insurance_claim_management_system.InsuranceCard.InsuranceCard;
@@ -9,6 +10,7 @@ import org.example.asm2_insurance_claim_management_system.Interface.SuperCustome
 import org.example.asm2_insurance_claim_management_system.Interface.UserAuthentication;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
@@ -268,6 +270,36 @@ public class PolicyHolder extends Customer implements CRUDoperation, SuperCustom
         return false;
     }
 
+    public List<PolicyHolder> listOfPolicyHolder() {
+        // Create a Hibernate SessionFactory
+//        SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        // Obtain a Hibernate Session
+        Session session = sessionFactory.openSession();
+
+        List<PolicyHolder> policyHolderList = null;
+        try {
+            // Begin a transaction
+            session.beginTransaction();
+
+            // Perform a query
+            policyHolderList = session.createQuery("FROM PolicyHolder", PolicyHolder.class).getResultList();
+
+            // Commit the transaction
+            session.getTransaction().commit();
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        }
+//        finally {
+//            // Close the session and session factory
+//            session.close();
+//            sessionFactory.close();
+//        }
+        return policyHolderList;
+    }
+
     @Override
     public boolean createClaim() {
         Scanner scanner = new Scanner(System.in);
@@ -318,12 +350,16 @@ public class PolicyHolder extends Customer implements CRUDoperation, SuperCustom
             ex.printStackTrace();
         } finally {
             // Close the session and session factory
-            session.close();
-            sessionFactory.close();
+//            session.close();
+//            sessionFactory.close();
+            if (session != null) {
+                session.close();
+            }
         }
         return false;
 
     }
+
 
     @Override
     public boolean fileClaim() {
@@ -387,16 +423,16 @@ public class PolicyHolder extends Customer implements CRUDoperation, SuperCustom
             session.beginTransaction();
             List<Claim> claimList = session.createQuery("FROM Claim ", Claim.class).getResultList();
             for (Claim claim : claimList) {
-                if (this.getId().equals(claim.getPolicyHolder())) {
+//                if (this.getId().equals(claim.getPolicyHolder().getId())) {
                     System.out.println("Claim ID: " + claim.getClaimId());
                     System.out.println("Claim Date: " + claim.getClaimDate());
                     System.out.println("Claim Amount: " + claim.getClaimAmount());
                     System.out.println("List of Document: " + claim.getListOfDocument());
                     System.out.println("Claim Status: " + claim.getStatus());
-                    System.out.println("Card Number: " + claim.getInsuranceCard());
-                    System.out.println("Policy Holder: " + claim.getPolicyHolder());
+                    System.out.println("Card Number: " + claim.getInsuranceCard().getCardNumber());
+                    System.out.println("Policy Holder: " + claim.getPolicyHolder().getId());
                     System.out.println("Dependent: " + claim.getDependent());
-                }
+//                }
             }
         } catch (Exception ex) {
             // Rollback the transaction in case of an exception

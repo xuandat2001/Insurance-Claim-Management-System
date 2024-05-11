@@ -238,6 +238,36 @@ public class Dependent extends Customer implements CRUDoperation, UserAuthentica
         return false;
     }
 
+    public List<Dependent> listOfDependent() {
+        // Create a Hibernate SessionFactory
+//        SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        // Obtain a Hibernate Session
+        Session session = sessionFactory.openSession();
+
+        List<Dependent> dependentList = null;
+        try {
+            // Begin a transaction
+            session.beginTransaction();
+
+            // Perform a query
+            dependentList = session.createQuery("FROM Dependent", Dependent.class).getResultList();
+
+            // Commit the transaction
+            session.getTransaction().commit();
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        }
+//        finally {
+//            // Close the session and session factory
+//            session.close();
+//            sessionFactory.close();
+//        }
+        return dependentList;
+    }
+
     @Override
     public String getId() {
         return customerId;
