@@ -423,7 +423,7 @@ public class PolicyHolder extends Customer implements CRUDoperation, SuperCustom
             session.beginTransaction();
             List<Claim> claimList = session.createQuery("FROM Claim ", Claim.class).getResultList();
             for (Claim claim : claimList) {
-//                if (this.getId().equals(claim.getPolicyHolder().getId())) {
+                if (this.getId().equals(claim.getPolicyHolder().getId())) {
                     System.out.println("Claim ID: " + claim.getClaimId());
                     System.out.println("Claim Date: " + claim.getClaimDate());
                     System.out.println("Claim Amount: " + claim.getClaimAmount());
@@ -432,7 +432,7 @@ public class PolicyHolder extends Customer implements CRUDoperation, SuperCustom
                     System.out.println("Card Number: " + claim.getInsuranceCard().getCardNumber());
                     System.out.println("Policy Holder: " + claim.getPolicyHolder().getId());
                     System.out.println("Dependent: " + claim.getDependent());
-//                }
+                }
             }
         } catch (Exception ex) {
             // Rollback the transaction in case of an exception
@@ -445,6 +445,8 @@ public class PolicyHolder extends Customer implements CRUDoperation, SuperCustom
         }
         return false;
     }
+
+
 
     @Override
     public boolean updateInfo() {

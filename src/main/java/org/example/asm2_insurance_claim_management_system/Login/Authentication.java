@@ -11,9 +11,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class Authentication {
-    private PolicyHolder policyHolder;
-    private PolicyOwner policyOwner;
-    private Dependent dependent;
     public UserAuthentication authenticate(List<? extends UserAuthentication>listOfUser, String userName, String password){
             for (UserAuthentication userAuthentication : listOfUser) {
                 if (userAuthentication.getId().equals(userName) && userAuthentication.getPassword().equals(password)){

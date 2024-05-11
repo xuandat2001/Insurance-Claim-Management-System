@@ -2,6 +2,8 @@ package org.example.asm2_insurance_claim_management_system.Customers;
 import jakarta.persistence.*;
 import org.example.asm2_insurance_claim_management_system.InsuranceCard.InsuranceCard;
 import org.example.asm2_insurance_claim_management_system.Interface.CRUDoperation;
+import org.example.asm2_insurance_claim_management_system.Interface.UserAuthentication;
+import org.example.asm2_insurance_claim_management_system.Login.Authentication;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -14,7 +16,7 @@ import java.util.Scanner;
 @Entity
 @Table(name = "PolicyOwner")
 @PrimaryKeyJoinColumn(name = "PolicyOwnerId") // Discriminator value for PolicyOwner
-public class PolicyOwner extends Customer implements CRUDoperation {
+public class PolicyOwner extends Customer implements CRUDoperation, UserAuthentication {
 
 
     @Column(name = "Location")
