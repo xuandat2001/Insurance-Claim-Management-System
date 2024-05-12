@@ -15,7 +15,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class PolicyHolderController implements CRUDoperation {
+public class CRUDPolicyHolderController implements CRUDoperation {
     @FXML
     private TextField textFieldId;
     @FXML

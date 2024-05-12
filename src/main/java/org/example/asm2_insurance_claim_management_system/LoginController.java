@@ -2,19 +2,16 @@ package org.example.asm2_insurance_claim_management_system;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.asm2_insurance_claim_management_system.Admin.Admin;
 import org.example.asm2_insurance_claim_management_system.Login.Authentication;
 
 import java.io.IOException;
-import java.sql.Statement;
 
-public class HelloController {
+public class LoginController {
     @FXML
     private Button loginButton;
 
@@ -23,8 +20,8 @@ public class HelloController {
     @FXML
     private PasswordField passwordField;
 
-    @FXML
-    private Button createPolicyHolderButton;
+//    @FXML
+//    private Button createPolicyHolderButton;
 
     @FXML
     protected void onLoginButtonClick() {
@@ -68,28 +65,6 @@ public class HelloController {
         alert.showAndWait();
     }
 
-    }
-    @FXML protected void OnCreatePolicyHolderButton(){
-        try {
-            // Load the Admin.fxml file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("createPolicyHolder.fxml"));
-
-            // Load the root element (in this case, VBox)
-            VBox adminRoot = loader.load();
-
-            // Create a new stage for the Admin UI
-            Stage adminStage = new Stage();
-            adminStage.setTitle("Admin Page");
-            adminStage.setScene(new Scene(adminRoot, 400, 320));
-
-            // Show the Admin UI stage
-            adminStage.show();
-
-            // Close the current stage (the one containing the button)
-            createPolicyHolderButton.getScene().getWindow().hide();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 }
