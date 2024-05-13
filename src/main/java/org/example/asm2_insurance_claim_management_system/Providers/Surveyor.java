@@ -12,7 +12,7 @@ import java.util.Scanner;
 @Entity
 @Table(name = "Surveyor")
 @PrimaryKeyJoinColumn(name = "SurveyorID")
-public class Surveyor extends Providers implements CRUDoperation {
+public class Surveyor extends Providers {
 
     private boolean isManager = true;
 
@@ -32,7 +32,7 @@ public class Surveyor extends Providers implements CRUDoperation {
         isManager = manager;
     }
 
-    @Override
+
     public boolean create() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Set your ID(username): ");
@@ -74,7 +74,7 @@ public class Surveyor extends Providers implements CRUDoperation {
         return false;
     }
 
-    @Override
+
     public boolean update() {
         SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
         Session session = null;
@@ -124,7 +124,7 @@ public class Surveyor extends Providers implements CRUDoperation {
         }
     }
 
-    @Override
+
     public boolean delete() {
         SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
 
@@ -165,7 +165,7 @@ public class Surveyor extends Providers implements CRUDoperation {
         return false;
     }
 
-    @Override
+
     public boolean view() {
         // Create a Hibernate SessionFactory
         SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();

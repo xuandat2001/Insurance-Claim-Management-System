@@ -16,7 +16,6 @@ public abstract class  Customer implements UserAuthentication {
     String fullName;
 
 
-
     public Customer() {
     }
 

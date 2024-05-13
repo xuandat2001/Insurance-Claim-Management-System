@@ -16,7 +16,7 @@ import java.util.Scanner;
 @Entity
 @Table(name = "PolicyOwner")
 @PrimaryKeyJoinColumn(name = "PolicyOwnerId") // Discriminator value for PolicyOwner
-public class PolicyOwner extends Customer implements CRUDoperation, UserAuthentication {
+public class PolicyOwner extends Customer implements UserAuthentication {
 
 
     @Column(name = "Location")
@@ -39,7 +39,7 @@ public class PolicyOwner extends Customer implements CRUDoperation, UserAuthenti
         this.location = location;
     }
 
-    @Override
+
     public boolean create() {
 
         Scanner scanner = new Scanner(System.in);
@@ -85,7 +85,7 @@ public class PolicyOwner extends Customer implements CRUDoperation, UserAuthenti
         return false;
     }
 
-    @Override
+
     public boolean update() {
         SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
         Session session = null;
@@ -136,7 +136,7 @@ public class PolicyOwner extends Customer implements CRUDoperation, UserAuthenti
         }
     }
 
-    @Override
+
     public boolean delete() {
 
         SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
@@ -178,7 +178,7 @@ public class PolicyOwner extends Customer implements CRUDoperation, UserAuthenti
         return false;
     }
 
-    @Override
+
     public boolean view() {
 
         // Create a Hibernate SessionFactory

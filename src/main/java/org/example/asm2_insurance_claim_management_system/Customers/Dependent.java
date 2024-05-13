@@ -13,7 +13,7 @@ import java.util.Scanner;
 @Entity
 @Table(name = "Dependent")
 @PrimaryKeyJoinColumn(name = "DependentId")// Discriminator value for Dependent
-public class Dependent extends Customer implements CRUDoperation, UserAuthentication {
+public class Dependent extends Customer implements UserAuthentication {
 
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -43,7 +43,7 @@ public class Dependent extends Customer implements CRUDoperation, UserAuthentica
         this.policyOwner = policyOwner;
     }
 
-    @Override
+
     public boolean create() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Set your ID(username): ");
@@ -110,7 +110,7 @@ public class Dependent extends Customer implements CRUDoperation, UserAuthentica
         return false;
     }
 
-    @Override
+
     public boolean update() {
         SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
         Session session = null;
@@ -160,7 +160,7 @@ public class Dependent extends Customer implements CRUDoperation, UserAuthentica
         }
     }
 
-    @Override
+
     public boolean delete() {
         SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
 
@@ -201,7 +201,7 @@ public class Dependent extends Customer implements CRUDoperation, UserAuthentica
         return false;
     }
 
-    @Override
+
     public boolean view() {
         // Create a Hibernate SessionFactory
         SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();

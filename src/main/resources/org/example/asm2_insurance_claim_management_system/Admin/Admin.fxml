@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.AdminGUI.AdminController">
+    <padding>
+        <Insets bottom="10" left="10" right="10" top="10" />
+    </padding>
+    <Label text="Admin Page">
+      <VBox.margin>
+         <Insets bottom="10.0" />
+      </VBox.margin></Label>
+    <Button fx:id="createPolicyHolderButton" onAction="#OnCreatePolicyHolderButton" text="Create PolicyHolder">
+      <VBox.margin>
+         <Insets bottom="10.0" />
+      </VBox.margin></Button>
+   <Button fx:id="updatePolicyHolderButton" mnemonicParsing="false" text="Update PolicyHolder" onAction="#OnUpdatePolicyHolderButton">
+      <VBox.margin>
+         <Insets bottom="10.0" />
+      </VBox.margin>
+   </Button>
+   <Button fx:id="deletePolicyHolderButton" mnemonicParsing="false" text="Delete PolicyHolder" onAction="#OnDeletePolicyHolderButton">
+      <VBox.margin>
+         <Insets bottom="10.0" />
+      </VBox.margin>
+   </Button>
+   <Button fx:id="viewPolicyHolderButton" mnemonicParsing="false" text="View PolicyHolder" onAction="#OnViewPolicyHolderButton" >
+      <VBox.margin>
+         <Insets bottom="10.0" />
+      </VBox.margin>
+   </Button>
+    <Button fx:id="backButton" text="Back" onAction="#goBack" />
+</VBox>

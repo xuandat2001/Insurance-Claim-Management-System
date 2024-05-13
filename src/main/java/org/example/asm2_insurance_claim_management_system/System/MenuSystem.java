@@ -28,7 +28,6 @@ public class MenuSystem {
 //            policyHolder.update();
 //            policyHolder.delete();
             //policyHolder.view();
-//            policyHolder.create();
 //            Dependent dependent = new Dependent();
 //            policyHolder.retrieveClaim();
 //            policyHolder.createClaim();
@@ -39,10 +38,8 @@ public class MenuSystem {
         } else if (login.authenticate(policyHolder.listOfPolicyHolder(), userName, password) != null) {
             System.out.println("Login successfully (PolicyHolder)");
             PolicyHolder authenticatedPolicyHolder = (PolicyHolder) login.authenticate(policyHolder.listOfPolicyHolder(), userName, password);
-//            authenticatedPolicyHolder.retrieveClaim();
-//            authenticatedPolicyHolder.createClaim();
-            authenticatedPolicyHolder.deleteDependent();
-//            authenticatedPolicyHolder.addDependent();
+            authenticatedPolicyHolder.retrieveClaim();
+//            policyHolder.createClaim();
         } else if (login.authenticate(policyOwner.listOfPolicyOwner(), userName, password) != null) {
             System.out.println("Login successfully (PolicyOwner)");
             PolicyOwner authenticatedPolicyOwner = (PolicyOwner) login.authenticate(policyOwner.listOfPolicyOwner(), userName, password);
