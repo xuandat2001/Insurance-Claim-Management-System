@@ -305,8 +305,6 @@ public class PolicyHolder extends Customer implements CRUDoperation, SuperCustom
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the claimID (6 character): ");
         String claimID = scanner.nextLine();
-        System.out.println("Enter the Policy Holder ID: ");
-        String policyHolderID = scanner.nextLine();
         System.out.println("Enter the claim amount: ");
         double claimAmount = scanner.nextDouble();
 
@@ -314,25 +312,12 @@ public class PolicyHolder extends Customer implements CRUDoperation, SuperCustom
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         Session session = sessionFactory.openSession();
 
-        PolicyHolder policyHolder = new PolicyHolder();
-        List<PolicyHolder> policyHolderList = session.createQuery("FROM PolicyHolder ", PolicyHolder.class).getResultList();
-        for (PolicyHolder testPolicyHolder : policyHolderList) {
-            if (testPolicyHolder.getId().equals(policyHolderID)) {
-                policyHolder = testPolicyHolder;
-            } else {
-                System.out.println("Policy Holder does not exist");
-            }
-        }
-        InsuranceCard insuranceCard = new InsuranceCard();
-        insuranceCard = policyHolder.getInsuranceCard();
-
-
         Claim claim = new Claim();
         claim.setClaimId(claimID);
         claim.setClaimDate(LocalDate.now());
         claim.setStatus(Status.NEW);
-        claim.setInsuranceCard(insuranceCard);
-        claim.setPolicyHolder(policyHolder);
+        claim.setInsuranceCard(this.insuranceCard);
+        claim.setPolicyHolder(this);
         claim.setClaimAmount(claimAmount);
         // List of document
 
@@ -446,12 +431,130 @@ public class PolicyHolder extends Customer implements CRUDoperation, SuperCustom
         return false;
     }
 
-
-
     @Override
     public boolean updateInfo() {
         return false;
     }
 
 
+    public boolean addDependent() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Set Dependent ID(username): ");
+        String userName = scanner.nextLine();
+        System.out.println("Set Dependent password: ");
+        String password = scanner.nextLine();
+        System.out.println("Set Dependent full name: ");
+        String fullName = scanner.nextLine();
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        Dependent dependent = new Dependent();
+        // Obtain a Hibernate Session
+        Session session = sessionFactory.openSession();
+
+        dependent.setCustomerId(userName);
+        dependent.setPassword(password);
+        dependent.setFullName(fullName);
+        dependent.setPolicyHolder(this);
+        dependent.setPolicyOwner(this.policyOwner);
+        try {
+            // Begin a transaction
+            session.beginTransaction();
+
+            // Perform a query
+            session.save(dependent);
+
+
+            // Commit the transaction
+            session.getTransaction().commit();
+            System.out.println("Add Dependent Successfully");
+            return true;
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            // Close the session and session factory
+            session.close();
+            sessionFactory.close();
+        }
+        return false;
+    }
+
+    public boolean getAllDependent() {
+        // Create a Hibernate SessionFactory
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+
+        // Obtain a Hibernate Session
+        Session session = sessionFactory.openSession();
+
+        List<Dependent>dependentList;
+        try {
+            // Begin a transaction
+            session.beginTransaction();
+
+            // Perform a query
+            dependentList = session.createQuery("FROM Dependent ", Dependent.class).getResultList();
+            for (Dependent dependent : dependentList ){
+                System.out.println("Dependent ID: " + dependent.getId());
+                System.out.println("Full Name: " + dependent.getFullName());
+                System.out.println("Password: " + dependent.getPassword());
+            }
+
+            // Commit the transaction
+            session.getTransaction().commit();
+            return true;
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            // Close the session and session factory
+            session.close();
+            sessionFactory.close();
+        }
+
+        return false;
+    }
+
+    public boolean deleteDependent() {
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+
+        // Obtain a Hibernate Session
+        Session session = sessionFactory.openSession();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the ID(username) of the record you want to delete: ");
+        String userName = scanner.nextLine();
+        try {
+            // Begin a transaction
+            session.beginTransaction();
+
+            // Load the entity you want to delete
+            Dependent dependent = session.get(Dependent.class, userName);
+
+            // Check if the entity exists
+            if (dependent != null) {
+                // Delete the entity
+                session.delete(dependent);
+                System.out.println("Record deleted successfully.");
+            } else {
+                System.out.println("Record with ID " + userName + " not found.");
+            }
+
+            // Commit the transaction
+            session.getTransaction().commit();
+            System.out.println("Delete Successfully");
+            return true;
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            // Close the session and session factory
+            session.close();
+            sessionFactory.close();
+        }
+        return false;
+    }
+
+
 }
+

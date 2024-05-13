@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="383.0" prefWidth="279.0" xmlns="http://javafx.com/javafx/17.0.2-ea" fx:controller="org.example.asm2_insurance_claim_management_system.CRUDClaim" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label text="Enter the Claim ID (6 digits)" textAlignment="CENTER" />
+      <TextField fx:id="textFieldClaimID" />
+      <Label text="Enter the Claim Amount " />
+      <TextField fx:id="textFieldClaimAmount" />
+      <Label text="Input the document" />
+      <TextField fx:id="textFieldDocument"/>
+      <Button fx:id="saveClaimButton" mnemonicParsing="false" onAction="#createClaim"  text="Create" />
+   </children>
+</VBox>
