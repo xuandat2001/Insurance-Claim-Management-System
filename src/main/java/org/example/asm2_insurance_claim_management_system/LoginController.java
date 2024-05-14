@@ -46,7 +46,7 @@ public class LoginController {
             // Create a new stage for the Admin UI
             Stage adminStage = new Stage();
             adminStage.setTitle("Admin Page");
-            adminStage.setScene(new Scene(adminRoot, 320, 240));
+            adminStage.setScene(new Scene(adminRoot, 520, 440));
 
             // Show the Admin UI stage
             adminStage.show();

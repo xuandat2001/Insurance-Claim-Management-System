@@ -31,5 +31,25 @@
          <Insets bottom="10.0" />
       </VBox.margin>
    </Button>
-    <Button fx:id="backButton" text="Back" onAction="#goBack" />
+    <Button fx:id="createPolicyOwnerButton" mnemonicParsing="false" text="Create PolicyOwner" onAction="#OnCreatePolicyOwnerButton" >
+        <VBox.margin>
+            <Insets bottom="10.0" />
+        </VBox.margin>
+    </Button>
+    <Button fx:id="updatePolicyOwnerButton" mnemonicParsing="false" text="Update PolicyOwner" onAction="#OnUpdatePolicyOwnerButton" >
+        <VBox.margin>
+            <Insets bottom="10.0" />
+        </VBox.margin>
+    </Button>
+    <Button fx:id="deletePolicyOwnerButton" mnemonicParsing="false" text="Delete PolicyOwner" onAction="#OnDeletePolicyOwnerButton" >
+        <VBox.margin>
+            <Insets bottom="10.0" />
+        </VBox.margin>
+    </Button>
+    <Button fx:id="viewPolicyOwnerButton" mnemonicParsing="false" text="View PolicyOwner" onAction="#OnViewPolicyOwnerButton" >
+        <VBox.margin>
+            <Insets bottom="10.0" />
+        </VBox.margin>
+    </Button>
+    <Button text="Back" onAction="#goBack" />
 </VBox>

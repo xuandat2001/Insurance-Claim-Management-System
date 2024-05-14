@@ -22,12 +22,18 @@ public class AdminController{
     private Button deletePolicyHolderButton;
     @FXML
     private Button viewPolicyHolderButton;
-
     @FXML
-    protected void OnCreatePolicyHolderButton() {
+    private Button createPolicyOwnerButton;
+    @FXML
+    private Button updatePolicyOwnerButton;
+    @FXML
+    private Button deletePolicyOwnerButton;
+    @FXML
+    private Button viewPolicyOwnerButton;
+    public void createSceneAdmin (String url, Button button) {
         try {
             // Load the Admin.fxml file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/asm2_insurance_claim_management_system/Admin/createPolicyHolder.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(url));
 
             // Load the root element (in this case, VBox)
             VBox adminRoot = loader.load();
@@ -41,87 +47,55 @@ public class AdminController{
             adminStage.show();
 
             // Close the current stage (the one containing the button)
-            createPolicyHolderButton.getScene().getWindow().hide();
+            button.getScene().getWindow().hide();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+    @FXML
+    protected void OnCreatePolicyHolderButton() {
+        String url = "/org/example/asm2_insurance_claim_management_system/Admin/createPolicyHolder.fxml";
+        createSceneAdmin(url, createPolicyHolderButton);
     }
     @FXML
     protected void OnUpdatePolicyHolderButton(){
-        try {
-            // Load the Admin.fxml file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/asm2_insurance_claim_management_system/Admin/updatePolicyHolder.fxml"));
-
-            // Load the root element (in this case, VBox)
-            VBox adminRoot = loader.load();
-
-            // Create a new stage for the Admin UI
-            Stage adminStage = new Stage();
-            adminStage.setTitle("Admin Page");
-            adminStage.setScene(new Scene(adminRoot, 400, 320));
-
-            // Show the Admin UI stage
-            adminStage.show();
-
-            // Close the current stage (the one containing the button)
-            updatePolicyHolderButton.getScene().getWindow().hide();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        String url = "/org/example/asm2_insurance_claim_management_system/Admin/updatePolicyHolder.fxml";
+        createSceneAdmin(url, updatePolicyHolderButton);
     }
     @FXML
     protected void OnDeletePolicyHolderButton(){
-        try {
-            // Load the Admin.fxml file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/asm2_insurance_claim_management_system/Admin/deletePolicyHolder.fxml"));
-
-            // Load the root element (in this case, VBox)
-            VBox adminRoot = loader.load();
-
-            // Create a new stage for the Admin UI
-            Stage adminStage = new Stage();
-            adminStage.setTitle("Admin Page");
-            adminStage.setScene(new Scene(adminRoot, 400, 320));
-
-            // Show the Admin UI stage
-            adminStage.show();
-
-            // Close the current stage (the one containing the button)
-            deletePolicyHolderButton.getScene().getWindow().hide();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        String url = "/org/example/asm2_insurance_claim_management_system/Admin/deletePolicyHolder.fxml";
+        createSceneAdmin(url, deletePolicyHolderButton);
     }
     @FXML
     protected void OnViewPolicyHolderButton(){
-        try {
-            // Load the Admin.fxml file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/asm2_insurance_claim_management_system/Admin/viewPolicyHolder.fxml"));
+        String url = "/org/example/asm2_insurance_claim_management_system/Admin/viewPolicyHolder.fxml";
+        createSceneAdmin(url, viewPolicyHolderButton);
+    }
 
-            // Load the root element (in this case, VBox)
-            VBox adminRoot = loader.load();
-
-            // Create a new stage for the Admin UI
-            Stage adminStage = new Stage();
-            adminStage.setTitle("Admin Page");
-            adminStage.setScene(new Scene(adminRoot, 400, 320));
-
-            // Show the Admin UI stage
-            adminStage.show();
-
-            // Close the current stage (the one containing the button)
-            viewPolicyHolderButton.getScene().getWindow().hide();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+    @FXML
+    protected void OnCreatePolicyOwnerButton() {
+        String url = "/org/example/asm2_insurance_claim_management_system/Admin/createPolicyOwner.fxml";
+        createSceneAdmin(url,createPolicyOwnerButton);
+    }
+    @FXML
+    protected void OnUpdatePolicyOwnerButton(){
+        String url = "/org/example/asm2_insurance_claim_management_system/Admin/updatePolicyOwner.fxml";
+        createSceneAdmin(url, updatePolicyOwnerButton);
+    }
+    @FXML
+    protected void OnDeletePolicyOwnerButton(){
+        String url = "/org/example/asm2_insurance_claim_management_system/Admin/deletePolicyOwner.fxml";
+        createSceneAdmin(url, deletePolicyOwnerButton);
+    }
+    @FXML
+    protected void OnViewPolicyOwnerButton(){
+        String url = "/org/example/asm2_insurance_claim_management_system/Admin/viewPolicyOwner.fxml";
+        createSceneAdmin(url, viewPolicyOwnerButton);
     }
     @FXML
     private void goBack(ActionEvent event) {
-
-
         try {
             // Load the previous FXML file (e.g., the main menu)
             Parent root = FXMLLoader.load(getClass().getResource("/org/example/asm2_insurance_claim_management_system/login.fxml"));

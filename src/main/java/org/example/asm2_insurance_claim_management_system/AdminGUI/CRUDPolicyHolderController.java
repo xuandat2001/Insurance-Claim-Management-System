@@ -39,8 +39,7 @@ public class CRUDPolicyHolderController implements CRUDoperation {
     private TextField textFieldPolicyOwner;
     @FXML
     private TextField textFieldDate;
-    @FXML
-    private Button viewPolicyHolderButton;
+
 
 
     // Attributes of update()
@@ -57,6 +56,9 @@ public class CRUDPolicyHolderController implements CRUDoperation {
     // Attributes of view()
     @FXML
     private TextField viewPolicyHolder;
+    @FXML
+    private Button viewPolicyHolderButton;
+
 
 
 
@@ -201,7 +203,6 @@ public class CRUDPolicyHolderController implements CRUDoperation {
             if (session != null) {
                 session.close();
             }
-            sessionFactory.close();
         }
     }
 
@@ -270,7 +271,7 @@ public class CRUDPolicyHolderController implements CRUDoperation {
                 // Load the Admin.fxml file
                 // Create a new stage (window)
                 displayPolicyHolderDetails(policyHolder);
-                viewPolicyHolder.getScene().getWindow().hide();
+                viewPolicyHolderButton.getScene().getWindow().hide();
 
 
             } else {
@@ -295,7 +296,7 @@ public class CRUDPolicyHolderController implements CRUDoperation {
     }
 
 
-    // Method to display policy holder details in a new window
+    // Method to display policyholder details in a new window
     private void displayPolicyHolderDetails(PolicyHolder policyHolder) {
         // Create a new stage (window)
         Stage codeStage = new Stage();
@@ -304,11 +305,11 @@ public class CRUDPolicyHolderController implements CRUDoperation {
         // Create a VBox to hold the code
         VBox codeContainer = new VBox();
         Label codeLabel = new Label("PolicyHolder: " + "\n" +
-                "customerId='" + policyHolder.getId() + "'\n" +
-                "password='" + policyHolder.getPassword() + "'\n" +
-                "fullName='" + policyHolder.getFullName() + "'\n" +
-                "insuranceCard=" + policyHolder.getInsuranceCard().getCardNumber() + "\n" +
-                "policyOwner=" + policyHolder.getPolicyOwner().getFullName()
+                "CustomerId: " + policyHolder.getId() + "'\n" +
+                "Password: " + policyHolder.getPassword() + "'\n" +
+                "FullName: " + policyHolder.getFullName() + "'\n" +
+                "InsuranceCard: " + policyHolder.getInsuranceCard().getCardNumber() + "\n" +
+                "PolicyOwner: " + policyHolder.getPolicyOwner().getFullName()
         );
 
         // Add the code label to the VBox
