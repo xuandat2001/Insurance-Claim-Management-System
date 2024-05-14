@@ -2,15 +2,15 @@ package org.example.asm2_insurance_claim_management_system.Interface;
 
 public interface SuperCustomer {
 
-    public boolean fileClaim();
+    public boolean filePolicyHolderClaim();
 
-    public boolean updateClaim();
+    public boolean updatePolicyHolderClaim();
 
-    public boolean retrieveClaim();
+    public boolean retrievePolicyHolderClaim();
 
-    public boolean updateInfo();
+    public boolean updatePolicyHolderInfo();
 
-    public boolean showInfo();
+    public boolean showPolicyHolderInfo();
 
     public boolean fileClaimForDependent();
 

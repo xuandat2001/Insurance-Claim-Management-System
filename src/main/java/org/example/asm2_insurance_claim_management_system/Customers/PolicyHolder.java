@@ -289,7 +289,7 @@ public class PolicyHolder extends Customer implements SuperCustomer, UserAuthent
     }
 
     @Override
-    public boolean fileClaim() {
+    public boolean filePolicyHolderClaim() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the claimID (6 character): ");
         String claimID = scanner.nextLine();
@@ -334,7 +334,7 @@ public class PolicyHolder extends Customer implements SuperCustomer, UserAuthent
     }
 
     @Override
-    public boolean updateClaim() {
+    public boolean updatePolicyHolderClaim() {
 
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         Session session = null;
@@ -382,7 +382,7 @@ public class PolicyHolder extends Customer implements SuperCustomer, UserAuthent
 
 
     @Override
-    public boolean retrieveClaim() {
+    public boolean retrievePolicyHolderClaim() {
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         Session session = sessionFactory.openSession();
 
@@ -415,7 +415,7 @@ public class PolicyHolder extends Customer implements SuperCustomer, UserAuthent
 
 
     @Override
-    public boolean showInfo() {
+    public boolean showPolicyHolderInfo() {
         // Create a Hibernate SessionFactory
 //        SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
@@ -454,7 +454,7 @@ public class PolicyHolder extends Customer implements SuperCustomer, UserAuthent
     }
 
     @Override
-    public boolean updateInfo() {
+    public boolean updatePolicyHolderInfo() {
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         Session session = null;
         Scanner scanner = new Scanner(System.in);

@@ -2,6 +2,7 @@ package org.example.asm2_insurance_claim_management_system.Customers;
 import jakarta.persistence.*;
 import org.example.asm2_insurance_claim_management_system.InsuranceCard.InsuranceCard;
 import org.example.asm2_insurance_claim_management_system.Interface.CRUDoperation;
+import org.example.asm2_insurance_claim_management_system.Interface.SuperCustomer;
 import org.example.asm2_insurance_claim_management_system.Interface.UserAuthentication;
 import org.example.asm2_insurance_claim_management_system.Login.Authentication;
 import org.hibernate.Session;
@@ -16,7 +17,7 @@ import java.util.Scanner;
 @Entity
 @Table(name = "PolicyOwner")
 @PrimaryKeyJoinColumn(name = "PolicyOwnerId") // Discriminator value for PolicyOwner
-public class PolicyOwner extends Customer implements UserAuthentication {
+public class PolicyOwner extends Customer implements UserAuthentication, SuperCustomer {
 
 
     @Column(name = "Location")
@@ -247,4 +248,53 @@ public class PolicyOwner extends Customer implements UserAuthentication {
         return policyOwnerList;
     }
 
+    @Override
+    public boolean filePolicyHolderClaim() {
+        return false;
+    }
+
+    @Override
+    public boolean updatePolicyHolderClaim() {
+        return false;
+    }
+
+    @Override
+    public boolean retrievePolicyHolderClaim() {
+        return false;
+    }
+
+    @Override
+    public boolean updatePolicyHolderInfo() {
+        return false;
+    }
+
+    @Override
+    public boolean showPolicyHolderInfo() {
+        return false;
+    }
+
+    @Override
+    public boolean fileClaimForDependent() {
+        return false;
+    }
+
+    @Override
+    public boolean updateClaimForDependent() {
+        return false;
+    }
+
+    @Override
+    public boolean retrieveClaimForDependent() {
+        return false;
+    }
+
+    @Override
+    public boolean updateInfoForDependent() {
+        return false;
+    }
+
+    @Override
+    public boolean getAllDependent() {
+        return false;
+    }
 }

@@ -30,7 +30,7 @@ public class CRUDClaim extends PolicyHolder implements SuperCustomer {
     private Button saveClaimButton;
 
     @Override
-    public boolean fileClaim() {
+    public boolean filePolicyHolderClaim() {
         String claimID = textFieldClaimID.getText();
         double claimAmount = Double.parseDouble(textFieldClaimAmount.getText());
 
@@ -73,17 +73,17 @@ public class CRUDClaim extends PolicyHolder implements SuperCustomer {
     }
 
     @Override
-    public boolean updateClaim() {
+    public boolean updatePolicyHolderClaim() {
         return false;
     }
 
     @Override
-    public boolean retrieveClaim() {
+    public boolean retrievePolicyHolderClaim() {
         return false;
     }
 
     @Override
-    public boolean updateInfo() {
+    public boolean updatePolicyHolderInfo() {
         return false;
     }
 
