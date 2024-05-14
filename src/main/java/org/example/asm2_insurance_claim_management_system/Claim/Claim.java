@@ -38,9 +38,6 @@ public class Claim {
     @Column(name = "Status")
     private Status status;
 
-    @Column (name = "Approval")
-    private Approval approval;
-
     @ManyToOne
     @JoinColumn(name = "CardNumber") // foreign key referencing InsuranceCard primary key
     private InsuranceCard insuranceCard;
@@ -130,11 +127,5 @@ public class Claim {
         this.claimAmount = claimAmount;
     }
 
-    public Approval getApproval() {
-        return approval;
-    }
 
-    public void setApproval(Approval approval) {
-        this.approval = approval;
-    }
 }

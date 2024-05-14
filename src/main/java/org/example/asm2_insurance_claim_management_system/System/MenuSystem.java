@@ -24,7 +24,7 @@ public class MenuSystem {
         Dependent dependent = new Dependent();
         if (login.authenticate(admin.listOfAdmin(), userName, password) != null) {
             System.out.println("Login successfully (Admin)");
-            policyHolder.create();
+//            policyHolder.create();
 //            policyHolder.update();
 //            policyHolder.delete();
             //policyHolder.view();
@@ -32,14 +32,26 @@ public class MenuSystem {
 //            policyHolder.retrieveClaim();
 //            policyHolder.createClaim();
 //            dependent.create();
+//            dependent.delete();
+//            policyOwner.create();
+
 //            Claim claim = new Claim();
 //            claim.createClaim();
 //            claim.updateClaim();
         } else if (login.authenticate(policyHolder.listOfPolicyHolder(), userName, password) != null) {
             System.out.println("Login successfully (PolicyHolder)");
             PolicyHolder authenticatedPolicyHolder = (PolicyHolder) login.authenticate(policyHolder.listOfPolicyHolder(), userName, password);
-            authenticatedPolicyHolder.retrieveClaim();
-//            policyHolder.createClaim();
+//            authenticatedPolicyHolder.fileClaim();
+//            authenticatedPolicyHolder.retrieveClaim();
+//            authenticatedPolicyHolder.updateClaim();
+//            authenticatedPolicyHolder.showInfo();
+//            authenticatedPolicyHolder.getAllDependent();
+//            authenticatedPolicyHolder.updateInfo();
+//            authenticatedPolicyHolder.fileClaimForDependent();
+////            authenticatedPolicyHolder.updateClaimForDependent();
+//                authenticatedPolicyHolder.retrieveClaimForDependent();
+//            authenticatedPolicyHolder.updateInfoForDependent();
+
         } else if (login.authenticate(policyOwner.listOfPolicyOwner(), userName, password) != null) {
             System.out.println("Login successfully (PolicyOwner)");
             PolicyOwner authenticatedPolicyOwner = (PolicyOwner) login.authenticate(policyOwner.listOfPolicyOwner(), userName, password);
@@ -47,7 +59,8 @@ public class MenuSystem {
         } else if (login.authenticate(dependent.listOfDependent(), userName, password) != null) {
             System.out.println("Login successfully (Dependent)");
             Dependent authenticatedDependent = (Dependent) login.authenticate(dependent.listOfDependent(), userName, password);
-
+//            authenticatedDependent.showInfo();
+//            authenticatedDependent.retrieveClaim();
         } else {
             System.out.println("Username and Password are not correct");
         }
