@@ -3,7 +3,7 @@ import jakarta.persistence.*;
 
 
 @Entity
-@Table(name = "Claim")
+@Table(name = "BankInfo")
 public class BankInfo {
     @Id
     @Column(name = "BankId")
@@ -13,10 +13,11 @@ public class BankInfo {
     private String bankName;
 
     @Column(name = "OwnerName")
-    private String OwnerName;
+    private String ownerName;
 
     @Column(name = "AccountNumber")
     private String accountNumber;
+
 
 
     public BankInfo() {
@@ -31,7 +32,7 @@ public class BankInfo {
     }
 
     public String getOwnerName() {
-        return OwnerName;
+        return ownerName;
     }
 
     public String getAccountNumber() {
@@ -47,7 +48,7 @@ public class BankInfo {
     }
 
     public void setOwnerName(String ownerName) {
-        OwnerName = ownerName;
+        this.ownerName = ownerName;
     }
 
     public void setAccountNumber(String accountNumber) {

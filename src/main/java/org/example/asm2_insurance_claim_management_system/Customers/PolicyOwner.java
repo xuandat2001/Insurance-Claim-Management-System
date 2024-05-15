@@ -1,5 +1,9 @@
 package org.example.asm2_insurance_claim_management_system.Customers;
+
 import jakarta.persistence.*;
+import org.example.asm2_insurance_claim_management_system.Claim.BankInfo;
+import org.example.asm2_insurance_claim_management_system.Claim.Claim;
+import org.example.asm2_insurance_claim_management_system.Claim.Status;
 import org.example.asm2_insurance_claim_management_system.InsuranceCard.InsuranceCard;
 import org.example.asm2_insurance_claim_management_system.Interface.CRUDoperation;
 import org.example.asm2_insurance_claim_management_system.Interface.SuperCustomer;
@@ -28,8 +32,8 @@ public class PolicyOwner extends Customer implements UserAuthentication, SuperCu
         this.location = location;
     }
 
-    public PolicyOwner() {}
-
+    public PolicyOwner() {
+    }
 
 
     public String getLocation() {
@@ -188,14 +192,14 @@ public class PolicyOwner extends Customer implements UserAuthentication, SuperCu
         // Obtain a Hibernate Session
         Session session = sessionFactory.openSession();
 
-        List<PolicyOwner>policyOwnerList;
+        List<PolicyOwner> policyOwnerList;
         try {
             // Begin a transaction
             session.beginTransaction();
 
             // Perform a query
             policyOwnerList = session.createQuery("FROM PolicyOwner ", PolicyOwner.class).getResultList();
-            for (PolicyOwner policyOwner : policyOwnerList ){
+            for (PolicyOwner policyOwner : policyOwnerList) {
                 System.out.println("PolicyOwner ID: " + policyOwner.getId());
                 System.out.println("Full Name: " + policyOwner.getFullName());
                 System.out.println("Password: " + policyOwner.getPassword());
@@ -250,26 +254,296 @@ public class PolicyOwner extends Customer implements UserAuthentication, SuperCu
 
     @Override
     public boolean filePolicyHolderClaim() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the policy ID: ");
+        String policyHolderId = scanner.nextLine();
+        System.out.println("Enter the claimID (6 character): ");
+        String claimID = scanner.nextLine();
+        System.out.println("Enter the claim amount: ");
+        double claimAmount = scanner.nextDouble();
+        scanner.nextLine();
+        System.out.println("Set the Bank ID: ");
+        String bankID = scanner.nextLine();
+        System.out.println("Set the Bank Name: ");
+        String bankName = scanner.nextLine();
+        System.out.println("Set the Owner Name: ");
+        String ownerName = scanner.nextLine();
+        System.out.println("Set the Account Number: ");
+        String accountNumber = scanner.nextLine();
+
+
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        Session session = sessionFactory.openSession();
+
+// Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
+        String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE o.id = :policyOwnerId";
+        List<PolicyHolder> policyHolderList = session.createQuery(desiredPolicyHolder, PolicyHolder.class)
+                .setParameter("policyOwnerId", this.getId())
+                .getResultList();
+        for (PolicyHolder policyHolder : policyHolderList) {
+            if (!policyHolder.getId().equals(policyHolderId)) {
+                System.out.println("Policy Holder does not exist");
+            } else {
+                BankInfo bankInfo = new BankInfo();
+                bankInfo.setBankID(bankID);
+                bankInfo.setBankName(bankName);
+                bankInfo.setOwnerName(ownerName);
+                bankInfo.setAccountNumber(accountNumber);
+                Claim claim = new Claim();
+                claim.setClaimId(claimID);
+                claim.setClaimDate(LocalDate.now());
+                claim.setStatus(Status.NEW);
+                claim.setInsuranceCard(policyHolder.getInsuranceCard());
+                claim.setPolicyHolder(policyHolder);
+                claim.setClaimAmount(claimAmount);
+                claim.setDependent(null);
+                claim.setBankInfo(bankInfo);
+//         List of document
+
+                try {
+                    session.beginTransaction();
+                    session.save(bankInfo);
+                    session.save(claim);
+                    session.getTransaction().commit();
+                    System.out.println("Create claim successfully");
+                    return true;
+
+
+                } catch (Exception ex) {
+                    // Rollback the transaction in case of an exception
+                    session.getTransaction().rollback();
+                    ex.printStackTrace();
+                } finally {
+                    // Close the session and session factory
+//            session.close();
+//            sessionFactory.close();
+                    if (session != null) {
+                        session.close();
+                    }
+                }
+
+            }
+
+        }
+
         return false;
     }
 
     @Override
     public boolean updatePolicyHolderClaim() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the policy ID: ");
+        String policyHolderId = scanner.nextLine();
+        System.out.println("Enter the Claim ID (6 character): ");
+        String claimID = scanner.nextLine();
+        System.out.println("Enter the new Claim Amount: ");
+        double claimAmount = scanner.nextDouble();
+        scanner.nextLine();
+        System.out.println("Enter the new Bank Name:");
+        String bankName = scanner.nextLine();
+        System.out.println("Enter the new Bank Owner Name:");
+        String ownerName = scanner.nextLine();
+        System.out.println("Enter the new Bank Account Number:");
+        String accountNumber = scanner.nextLine();
+
+
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        Session session = sessionFactory.openSession();
+
+// Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
+        String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE o.id = :policyOwnerId";
+        List<PolicyHolder> policyHolderList = session.createQuery(desiredPolicyHolder, PolicyHolder.class)
+                .setParameter("policyOwnerId", this.getId())
+                .getResultList();
+        for (PolicyHolder policyHolder : policyHolderList) {
+            if (!policyHolder.getId().equals(policyHolderId)) {
+                System.out.println("Policy Holder does not exist");
+            } else {
+                try {
+                    session.beginTransaction();
+                    Claim claim = session.get(Claim.class, claimID);
+                    if (claimID == null) {
+                        System.out.println("Claim with claim ID" + claimID + "is not found");
+                        return false;
+                    }
+                    claim.setClaimAmount(claimAmount);
+                    claim.getBankInfo().setBankName(bankName);
+                    claim.getBankInfo().setOwnerName(ownerName);
+                    claim.getBankInfo().setAccountNumber(accountNumber);
+
+                    session.getTransaction().commit();
+                    System.out.println("Update Sucessfully");
+                    return true; // Update successful
+
+                } catch (Exception ex) {
+                    // Rollback the transaction in case of an exception
+                    session.getTransaction().rollback();
+                    ex.printStackTrace();
+                } finally {
+                    // Close the session and session factory
+//            session.close();
+//            sessionFactory.close();
+                    if (session != null) {
+                        session.close();
+                    }
+                }
+
+            }
+
+        }
+
         return false;
     }
 
     @Override
     public boolean retrievePolicyHolderClaim() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the Policy Holder ID: ");
+        String policyHolderId = scanner.nextLine();
+
+
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        Session session = sessionFactory.openSession();
+
+// Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
+        String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE o.id = :policyOwnerId";
+        List<PolicyHolder> policyHolderList = session.createQuery(desiredPolicyHolder, PolicyHolder.class)
+                .setParameter("policyOwnerId", this.getId())
+                .getResultList();
+        for (PolicyHolder policyHolder : policyHolderList) {
+            if (!policyHolder.getId().equals(policyHolderId)) {
+                System.out.println("Policy Holder does not exist");
+            } else {
+                try {
+                    session.beginTransaction();
+                    String desiredClaim = "SELECT c FROM Claim c WHERE c.policyHolder IS NOT NULL AND c.dependent IS NULL";
+                    List<Claim> claimList = session.createQuery(desiredClaim, Claim.class)
+                            .getResultList();
+                    for (Claim claim : claimList) {
+                        if (policyHolder.getId().equals(claim.getPolicyHolder().getId())) {
+                            System.out.println("Claim ID: " + claim.getClaimId());
+                            System.out.println("Claim Date: " + claim.getClaimDate());
+                            System.out.println("Claim Amount: " + claim.getClaimAmount());
+                            System.out.println("List of Document: " + claim.getListOfDocument());
+                            System.out.println("Claim Status: " + claim.getStatus());
+                            System.out.println("Card Number: " + claim.getInsuranceCard().getCardNumber());
+                            System.out.println("Policy Holder: " + claim.getPolicyHolder().getId());
+                            System.out.println("Bank ID: " + claim.getBankInfo().getBankID());
+                            System.out.println("Bank Name: " + claim.getBankInfo().getBankName());
+                            System.out.println("Owner Name: " + claim.getBankInfo().getOwnerName());
+                            System.out.println("Bank Account Number: " + claim.getBankInfo().getAccountNumber());
+                        }
+                    }
+                } catch (Exception ex) {
+                    // Rollback the transaction in case of an exception
+                    session.getTransaction().rollback();
+                    ex.printStackTrace();
+                } finally {
+                    // Close the session and session factory
+//            session.close();
+//            sessionFactory.close();
+                    if (session != null) {
+                        session.close();
+                    }
+                }
+
+            }
+
+        }
         return false;
     }
 
     @Override
     public boolean updatePolicyHolderInfo() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the Policy Holder ID: ");
+        String policyHolderId = scanner.nextLine();
+        System.out.println("Enter the full name: ");
+        String newDependentName = scanner.nextLine();
+        System.out.println("Enter the password: ");
+        String newPassword = scanner.nextLine();
+
+
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        Session session = sessionFactory.openSession();
+
+// Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
+        String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE o.id = :policyOwnerId";
+        List<PolicyHolder> policyHolderList = session.createQuery(desiredPolicyHolder, PolicyHolder.class)
+                .setParameter("policyOwnerId", this.getId())
+                .getResultList();
+        for (PolicyHolder policyHolder : policyHolderList) {
+            if (!policyHolder.getId().equals(policyHolderId)) {
+                System.out.println("Policy Holder does not exist");
+            } else  {
+                try {
+                    session = sessionFactory.openSession();
+                    session.beginTransaction();
+
+                    policyHolder = session.get(PolicyHolder.class, policyHolderId);
+                    policyHolder.setFullName(newDependentName);
+                    policyHolder.setPassword(newPassword);
+
+                    session.getTransaction().commit();
+                    System.out.println("Update Sucessfully");
+                    return true; // Update successful
+                } catch (Exception ex) {
+                    // Rollback the transaction in case of an exception
+                    session.getTransaction().rollback();
+                    ex.printStackTrace();
+                } finally {
+                    // Close the session and session factory
+//            session.close();
+//            sessionFactory.close();
+                    if (session != null) {
+                        session.close();
+                    }
+                }
+
+            }
+
+        }
+
         return false;
     }
 
     @Override
     public boolean showPolicyHolderInfo() {
+        // Create a Hibernate SessionFactory
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+
+        // Obtain a Hibernate Session
+        Session session = sessionFactory.openSession();
+
+
+        try {
+            // Begin a transaction
+            session.beginTransaction();
+
+            // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
+            String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE o.id = :policyOwnerId";
+            List<PolicyHolder> policyHolderList = session.createQuery(desiredPolicyHolder, PolicyHolder.class)
+                    .setParameter("policyOwnerId", this.getId())
+                    .getResultList();
+            for (PolicyHolder policyHolder : policyHolderList) {
+                System.out.println("Policy Holder ID: " + policyHolder.getId());
+                System.out.println("Full Name: " + policyHolder.getFullName());
+                System.out.println("Password: " + policyHolder.getPassword());
+            }
+
+            // Commit the transaction
+            session.getTransaction().commit();
+            return true;
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            // Close the session and session factory
+            session.close();
+            sessionFactory.close();
+        }
+
         return false;
     }
 

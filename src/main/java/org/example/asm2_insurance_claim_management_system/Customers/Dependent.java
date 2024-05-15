@@ -274,10 +274,11 @@ public class Dependent extends Customer implements UserAuthentication {
         Session session = sessionFactory.openSession();
 
         try {
-            session.beginTransaction();
-            List<Claim> claimList = session.createQuery("FROM Claim ", Claim.class).getResultList();
+            String desiredClaim = "SELECT c FROM Claim c WHERE c.dependent IS NOT NULL";
+            List<Claim> claimList = session.createQuery(desiredClaim, Claim.class)
+                    .getResultList();
             for (Claim claim : claimList) {
-                if (this.getId().equals(claim.getPolicyHolder().getId())) {
+                if (this.getId().equals(claim.getDependent().getId())) {
                     System.out.println("Claim ID: " + claim.getClaimId());
                     System.out.println("Claim Date: " + claim.getClaimDate());
                     System.out.println("Claim Amount: " + claim.getClaimAmount());
@@ -285,7 +286,11 @@ public class Dependent extends Customer implements UserAuthentication {
                     System.out.println("Claim Status: " + claim.getStatus());
                     System.out.println("Card Number: " + claim.getInsuranceCard().getCardNumber());
                     System.out.println("Policy Holder: " + claim.getPolicyHolder().getId());
-                    System.out.println("Dependent: " + claim.getDependent());
+                    System.out.println("Dependent: " + claim.getDependent().getId());
+                    System.out.println("Bank ID: " + claim.getBankInfo().getBankID());
+                    System.out.println("Bank Name: " + claim.getBankInfo().getBankName());
+                    System.out.println("Owner Name: " + claim.getBankInfo().getOwnerName());
+                    System.out.println("Bank Account Number: " + claim.getBankInfo().getAccountNumber());
                 }
             }
         } catch (Exception ex) {
@@ -316,7 +321,7 @@ public class Dependent extends Customer implements UserAuthentication {
                 System.out.println("Full Name: " + this.getFullName());
                 System.out.println("Password: " + this.getPassword());
                 System.out.println("Policy Holder: " + this.getPolicyHolder().getId());
-                System.out.println("Policy Holder: " + this.getPolicyOwner().getId());
+                System.out.println("Policy Owner: " + this.getPolicyOwner().getId());
                 System.out.println("Insurance Card: " + this.getPolicyHolder().getInsuranceCard().getCardNumber());
 
             // Commit the transaction

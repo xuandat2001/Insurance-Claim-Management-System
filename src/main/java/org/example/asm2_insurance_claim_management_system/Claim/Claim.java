@@ -50,6 +50,10 @@ public class Claim {
     @JoinColumn(name = "Dependent") // foreign key referencing Dependent primary key
     private Dependent dependent;
 
+    @OneToOne
+    @JoinColumn(name = "BankInfo")
+    private BankInfo bankInfo;
+
     // Constructors, getters, and setters
 
     public Claim() {
@@ -127,5 +131,11 @@ public class Claim {
         this.claimAmount = claimAmount;
     }
 
+    public BankInfo getBankInfo() {
+        return bankInfo;
+    }
 
+    public void setBankInfo(BankInfo bankInfo) {
+        this.bankInfo = bankInfo;
+    }
 }

@@ -1,6 +1,7 @@
 package org.example.asm2_insurance_claim_management_system.Customers;
 
 import jakarta.persistence.*;
+import org.example.asm2_insurance_claim_management_system.Claim.BankInfo;
 import org.example.asm2_insurance_claim_management_system.Claim.Claim;
 import org.example.asm2_insurance_claim_management_system.Claim.Status;
 import org.example.asm2_insurance_claim_management_system.InsuranceCard.InsuranceCard;
@@ -25,7 +26,7 @@ public class PolicyHolder extends Customer implements SuperCustomer, UserAuthent
     private InsuranceCard insuranceCard;
 
     @ManyToOne
-    @JoinColumn(name = "PolicyOwnerId") // foreign key referencing InsuranceCard's primary key
+    @JoinColumn(name = "PolicyOwnerId")
     private PolicyOwner policyOwner;
 
 
@@ -295,11 +296,25 @@ public class PolicyHolder extends Customer implements SuperCustomer, UserAuthent
         String claimID = scanner.nextLine();
         System.out.println("Enter the claim amount: ");
         double claimAmount = scanner.nextDouble();
+        scanner.nextLine();
+        System.out.println("Set the Bank ID: ");
+        String bankID = scanner.nextLine();
+        System.out.println("Set the Bank Name: ");
+        String bankName = scanner.nextLine();
+        System.out.println("Set the Owner Name: ");
+        String ownerName = scanner.nextLine();
+        System.out.println("Set the Account Number: ");
+        String accountNumber = scanner.nextLine();
 
 
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         Session session = sessionFactory.openSession();
 
+        BankInfo bankInfo = new BankInfo();
+        bankInfo.setBankID(bankID);
+        bankInfo.setBankName(bankName);
+        bankInfo.setOwnerName(ownerName);
+        bankInfo.setAccountNumber(accountNumber);
         Claim claim = new Claim();
         claim.setClaimId(claimID);
         claim.setClaimDate(LocalDate.now());
@@ -307,10 +322,13 @@ public class PolicyHolder extends Customer implements SuperCustomer, UserAuthent
         claim.setInsuranceCard(this.insuranceCard);
         claim.setPolicyHolder(this);
         claim.setClaimAmount(claimAmount);
+        claim.setBankInfo(bankInfo);
         // List of document
+
 
         try {
             session.beginTransaction();
+            session.save(bankInfo);
             session.save(claim);
             session.getTransaction().commit();
             System.out.println("Create claim successfully");
@@ -347,6 +365,13 @@ public class PolicyHolder extends Customer implements SuperCustomer, UserAuthent
             String claimID = scanner.nextLine();
             System.out.println("Enter the new Claim Amount: ");
             double claimAmount = scanner.nextDouble();
+            scanner.nextLine();
+            System.out.println("Enter the new Bank Name:");
+            String bankName = scanner.nextLine();
+            System.out.println("Enter the new Bank Owner Name:");
+            String ownerName = scanner.nextLine();
+            System.out.println("Enter the new Bank Account Number:");
+            String accountNumber = scanner.nextLine();
             // List of document
 
             session.beginTransaction();
@@ -357,6 +382,9 @@ public class PolicyHolder extends Customer implements SuperCustomer, UserAuthent
             }
 
             claim.setClaimAmount(claimAmount);
+            claim.getBankInfo().setBankName(bankName);
+            claim.getBankInfo().setOwnerName(ownerName);
+            claim.getBankInfo().setAccountNumber(accountNumber);
 
             session.getTransaction().commit();
             System.out.println("Update Sucessfully");
@@ -388,7 +416,9 @@ public class PolicyHolder extends Customer implements SuperCustomer, UserAuthent
 
         try {
             session.beginTransaction();
-            List<Claim> claimList = session.createQuery("FROM Claim ", Claim.class).getResultList();
+            String desiredClaim = "SELECT c FROM Claim c WHERE c.dependent IS NULL";
+            List<Claim> claimList = session.createQuery(desiredClaim, Claim.class)
+                    .getResultList();
             for (Claim claim : claimList) {
                 if (this.getId().equals(claim.getPolicyHolder().getId())) {
                     System.out.println("Claim ID: " + claim.getClaimId());
@@ -398,7 +428,11 @@ public class PolicyHolder extends Customer implements SuperCustomer, UserAuthent
                     System.out.println("Claim Status: " + claim.getStatus());
                     System.out.println("Card Number: " + claim.getInsuranceCard().getCardNumber());
                     System.out.println("Policy Holder: " + claim.getPolicyHolder().getId());
-                    System.out.println("Dependent: " + claim.getDependent());
+                    System.out.println("Bank ID: " + claim.getBankInfo().getBankID());
+                    System.out.println("Bank Name: " + claim.getBankInfo().getBankName());
+                    System.out.println("Owner Name: " + claim.getBankInfo().getOwnerName());
+                    System.out.println("Bank Account Number: " + claim.getBankInfo().getAccountNumber());
+
                 }
             }
         } catch (Exception ex) {
@@ -503,13 +537,22 @@ public class PolicyHolder extends Customer implements SuperCustomer, UserAuthent
         String claimID = scanner.nextLine();
         System.out.println("Enter the claim amount: ");
         double claimAmount = scanner.nextDouble();
+        scanner.nextLine();
+        System.out.println("Set the Bank ID: ");
+        String bankID = scanner.nextLine();
+        System.out.println("Set the Bank Name: ");
+        String bankName = scanner.nextLine();
+        System.out.println("Set the Owner Name: ");
+        String ownerName = scanner.nextLine();
+        System.out.println("Set the Account Number: ");
+        String accountNumber = scanner.nextLine();
 
 
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         Session session = sessionFactory.openSession();
 
 // Assuming policyHolderId is the ID of the PolicyHolder you want to retrieve dependents for
-        String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyHolder p WHERE p.id = :policyHolderId";
+        String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyHolder h WHERE h.id = :policyHolderId";
         List<Dependent> dependentList = session.createQuery(desiredDependent, Dependent.class)
                 .setParameter("policyHolderId", this.getId())
                 .getResultList();
@@ -517,6 +560,11 @@ public class PolicyHolder extends Customer implements SuperCustomer, UserAuthent
             if (!dependent.getId().equals(dependentId)) {
                 System.out.println("Dependent does not exist");
             } else {
+                BankInfo bankInfo = new BankInfo();
+                bankInfo.setBankID(bankID);
+                bankInfo.setBankName(bankName);
+                bankInfo.setOwnerName(ownerName);
+                bankInfo.setAccountNumber(accountNumber);
                 Claim claim = new Claim();
                 claim.setClaimId(claimID);
                 claim.setClaimDate(LocalDate.now());
@@ -525,10 +573,12 @@ public class PolicyHolder extends Customer implements SuperCustomer, UserAuthent
                 claim.setPolicyHolder(this);
                 claim.setClaimAmount(claimAmount);
                 claim.setDependent(dependent);
+                claim.setBankInfo(bankInfo);
 //         List of document
 
                 try {
                     session.beginTransaction();
+                    session.save(bankInfo);
                     session.save(claim);
                     session.getTransaction().commit();
                     System.out.println("Create claim successfully");
@@ -565,13 +615,20 @@ public class PolicyHolder extends Customer implements SuperCustomer, UserAuthent
         String claimID = scanner.nextLine();
         System.out.println("Enter the new Claim Amount: ");
         double claimAmount = scanner.nextDouble();
+        scanner.nextLine();
+        System.out.println("Enter the new Bank Name:");
+        String bankName = scanner.nextLine();
+        System.out.println("Enter the new Bank Owner Name:");
+        String ownerName = scanner.nextLine();
+        System.out.println("Enter the new Bank Account Number:");
+        String accountNumber = scanner.nextLine();
 
 
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         Session session = sessionFactory.openSession();
 
 // Assuming policyHolderId is the ID of the PolicyHolder you want to retrieve dependents for
-        String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyHolder p WHERE p.id = :policyHolderId";
+        String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyHolder h WHERE h.id = :policyHolderId";
         List<Dependent> dependentList = session.createQuery(desiredDependent, Dependent.class)
                 .setParameter("policyHolderId", this.getId())
                 .getResultList();
@@ -587,6 +644,9 @@ public class PolicyHolder extends Customer implements SuperCustomer, UserAuthent
                         return false;
                     }
                     claim.setClaimAmount(claimAmount);
+                    claim.getBankInfo().setBankName(bankName);
+                    claim.getBankInfo().setOwnerName(ownerName);
+                    claim.getBankInfo().setAccountNumber(accountNumber);
 
                     session.getTransaction().commit();
                     System.out.println("Update Sucessfully");
@@ -624,7 +684,7 @@ public class PolicyHolder extends Customer implements SuperCustomer, UserAuthent
         Session session = sessionFactory.openSession();
 
 // Assuming policyHolderId is the ID of the PolicyHolder you want to retrieve dependents for
-        String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyHolder p WHERE p.id = :policyHolderId";
+        String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyHolder h WHERE h.id = :policyHolderId";
         List<Dependent> dependentList = session.createQuery(desiredDependent, Dependent.class)
                 .setParameter("policyHolderId", this.getId())
                 .getResultList();
@@ -647,6 +707,10 @@ public class PolicyHolder extends Customer implements SuperCustomer, UserAuthent
                             System.out.println("Card Number: " + claim.getInsuranceCard().getCardNumber());
                             System.out.println("Policy Holder: " + claim.getPolicyHolder().getId());
                             System.out.println("Dependent: " + claim.getDependent());
+                            System.out.println("Bank ID: " + claim.getBankInfo().getBankID());
+                            System.out.println("Bank Name: " + claim.getBankInfo().getBankName());
+                            System.out.println("Owner Name: " + claim.getBankInfo().getOwnerName());
+                            System.out.println("Bank Account Number: " + claim.getBankInfo().getAccountNumber());
                         }
                     }
                 } catch (Exception ex) {
@@ -684,7 +748,7 @@ public class PolicyHolder extends Customer implements SuperCustomer, UserAuthent
         Session session = sessionFactory.openSession();
 
 // Assuming policyHolderId is the ID of the PolicyHolder you want to retrieve dependents for
-        String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyHolder p WHERE p.id = :policyHolderId";
+        String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyHolder h WHERE h.id = :policyHolderId";
         List<Dependent> dependentList = session.createQuery(desiredDependent, Dependent.class)
                 .setParameter("policyHolderId", this.getId())
                 .getResultList();
@@ -730,13 +794,16 @@ public class PolicyHolder extends Customer implements SuperCustomer, UserAuthent
         // Obtain a Hibernate Session
         Session session = sessionFactory.openSession();
 
-        List<Dependent> dependentList;
         try {
             // Begin a transaction
             session.beginTransaction();
 
             // Perform a query
-            dependentList = session.createQuery("FROM Dependent ", Dependent.class).getResultList();
+            // Assuming policyHolderId is the ID of the PolicyHolder you want to retrieve dependents for
+            String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyHolder h WHERE h.id = :policyHolderId";
+            List<Dependent> dependentList = session.createQuery(desiredDependent, Dependent.class)
+                    .setParameter("policyHolderId", this.getId())
+                    .getResultList();
             for (Dependent dependent : dependentList) {
                 System.out.println("Dependent ID: " + dependent.getId());
                 System.out.println("Full Name: " + dependent.getFullName());
