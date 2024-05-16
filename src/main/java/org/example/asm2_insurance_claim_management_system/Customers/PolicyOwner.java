@@ -29,6 +29,8 @@ public class PolicyOwner extends Customer implements UserAuthentication, SuperCu
 
     @Column(name = "insuranceFee")
     private Double insuranceFee;
+
+    private static final double DEPENDENT_FEE = 0.6;
     public PolicyOwner(String policyOwnerId, String location) {
 
         this.location = location;
@@ -52,7 +54,8 @@ public class PolicyOwner extends Customer implements UserAuthentication, SuperCu
     public void setLocation(String location) {
         this.location = location;
     }
-//    public abstract double calcInsuranceFee();
+
+
     public boolean create() {
 
         Scanner scanner = new Scanner(System.in);
@@ -834,7 +837,7 @@ public class PolicyOwner extends Customer implements UserAuthentication, SuperCu
             session.beginTransaction();
 
             // Perform a query
-// Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
+// Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve Dependent for
             String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyOwner o WHERE o.id = :policyOwnerId";
             List<Dependent> dependentList = session.createQuery(desiredDependent, Dependent.class)
                     .setParameter("policyOwnerId", this.getId())
@@ -1086,5 +1089,72 @@ public class PolicyOwner extends Customer implements UserAuthentication, SuperCu
             }
         }
         return false;
-    }}
+    }
+
+    public int getNumberOfPolicyHolder() {
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        // Obtain a Hibernate Session
+        Session session = sessionFactory.openSession();
+
+        try {
+            // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
+            String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE o.id = :policyOwnerId";
+            List<PolicyHolder> policyHolderList = session.createQuery(desiredPolicyHolder, PolicyHolder.class)
+                    .setParameter("policyOwnerId", this.getId())
+                    .getResultList();
+
+            int count = policyHolderList.size();
+            return count;
+//            System.out.println(count);
+
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            // Close the session and session factory
+            session.close();
+        }
+
+        return 0;
+    }
+
+    public int getNumberOfDependent() {
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        // Obtain a Hibernate Session
+        Session session = sessionFactory.openSession();
+
+        try {
+            // Perform a query
+// Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve Dependent for
+            String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyOwner o WHERE o.id = :policyOwnerId";
+            List<Dependent> dependentList = session.createQuery(desiredDependent, Dependent.class)
+                    .setParameter("policyOwnerId", this.getId())
+                    .getResultList();
+
+            int count = dependentList.size();
+            return count;
+//            System.out.println(count);
+
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            // Close the session and session factory
+            session.close();
+        }
+        return 0;
+    }
+
+    public double calcInsuranceFee() {
+        double policyHolderFee = this.getNumberOfPolicyHolder() * this.getInsuranceFee();
+        double dependentFee = this.getNumberOfDependent() * this.getInsuranceFee() * DEPENDENT_FEE;
+        double totalInsuranceFee = policyHolderFee + dependentFee;
+        System.out.println("Total Insurance Fee have to pay yearly: " + totalInsuranceFee);
+        return 0;
+    }
+
+}
+
 
