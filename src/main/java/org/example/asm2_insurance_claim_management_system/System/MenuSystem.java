@@ -5,6 +5,8 @@ import org.example.asm2_insurance_claim_management_system.Customers.Dependent;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyHolder;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyOwner;
 import org.example.asm2_insurance_claim_management_system.Login.Authentication;
+import org.example.asm2_insurance_claim_management_system.Providers.Manager;
+import org.example.asm2_insurance_claim_management_system.Providers.Surveyor;
 
 
 import java.util.Scanner;
@@ -26,7 +28,7 @@ public class MenuSystem {
 //            policyHolder.create();
 //            policyHolder.update();
 //            policyHolder.delete();
-            //policyHolder.view();
+//            policyHolder.view();
 //            Dependent dependent = new Dependent();
 //            policyHolder.retrieveClaim();
 //            policyHolder.createClaim();
@@ -36,6 +38,7 @@ public class MenuSystem {
 //            Claim claim = new Claim();
 //            claim.createClaim();
 //            claim.updateClaim();
+
         } else if (user instanceof PolicyHolder) {
             System.out.println("Login successfully (PolicyHolder)");
             PolicyHolder authenticatedPolicyHolder = (PolicyHolder) login.authenticate( userName, password);
@@ -64,6 +67,19 @@ public class MenuSystem {
             Dependent authenticatedDependent = (Dependent) login.authenticate(userName, password);
 //            authenticatedDependent.showInfo();
 //            authenticatedDependent.retrieveClaim();
+
+        } else if (user instanceof Surveyor) {
+            System.out.println("Login successfully (Surveyor)");
+            Surveyor authenticatedSurveyor = (Surveyor) login.authenticate(userName, password);
+//            authenticatedSurveyor.requireMoreInfoOnClaim();
+//            authenticatedSurveyor.proposeClaim();
+
+        } else if (user instanceof Manager) {
+            System.out.println("Login successfully (Manager)");
+            Manager authenticatedManager = (Manager) login.authenticate(userName, password);
+//            authenticatedManager.approveClaim();
+//            authenticatedManager.rejectClaim();
+
         } else {
             System.out.println("Username and Password are not correct");
         }

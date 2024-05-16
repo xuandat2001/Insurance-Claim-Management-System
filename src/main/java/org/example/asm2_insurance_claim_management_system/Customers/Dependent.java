@@ -28,6 +28,7 @@ public class Dependent extends Customer implements UserAuthentication {
 
     }
 
+
     public PolicyHolder getPolicyHolder() {
         return policyHolder;
     }

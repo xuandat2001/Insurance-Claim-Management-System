@@ -2,18 +2,10 @@ package org.example.asm2_insurance_claim_management_system.Claim;
 
 import jakarta.persistence.*;
 import org.example.asm2_insurance_claim_management_system.Customers.Dependent;
-import org.example.asm2_insurance_claim_management_system.Customers.HibernateSingleton;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyHolder;
-import org.example.asm2_insurance_claim_management_system.Customers.PolicyOwner;
 import org.example.asm2_insurance_claim_management_system.InsuranceCard.InsuranceCard;
-import org.example.asm2_insurance_claim_management_system.Interface.SuperCustomer;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Scanner;
 
 
 @Entity
@@ -36,6 +28,7 @@ public class Claim {
     private double claimAmount;
 
     @Column(name = "Status")
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     @ManyToOne
@@ -54,9 +47,31 @@ public class Claim {
     @JoinColumn(name = "BankInfo")
     private BankInfo bankInfo;
 
+    @Column(name = "RequiredInfo")
+    private String requiredinfo;
+
+    @Column(name = "Approval")
+    private String approval;
+
     // Constructors, getters, and setters
 
     public Claim() {
+    }
+
+    public String getRequiredinfo() {
+        return requiredinfo;
+    }
+
+    public void setRequiredinfo(String requiredinfo) {
+        this.requiredinfo = requiredinfo;
+    }
+
+    public String getApproval() {
+        return approval;
+    }
+
+    public void setApproval(String approval) {
+        this.approval = approval;
     }
 
     public String getClaimId() {
@@ -137,5 +152,40 @@ public class Claim {
 
     public void setBankInfo(BankInfo bankInfo) {
         this.bankInfo = bankInfo;
+    }
+
+    @Override
+    public String toString() {
+        return "ClaimId = " + claimId + '\n' +
+                "claimDate = " + claimDate +
+                ", listOfDocument = " + listOfDocument +
+                ", claimAmount = " + claimAmount + '\n' +
+                "insuranceCard = " + insuranceCard.getCardNumber() +
+                ", policyHolder = " + policyHolder.getFullName() +
+                ", dependent = " + dependent.getFullName() +
+                ", bankInfo = " + bankInfo.getBankID() + "\n";
+    }
+
+    public void showInfo(){
+        if (this.getDependent() == null){
+            System.out.println("ClaimId = " + claimId + '\n' +
+                    "claimDate = " + claimDate +
+                    ", listOfDocument = " + listOfDocument +
+                    ", claimAmount = " + claimAmount + '\n' +
+                    "insuranceCard = " + insuranceCard.getCardNumber() +
+                    ", policyHolder = " + policyHolder.getFullName() +
+                    ", dependent = null" +
+                    ", bankInfo = " + bankInfo.getBankID() + "\n");
+        }
+        else {
+            System.out.println("ClaimId = " + claimId + '\n' +
+                    "claimDate = " + claimDate +
+                    ", listOfDocument = " + listOfDocument +
+                    ", claimAmount = " + claimAmount + '\n' +
+                    "insuranceCard = " + insuranceCard.getCardNumber() +
+                    ", policyHolder = " + policyHolder.getFullName() +
+                    ", dependent = " + dependent.getFullName() +
+                    ", bankInfo = " + bankInfo.getBankID() + "\n");
+        }
     }
 }
