@@ -7,10 +7,16 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.asm2_insurance_claim_management_system.Admin.Admin;
+import org.example.asm2_insurance_claim_management_system.AdminGUI.AdminController;
+import org.example.asm2_insurance_claim_management_system.Alert.ShowAlert;
 import org.example.asm2_insurance_claim_management_system.Customers.Dependent;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyHolder;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyOwner;
+import org.example.asm2_insurance_claim_management_system.Login.AdminControllerLogin;
 import org.example.asm2_insurance_claim_management_system.Login.Authentication;
+import org.example.asm2_insurance_claim_management_system.Login.PolicyHolderControllerLogin;
+import org.example.asm2_insurance_claim_management_system.Login.PolicyOwnerControllerLogin;
+import org.example.asm2_insurance_claim_management_system.PolicyHolderGUI.FeaturesPolicyHolder;
 
 import java.io.IOException;
 
@@ -27,69 +33,63 @@ public class LoginController {
 //    private Button createPolicyHolderButton;
 
     @FXML
-    protected void onLoginButtonClick() {
+    protected void onLoginButtonClick() throws IOException {
         String userName = textField.getText();
         String password = passwordField.getText();
         Authentication login = new Authentication();
-        Admin admin = Admin.getInstance();
-        PolicyHolder policyHolder = new PolicyHolder();
-        PolicyOwner policyOwner = new PolicyOwner();
-        Dependent dependent = new Dependent();
-        if (login.authenticate(admin.listOfAdmin(), userName, password) != null) {
-            Alert alertSucess = new Alert(Alert.AlertType.INFORMATION);
-            alertSucess.setTitle("Successful");
-            alertSucess.setHeaderText(null);
-            alertSucess.setContentText("Login Successfully");
-            alertSucess.showAndWait();
+
+        Object user = login.authenticate(userName, password);
+
+        if (user != null) {
+            Alert alertSuccess = new Alert(Alert.AlertType.INFORMATION);
+            alertSuccess.setTitle("Successful");
+            alertSuccess.setHeaderText(null);
+            alertSuccess.setContentText("Login Successfully");
+            alertSuccess.showAndWait();
 
             try {
-                // Load the Admin.fxml file
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/asm2_insurance_claim_management_system/Admin/Admin.fxml"));
+                FXMLLoader loader = new FXMLLoader();
+                String fxmlFile = "";
 
-                // Load the root element (in this case, VBox)
-                VBox adminRoot = loader.load();
+                if (user instanceof Admin) {
+                    fxmlFile = "/org/example/asm2_insurance_claim_management_system/Admin/Admin.fxml";
+                    loader.setLocation(getClass().getResource(fxmlFile));
 
-                // Create a new stage for the Admin UI
-                Stage adminStage = new Stage();
-                adminStage.setTitle("Admin Page");
-                adminStage.setScene(new Scene(adminRoot, 520, 440));
-
-                // Show the Admin UI stage
-                adminStage.show();
+                    VBox adminRoot = loader.load();
+                    AdminController controller = loader.getController();
+                    controller.setAdmin((Admin)user);
+                    //System.out.println(loader.getController().getClass().getName());
+                    Stage adminStage = new Stage();
+                    adminStage.setTitle("Admin Page");
+                    adminStage.setScene(new Scene(adminRoot, 520, 440));
+                    adminStage.show();
+                } else if (user instanceof PolicyHolder) {
+                    fxmlFile = "/org/example/asm2_insurance_claim_management_system/PolicyHolder/PolicyHolder.fxml";
+                    loader.setLocation(getClass().getResource(fxmlFile));
+                    VBox policyHolderRoot = loader.load();
+                    FeaturesPolicyHolder controller = loader.getController();
+                    controller.setPolicyHolder((PolicyHolder)user);
+                    Stage policyHolderStage = new Stage();
+                    policyHolderStage.setTitle("Policy Holder Page");
+                    policyHolderStage.setScene(new Scene(policyHolderRoot, 520, 440));
+                    policyHolderStage.show();
+                } else if (user instanceof PolicyOwner) {
+                    fxmlFile = "/org/example/asm2_insurance_claim_management_system/PolicyOwner/PolicyOwner.fxml";
+                    loader.setLocation(getClass().getResource(fxmlFile));
+                    VBox policyOwnerRoot = loader.load();
+                    //PolicyOwnerControllerLogin controller = loader.getController();
+                    //controller.setPolicyOwner((PolicyOwner) user);
+                    Stage policyOwnerStage = new Stage();
+                    policyOwnerStage.setTitle("Policy Owner Page");
+                    policyOwnerStage.setScene(new Scene(policyOwnerRoot, 520, 440));
+                    policyOwnerStage.show();
+                }
 
                 // Close the current stage (the one containing the button)
                 loginButton.getScene().getWindow().hide();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else if (login.authenticate(policyHolder.listOfPolicyHolder(), userName, password) != null) {
-            PolicyHolder authenticatedPolicyHolder = (PolicyHolder) login.authenticate(policyHolder.listOfPolicyHolder(), userName, password);
-            Alert alertSucess = new Alert(Alert.AlertType.INFORMATION);
-            alertSucess.setTitle("Successful");
-            alertSucess.setHeaderText(null);
-            alertSucess.setContentText("Login Successfully");
-            alertSucess.showAndWait();
-            try {
-                // Load the PolicyHolder.fxml file
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("PolicyHolder.fxml"));
-
-                // Load the root element (in this case, VBox)
-                VBox policyHolderRoot = loader.load();
-
-                // Create a new stage for the PolicyHolder UI
-                Stage policyHolderStage = new Stage();
-                policyHolderStage.setTitle("Policy Holder Page");
-                policyHolderStage.setScene(new Scene(policyHolderRoot, 320, 240));
-
-                // Show the PolicyHolder UI stage
-                policyHolderStage.show();
-
-                // Close the current stage (the one containing the button)
-                loginButton.getScene().getWindow().hide();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
         } else {
             // If the credentials are incorrect, show an alert message
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -98,7 +98,5 @@ public class LoginController {
             alert.setContentText("Wrong username or password. Please try again.");
             alert.showAndWait();
         }
-
     }
-
 }

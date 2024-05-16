@@ -22,7 +22,7 @@ public class MenuSystem {
         PolicyHolder policyHolder = new PolicyHolder();
         PolicyOwner policyOwner = new PolicyOwner();
         Dependent dependent = new Dependent();
-        if (login.authenticate(admin.listOfAdmin(), userName, password) != null) {
+        if (login.authenticate(userName, password) != null) {
             System.out.println("Login successfully (Admin)");
 //            policyHolder.create();
 //            policyHolder.update();
@@ -37,9 +37,9 @@ public class MenuSystem {
 //            Claim claim = new Claim();
 //            claim.createClaim();
 //            claim.updateClaim();
-        } else if (login.authenticate(policyHolder.listOfPolicyHolder(), userName, password) != null) {
+        } else if (login.authenticate(userName, password) != null) {
             System.out.println("Login successfully (PolicyHolder)");
-            PolicyHolder authenticatedPolicyHolder = (PolicyHolder) login.authenticate(policyHolder.listOfPolicyHolder(), userName, password);
+            PolicyHolder authenticatedPolicyHolder = (PolicyHolder) login.authenticate( userName, password);
 //            authenticatedPolicyHolder.filePolicyHolderClaim();
 //            authenticatedPolicyHolder.retrievePolicyHolderClaim();
 //            authenticatedPolicyHolder.updatePolicyHolderClaim();
@@ -51,18 +51,18 @@ public class MenuSystem {
 //                authenticatedPolicyHolder.retrieveClaimForDependent();
 //            authenticatedPolicyHolder.updateInfoForDependent();
 
-        } else if (login.authenticate(policyOwner.listOfPolicyOwner(), userName, password) != null) {
+        } else if (login.authenticate( userName, password) != null) {
             System.out.println("Login successfully (PolicyOwner)");
-            PolicyOwner authenticatedPolicyOwner = (PolicyOwner) login.authenticate(policyOwner.listOfPolicyOwner(), userName, password);
+            PolicyOwner authenticatedPolicyOwner = (PolicyOwner) login.authenticate( userName, password);
 //            authenticatedPolicyOwner.filePolicyHolderClaim();
 //            authenticatedPolicyOwner.updatePolicyHolderClaim();
 //            authenticatedPolicyOwner.retrievePolicyHolderClaim();
 //            authenticatedPolicyOwner.updatePolicyHolderInfo();
 //            authenticatedPolicyOwner.showPolicyHolderInfo();
 
-        } else if (login.authenticate(dependent.listOfDependent(), userName, password) != null) {
+        } else if (login.authenticate( userName, password) != null) {
             System.out.println("Login successfully (Dependent)");
-            Dependent authenticatedDependent = (Dependent) login.authenticate(dependent.listOfDependent(), userName, password);
+            Dependent authenticatedDependent = (Dependent) login.authenticate(userName, password);
 //            authenticatedDependent.showInfo();
 //            authenticatedDependent.retrieveClaim();
         } else {

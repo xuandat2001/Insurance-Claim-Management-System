@@ -11,15 +11,26 @@ import java.util.List;
 import java.util.Objects;
 
 public class Authentication {
-    public UserAuthentication authenticate(List<? extends UserAuthentication>listOfUser, String userName, String password){
-            for (UserAuthentication userAuthentication : listOfUser) {
-                if (userAuthentication.getId().equals(userName) && userAuthentication.getPassword().equals(password)){
+    public Object authenticate(String userName, String password){
+        Admin admin = Admin.getInstance();
+
+            for (Admin adminAuthentication : admin.listOfAdmin()) {
+                if (adminAuthentication.getId().equals(userName) && adminAuthentication.getPassword().equals(password)){
                     //Authentication success
-                    return userAuthentication;
+                    return adminAuthentication;
                 }
             }
+        PolicyHolder policyHolder = new PolicyHolder();
+        for (PolicyHolder policyHolderAuthentication : policyHolder.listOfPolicyHolder()) {
+            if (policyHolderAuthentication.getId().equals(userName) && policyHolderAuthentication.getPassword().equals(password)){
+                //Authentication success
+                return policyHolderAuthentication;
+            }
+        }
+
         //Authentication fail
             return null;
     }
+
 
 }

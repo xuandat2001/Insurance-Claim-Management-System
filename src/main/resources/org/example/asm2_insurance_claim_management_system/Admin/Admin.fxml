@@ -51,5 +51,21 @@
             <Insets bottom="10.0" />
         </VBox.margin>
     </Button>
+
+    <Button fx:id="createDependentButton" mnemonicParsing="false" text="Create Dependent" onAction="#OnCreateDependentButton" >
+        <VBox.margin>
+            <Insets bottom="10.0" />
+        </VBox.margin>
+    </Button>
+    <Button fx:id="deleteDependentButton" mnemonicParsing="false" text="Delete Dependent" onAction="#OnDeleteDependentButton" >
+        <VBox.margin>
+            <Insets bottom="10.0" />
+        </VBox.margin>
+    </Button>
+    <Button fx:id="updateDependentButton" mnemonicParsing="false" text="Update Dependent" onAction="#OnUpdateDependentButton" >
+        <VBox.margin>
+            <Insets bottom="10.0" />
+        </VBox.margin>
+    </Button>
     <Button text="Back" onAction="#goBack" />
 </VBox>

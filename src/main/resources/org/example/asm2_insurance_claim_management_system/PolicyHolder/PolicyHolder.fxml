@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.PolicyHolderGUI.FeaturesPolicyHolder">
+   <children>
+      <Label text="Policy Holder page">
+         <padding>
+            <Insets bottom="10.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+         <VBox.margin>
+            <Insets left="14.0" />
+         </VBox.margin>
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <Button fx:id="viewPolicyHolderButton" mnemonicParsing="false" text="Retrieve Information PolicyHolder" onAction="#retrieveInfoPolicyHolder">
+         <VBox.margin>
+            <Insets left="28.0" />
+         </VBox.margin>
+      </Button>
+   </children>
+</VBox>

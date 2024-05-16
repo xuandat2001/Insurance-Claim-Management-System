@@ -9,10 +9,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.example.asm2_insurance_claim_management_system.Admin.Admin;
+import org.example.asm2_insurance_claim_management_system.Login.AdminControllerLogin;
 
 import java.io.IOException;
 
 public class AdminController{
+    private Admin admin;
     @FXML
     private Button createPolicyHolderButton;
     @FXML
@@ -30,6 +33,17 @@ public class AdminController{
     private Button deletePolicyOwnerButton;
     @FXML
     private Button viewPolicyOwnerButton;
+    @FXML
+    private Button createDependentButton;
+    @FXML
+    private Button deleteDependentButton;
+    @FXML
+    private Button updateDependentButton;
+
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
+        // Optionally update the UI or other components with admin data
+    }
     public void createSceneAdmin (String url, Button button) {
         try {
             // Load the Admin.fxml file
@@ -93,6 +107,21 @@ public class AdminController{
     protected void OnViewPolicyOwnerButton(){
         String url = "/org/example/asm2_insurance_claim_management_system/Admin/viewPolicyOwner.fxml";
         createSceneAdmin(url, viewPolicyOwnerButton);
+    }
+    @FXML
+    protected void OnCreateDependentButton(){
+        String url = "/org/example/asm2_insurance_claim_management_system/Admin/createDependent.fxml";
+        createSceneAdmin(url, createDependentButton);
+    }
+    @FXML
+    protected void OnDeleteDependentButton(){
+        String url = "/org/example/asm2_insurance_claim_management_system/Admin/deleteDependent.fxml";
+        createSceneAdmin(url, deleteDependentButton);
+    }
+    @FXML
+    protected void OnUpdateDependentButton(){
+        String url = "/org/example/asm2_insurance_claim_management_system/Admin/updateDependent.fxml";
+        createSceneAdmin(url, updateDependentButton);
     }
     @FXML
     private void goBack(ActionEvent event) {

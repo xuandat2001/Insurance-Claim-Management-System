@@ -20,7 +20,9 @@
         <mapping class="org.example.asm2_insurance_claim_management_system.Customers.Dependent"/>
         <mapping class="org.example.asm2_insurance_claim_management_system.InsuranceCard.InsuranceCard"/>
         <mapping class="org.example.asm2_insurance_claim_management_system.Claim.Claim"/>
-        <mapping class="org.example.asm2_insurance_claim_management_system.Claim.BankInfo"/>
+        <mapping class="org.example.asm2_insurance_claim_management_system.Providers.Providers"/>
+        <mapping class="org.example.asm2_insurance_claim_management_system.Providers.Surveyor"/>
+        <mapping class="org.example.asm2_insurance_claim_management_system.Providers.Manager"/>
 
     </session-factory>
 </hibernate-configuration>

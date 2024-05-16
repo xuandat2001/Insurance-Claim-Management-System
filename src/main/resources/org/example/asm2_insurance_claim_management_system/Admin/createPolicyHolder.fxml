@@ -20,6 +20,6 @@
    <TextField fx:id="textFieldPolicyOwner" />
    <Label text="Enter a date (YYYY-MM-DD)" />
    <TextField fx:id="textFieldDate" />
-   <Button fx:id="savePolicyHolderButton" mnemonicParsing="false" onAction="#createEntity" text="Create" />
+   <Button mnemonicParsing="false" onAction="#createEntity" text="Create" />
    <Button fx:id="backButton" text="Back" onAction="#goBack" />
 </VBox>
