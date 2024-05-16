@@ -18,11 +18,10 @@ public class MenuSystem {
         String password = scanner.nextLine();
 
         Authentication login = new Authentication();
+        Object user = login.authenticate(userName, password);
         Admin admin = Admin.getInstance();
-        PolicyHolder policyHolder = new PolicyHolder();
-        PolicyOwner policyOwner = new PolicyOwner();
-        Dependent dependent = new Dependent();
-        if (login.authenticate(userName, password) != null) {
+
+        if (user instanceof Admin) {
             System.out.println("Login successfully (Admin)");
 //            policyHolder.create();
 //            policyHolder.update();
@@ -37,7 +36,7 @@ public class MenuSystem {
 //            Claim claim = new Claim();
 //            claim.createClaim();
 //            claim.updateClaim();
-        } else if (login.authenticate(userName, password) != null) {
+        } else if (user instanceof PolicyHolder) {
             System.out.println("Login successfully (PolicyHolder)");
             PolicyHolder authenticatedPolicyHolder = (PolicyHolder) login.authenticate( userName, password);
 //            authenticatedPolicyHolder.filePolicyHolderClaim();
@@ -51,7 +50,7 @@ public class MenuSystem {
 //                authenticatedPolicyHolder.retrieveClaimForDependent();
 //            authenticatedPolicyHolder.updateInfoForDependent();
 
-        } else if (login.authenticate( userName, password) != null) {
+        } else if (user instanceof PolicyOwner) {
             System.out.println("Login successfully (PolicyOwner)");
             PolicyOwner authenticatedPolicyOwner = (PolicyOwner) login.authenticate( userName, password);
 //            authenticatedPolicyOwner.filePolicyHolderClaim();
@@ -60,7 +59,7 @@ public class MenuSystem {
 //            authenticatedPolicyOwner.updatePolicyHolderInfo();
 //            authenticatedPolicyOwner.showPolicyHolderInfo();
 
-        } else if (login.authenticate( userName, password) != null) {
+        } else if (user instanceof Dependent) {
             System.out.println("Login successfully (Dependent)");
             Dependent authenticatedDependent = (Dependent) login.authenticate(userName, password);
 //            authenticatedDependent.showInfo();

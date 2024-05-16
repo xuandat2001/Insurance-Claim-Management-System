@@ -40,7 +40,8 @@ public class AdminController{
     private Button updateDependentButton;
     @FXML
     private Button viewDependentButton;
-
+    @FXML
+    private Button createSurveyorButton;
     public void setAdmin(Admin admin) {
         this.admin = admin;
         // Optionally update the UI or other components with admin data
@@ -128,6 +129,11 @@ public class AdminController{
     protected void OnViewDependentButton(){
         String url = "/org/example/asm2_insurance_claim_management_system/Admin/viewDependent.fxml";
         createSceneAdmin(url, viewDependentButton);
+    }
+    @FXML
+    protected void OnCreateSurveyorButton(){
+        String url = "/org/example/asm2_insurance_claim_management_system/Admin/createSurveyor.fxml";
+        createSceneAdmin(url, createSurveyorButton);
     }
     @FXML
     private void goBack(ActionEvent event) {

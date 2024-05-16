@@ -72,5 +72,10 @@
             <Insets bottom="10.0" />
         </VBox.margin>
     </Button>
+    <Button fx:id="createSurveyorButton" mnemonicParsing="false" text="View Dependent" onAction="#OnCreateSurveyorButton" >
+        <VBox.margin>
+            <Insets bottom="10.0" />
+        </VBox.margin>
+    </Button>
     <Button text="Back" onAction="#goBack" />
 </VBox>

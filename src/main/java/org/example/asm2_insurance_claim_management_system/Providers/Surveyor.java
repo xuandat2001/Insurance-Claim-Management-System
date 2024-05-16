@@ -16,7 +16,7 @@ import java.util.Scanner;
 @PrimaryKeyJoinColumn(name = "SurveyorID")
 public class Surveyor extends Providers {
 
-    private boolean isManager = true;
+
 
 
 
@@ -25,14 +25,6 @@ public class Surveyor extends Providers {
     }
 
 
-
-    public boolean isManager() {
-        return isManager;
-    }
-
-    public void setManager(boolean manager) {
-        isManager = manager;
-    }
 
 
     public List<Surveyor> ListOfSurveyor(){

@@ -18,18 +18,12 @@ import java.util.Scanner;
 @Table(name = "Manager")
 @PrimaryKeyJoinColumn(name = "ManagerID")
 public class Manager extends Providers {
-    private boolean isManager = true;
+
     public Manager() {
 
     }
 
-    public boolean isManager() {
-        return isManager;
-    }
 
-    public void setManager(boolean manager) {
-        isManager = manager;
-    }
     public List<Manager> ListOfManager(){
         // Create a Hibernate SessionFactory
 //        SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();

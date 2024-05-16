@@ -13,25 +13,27 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.asm2_insurance_claim_management_system.Alert.ShowAlert;
+import org.example.asm2_insurance_claim_management_system.Customers.Dependent;
 import org.example.asm2_insurance_claim_management_system.Customers.HibernateSingleton;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyHolder;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyOwner;
 import org.example.asm2_insurance_claim_management_system.Interface.CRUDoperation;
+import org.example.asm2_insurance_claim_management_system.Providers.Surveyor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+
 import java.io.IOException;
+import java.util.List;
 
-
-public class CRUDPolicyOwnerController implements CRUDoperation {
-    // Attributes for creating PolicyOwner
+public class CRUDSurveyorController implements CRUDoperation {
+    // attributes for creating Surveyor
     @FXML
     private TextField textFieldId;
     @FXML
     private TextField textFieldPassword;
     @FXML
     private TextField textFieldFullName;
-    @FXML
-    private TextField textLocation;
+
     // Attributes of update()
     @FXML
     private TextField checkUpdateId;
@@ -39,26 +41,20 @@ public class CRUDPolicyOwnerController implements CRUDoperation {
     private TextField updatePassword;
     @FXML
     private TextField updateFullName;
-    @FXML
-    private TextField updateLocation;
-
     // Attributes of delete()
     @FXML
-    private TextField deletePolicyOwner;
+    private TextField deleteSurveyor;
     // Attributes of view()
     @FXML
-    private TextField viewPolicyOwner;
+    private TextField viewSurveyor;
     @FXML
-    private Button viewPolicyOwnerButton;
-    @FXML
+    private Button viewSurveyorButton;
     @Override
     public boolean createEntity() {
         String userName = textFieldId.getText();
         String password = textFieldPassword.getText();
         String fullName = textFieldFullName.getText();
-        String location = textLocation.getText();
-
-        if (userName.isEmpty() || password.isEmpty() || fullName.isEmpty() || location.isEmpty() ) {
+        if (userName.isEmpty() || password.isEmpty() || fullName.isEmpty()) {
             // If any required field is empty, show an alert message
             ShowAlert showAlert = new ShowAlert();
             showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
@@ -67,17 +63,19 @@ public class CRUDPolicyOwnerController implements CRUDoperation {
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         // Obtain a Hibernate Session
         Session session = sessionFactory.openSession();
-        PolicyOwner policyOwner = new PolicyOwner();
-        policyOwner.setCustomerId(userName);
-        policyOwner.setPassword(password);
-        policyOwner.setFullName(fullName);
-        policyOwner.setLocation(location);
+        Surveyor surveyor = new Surveyor();
+
+        surveyor.setProviderId(userName);
+        surveyor.setPassword(password);
+        surveyor.setProviderName(fullName);
+
+
         try {
             // Begin a transaction
             session.beginTransaction();
 
             // Perform a query
-            session.save(policyOwner);// or session.persist(policyHolder)
+            session.save(surveyor);// or session.persist(policyHolder)
 
             // Commit the transaction
             session.getTransaction().commit();
@@ -89,7 +87,6 @@ public class CRUDPolicyOwnerController implements CRUDoperation {
             textFieldId.clear();
             textFieldPassword.clear();
             textFieldFullName.clear();
-            textLocation.clear();
             return true;
 
         } catch (Exception ex) {
@@ -109,30 +106,30 @@ public class CRUDPolicyOwnerController implements CRUDoperation {
         String userName = checkUpdateId.getText();
         String newPassword = updatePassword.getText();
         String newFullName = updateFullName.getText();
-        String newLocation = updateLocation.getText();
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
-        Session session = sessionFactory.openSession();
+        Session session = null;
+
+
         try {
+            session = sessionFactory.openSession();
             session.beginTransaction();
 
             // Retrieve the entity to update
-            PolicyOwner policyOwner = session.get(PolicyOwner.class, userName);
-            if (policyOwner == null) {
+            Surveyor surveyor = session.get(Surveyor.class, userName);
+            if (surveyor == null) {
                 ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.ERROR,"ERROR","PolicyOwner not found");
+                showAlert.showAlert(Alert.AlertType.ERROR,"ERROR","dependent not found");
                 return false;
             }
             // Update only non-empty fields
             if (!newPassword.isEmpty()) {
-                policyOwner.setPassword(newPassword);
+                surveyor.setPassword(newPassword);
             }
             if (!newFullName.isEmpty()) {
-                policyOwner.setFullName(newFullName);
+                surveyor.setProviderName(newFullName);
             }
 
-            if (!newLocation.isEmpty()) {
-                policyOwner.setLocation(newLocation);
-            }
+
             // Commit the transaction
             session.getTransaction().commit();
 
@@ -143,7 +140,6 @@ public class CRUDPolicyOwnerController implements CRUDoperation {
             checkUpdateId.clear();
             updatePassword.clear();
             updateFullName.clear();
-            updateLocation.clear();
             return true; // Update successful
         } catch (Exception ex) {
             // Rollback the transaction in case of an exception
@@ -163,7 +159,7 @@ public class CRUDPolicyOwnerController implements CRUDoperation {
     @Override
     public boolean deleteEntity() {
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
-        String userName = deletePolicyOwner.getText();
+        String userName = deleteSurveyor.getText();
         // Obtain a Hibernate Session
         Session session = sessionFactory.openSession();
 
@@ -173,12 +169,12 @@ public class CRUDPolicyOwnerController implements CRUDoperation {
             session.beginTransaction();
 
             // Load the entity you want to delete
-            PolicyOwner policyOwner = session.get(PolicyOwner.class, userName);
+            Surveyor surveyor = session.get(Surveyor.class, userName);
 
             // Check if the entity exists
-            if (policyOwner != null) {
+            if (surveyor != null) {
                 // Delete the entity
-                session.delete(policyOwner);
+                session.delete(surveyor);
                 ShowAlert showAlert = new ShowAlert();
                 showAlert.showAlert(Alert.AlertType.INFORMATION,"Successful","Record deleted successfully.");
 
@@ -190,7 +186,7 @@ public class CRUDPolicyOwnerController implements CRUDoperation {
 
             // Commit the transaction
             session.getTransaction().commit();
-            deletePolicyOwner.clear();
+            deleteSurveyor.clear();
             return true;
         } catch (Exception ex) {
             // Rollback the transaction in case of an exception
@@ -203,13 +199,14 @@ public class CRUDPolicyOwnerController implements CRUDoperation {
         return false;
     }
 
+
     @Override
     public boolean viewEntity() {
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
 
         // Obtain a Hibernate Session
         Session session = sessionFactory.openSession();
-        String userName = viewPolicyOwner.getText();
+        String userName = viewSurveyor.getText();
 
         try {
 
@@ -223,8 +220,8 @@ public class CRUDPolicyOwnerController implements CRUDoperation {
             if (policyOwner != null) {
                 // Load the Admin.fxml file
                 // Create a new stage (window)
-                displayPolicyOwnerDetails(policyOwner);
-                viewPolicyOwnerButton.getScene().getWindow().hide();
+                displaySurveyorDetails(policyOwner);
+                viewSurveyorButton.getScene().getWindow().hide();
 
 
             } else {
@@ -234,7 +231,7 @@ public class CRUDPolicyOwnerController implements CRUDoperation {
 
             // Commit the transaction
             session.getTransaction().commit();
-            viewPolicyOwner.clear();
+            viewSurveyor.clear();
             return true;
         } catch (Exception ex) {
             // Rollback the transaction in case of an exception
@@ -247,8 +244,7 @@ public class CRUDPolicyOwnerController implements CRUDoperation {
         }
         return false;
     }
-    // Method to display policyholder details in a new window
-    private void displayPolicyOwnerDetails(PolicyOwner policyOwner) {
+    private void displaySurveyorDetails(PolicyOwner policyOwner) {
         // Create a new stage (window)
         Stage codeStage = new Stage();
         codeStage.setTitle("PolicyHolder Details");

@@ -243,7 +243,7 @@ public class CRUDDependentController implements CRUDoperation {
             if (dependent != null) {
                 // Load the Admin.fxml file
                 // Create a new stage (window)
-                displayPolicyHolderDetails(dependent);
+                displayDependentDetails(dependent);
                 viewDependentButton.getScene().getWindow().hide();
 
 
@@ -270,7 +270,7 @@ public class CRUDDependentController implements CRUDoperation {
 
 
     // Method to display policyholder details in a new window
-    private void displayPolicyHolderDetails(Dependent dependent) {
+    private void displayDependentDetails(Dependent dependent) {
         // Create a new stage (window)
         Stage codeStage = new Stage();
         codeStage.setTitle("PolicyHolder Details");
