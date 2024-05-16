@@ -8,6 +8,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.asm2_insurance_claim_management_system.Admin.Admin;
 import org.example.asm2_insurance_claim_management_system.AdminGUI.AdminController;
+import org.example.asm2_insurance_claim_management_system.Alert.ShowAlert;
 import org.example.asm2_insurance_claim_management_system.Customers.Dependent;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyHolder;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyOwner;
@@ -43,11 +44,8 @@ public class LoginController {
         Object user = login.authenticate(userName, password);
 
         if (user != null) {
-            Alert alertSuccess = new Alert(Alert.AlertType.INFORMATION);
-            alertSuccess.setTitle("Successful");
-            alertSuccess.setHeaderText(null);
-            alertSuccess.setContentText("Login Successfully");
-            alertSuccess.showAndWait();
+            ShowAlert showAlertSuccessfully = new ShowAlert();
+            showAlertSuccessfully.showAlert(Alert.AlertType.INFORMATION,"Successful","Login Successfully");
 
             try {
                 FXMLLoader loader = new FXMLLoader();
@@ -97,14 +95,14 @@ public class LoginController {
                     dependentStage.show();
                 }
                 else if (user instanceof Surveyor) {
-                    fxmlFile = "/org/example/asm2_insurance_claim_management_system/PolicyOwner/PolicyOwner.fxml";
+                    fxmlFile = "/org/example/asm2_insurance_claim_management_system/Surveyor/Surveyor.fxml";
                     loader.setLocation(getClass().getResource(fxmlFile));
-                    VBox policyOwnerRoot = loader.load();
+                    VBox surveyorRoot = loader.load();
                     SurveyorController controller = loader.getController();
                     controller.setSurveyor((Surveyor) user);
                     Stage surveyorStage = new Stage();
                     surveyorStage.setTitle("Surveyor Page");
-                    surveyorStage.setScene(new Scene(policyOwnerRoot, 520, 440));
+                    surveyorStage.setScene(new Scene(surveyorRoot, 520, 440));
                     surveyorStage.show();
                 }
                 else if (user instanceof Manager) {

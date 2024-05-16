@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.SurveyorGUI.FeaturesSurveyor">
+    <children>
+      <TextField fx:id="textClaimId" promptText="ClaimId" />
+        <Button onAction="#ProposeClaim" text="Enter">
+            <VBox.margin>
+                <Insets left="28.0" />
+            </VBox.margin>
+        </Button>
+    </children>
+</VBox>
