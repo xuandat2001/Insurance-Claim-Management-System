@@ -26,7 +26,8 @@ public class PolicyOwner extends Customer implements UserAuthentication, SuperCu
 
     @Column(name = "Location")
     private String location;
-
+    @Column(name = "insurancefee")
+    private Double insuranceFee;
     public PolicyOwner(String policyOwnerId, String location) {
 
         this.location = location;
@@ -35,6 +36,13 @@ public class PolicyOwner extends Customer implements UserAuthentication, SuperCu
     public PolicyOwner() {
     }
 
+    public Double getInsuranceFee() {
+        return insuranceFee;
+    }
+
+    public void setInsuranceFee(Double insuranceFee) {
+        this.insuranceFee = insuranceFee;
+    }
 
     public String getLocation() {
         return location;
