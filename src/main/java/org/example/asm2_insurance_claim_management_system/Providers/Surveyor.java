@@ -1,5 +1,7 @@
 package org.example.asm2_insurance_claim_management_system.Providers;
 import jakarta.persistence.*;
+import org.example.asm2_insurance_claim_management_system.Customers.HibernateSingleton;
+import org.example.asm2_insurance_claim_management_system.Customers.PolicyOwner;
 import org.example.asm2_insurance_claim_management_system.Interface.CRUDoperation;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -33,6 +35,35 @@ public class Surveyor extends Providers {
     }
 
 
+    public List<Surveyor> ListOfSurveyor(){
+        // Create a Hibernate SessionFactory
+//        SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        // Obtain a Hibernate Session
+        Session session = sessionFactory.openSession();
+
+        List<Surveyor> surveyorList = null;
+        try {
+            // Begin a transaction
+            session.beginTransaction();
+
+            // Perform a query
+            surveyorList = session.createQuery("FROM Surveyor", Surveyor.class).getResultList();
+
+            // Commit the transaction
+            session.getTransaction().commit();
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        }
+//        finally {
+//            // Close the session and session factory
+//            session.close();
+//            sessionFactory.close();
+//        }
+        return surveyorList;
+    }
     public boolean create() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Set your ID(username): ");

@@ -67,5 +67,10 @@
             <Insets bottom="10.0" />
         </VBox.margin>
     </Button>
+    <Button fx:id="viewDependentButton" mnemonicParsing="false" text="View Dependent" onAction="#OnViewDependentButton" >
+        <VBox.margin>
+            <Insets bottom="10.0" />
+        </VBox.margin>
+    </Button>
     <Button text="Back" onAction="#goBack" />
 </VBox>

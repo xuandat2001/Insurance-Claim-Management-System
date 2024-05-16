@@ -7,7 +7,10 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.asm2_insurance_claim_management_system.Alert.ShowAlert;
 import org.example.asm2_insurance_claim_management_system.Customers.Dependent;
@@ -31,8 +34,7 @@ public class CRUDDependentController implements CRUDoperation {
     private TextField textFieldFullName;
     @FXML
     private TextField textFieldPolicyHolder;
-    @FXML
-    private TextField textFieldPolicyOwner;
+
 
     // Attributes of update()
     @FXML
@@ -47,14 +49,21 @@ public class CRUDDependentController implements CRUDoperation {
     @FXML
     private TextField textFieldDeleteDependent;
 
+    // Attributes of view()
+    @FXML
+    private TextField viewDependent;
+    @FXML
+    private Button viewDependentButton;
+
+
+
     @Override
     public boolean createEntity() {
         String userName = textFieldId.getText();
         String password = textFieldPassword.getText();
         String fullName = textFieldFullName.getText();
         String policyHolderId = textFieldPolicyHolder.getText();
-        String policyOwnerId = textFieldPolicyOwner.getText();
-        if (userName.isEmpty() || password.isEmpty() || fullName.isEmpty() || policyOwnerId.isEmpty() || policyHolderId.isEmpty()) {
+        if (userName.isEmpty() || password.isEmpty() || fullName.isEmpty() || policyHolderId.isEmpty()) {
             // If any required field is empty, show an alert message
             ShowAlert showAlert = new ShowAlert();
             showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
@@ -72,20 +81,12 @@ public class CRUDDependentController implements CRUDoperation {
                 policyHolder = testPolicyHolder;
             }
         }
-        PolicyOwner policyOwner = new PolicyOwner();
-        List<PolicyOwner> policyOwnerListList = session.createQuery("FROM PolicyOwner ", PolicyOwner.class).getResultList();
-        for (PolicyOwner testPolicyOwner : policyOwnerListList) {
-            if (testPolicyOwner.getId().equals(policyOwnerId)) {
-                policyOwner = testPolicyOwner;
-            }
-        }
-
         Dependent dependent = new Dependent();
         dependent.setCustomerId(userName);
         dependent.setPassword(password);
         dependent.setFullName(fullName);
         dependent.setPolicyHolder(policyHolder);
-        dependent.setPolicyOwner(policyOwner);
+        dependent.setPolicyOwner(policyHolder.getPolicyOwner());
 
 
         try {
@@ -105,8 +106,8 @@ public class CRUDDependentController implements CRUDoperation {
             textFieldId.clear();
             textFieldPassword.clear();
             textFieldFullName.clear();
-            textFieldPolicyOwner.clear();
-            textFieldPolicyOwner.clear();
+            textFieldPolicyHolder.clear();
+
 
             return true;
 
@@ -224,7 +225,74 @@ public class CRUDDependentController implements CRUDoperation {
 
     @Override
     public boolean viewEntity() {
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+
+        // Obtain a Hibernate Session
+        Session session = sessionFactory.openSession();
+        String userName = viewDependent.getText();
+
+        try {
+
+            // Begin a transaction
+            session.beginTransaction();
+
+            // Load the entity you want to delete
+            Dependent dependent = session.get(Dependent.class, userName);
+
+            // Check if the entity exists
+            if (dependent != null) {
+                // Load the Admin.fxml file
+                // Create a new stage (window)
+                displayPolicyHolderDetails(dependent);
+                viewDependentButton.getScene().getWindow().hide();
+
+
+            } else {
+                ShowAlert showAlert = new ShowAlert();
+                showAlert.showAlert(Alert.AlertType.ERROR,"ERROR","Record with ID " + userName + " not found.");
+            }
+
+            // Commit the transaction
+            session.getTransaction().commit();
+            viewDependent.clear();
+            return true;
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            // Close the session and session factory
+            session.close();
+
+        }
         return false;
+    }
+
+
+    // Method to display policyholder details in a new window
+    private void displayPolicyHolderDetails(Dependent dependent) {
+        // Create a new stage (window)
+        Stage codeStage = new Stage();
+        codeStage.setTitle("PolicyHolder Details");
+
+        // Create a VBox to hold the code
+        VBox codeContainer = new VBox();
+        Label codeLabel = new Label("Dependent: " + "\n" +
+                "CustomerId: " + dependent.getId() + "'\n" +
+                "Password: " + dependent.getPassword() + "'\n" +
+                "FullName: " +dependent.getFullName() + "'\n" +
+                "InsuranceCard: " + dependent.getPolicyHolder().getInsuranceCard().getCardNumber() + "\n" +
+                "PolicyOwner: " + dependent.getPolicyOwner().getFullName()
+        );
+
+        // Add the code label to the VBox
+        codeContainer.getChildren().add(codeLabel);
+
+        // Set the scene of the new stage with the VBox
+        codeStage.setScene(new Scene(codeContainer, 400, 200));
+
+        // Show the new stage
+        codeStage.show();
     }
     @FXML
     private void goBack(ActionEvent event) {

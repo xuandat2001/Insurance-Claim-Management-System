@@ -1,8 +1,8 @@
-package org.example.asm2_insurance_claim_management_system.Login;
+package org.example.asm2_insurance_claim_management_system.DependentGUI;
 
 import org.example.asm2_insurance_claim_management_system.Customers.Dependent;
 
-public class DependentControllerLogin {
+public class DependentController {
     private Dependent dependent;
 
     public void setDependent(Dependent dependent) {

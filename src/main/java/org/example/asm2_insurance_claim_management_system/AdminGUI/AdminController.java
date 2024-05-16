@@ -10,7 +10,6 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.asm2_insurance_claim_management_system.Admin.Admin;
-import org.example.asm2_insurance_claim_management_system.Login.AdminControllerLogin;
 
 import java.io.IOException;
 
@@ -39,6 +38,8 @@ public class AdminController{
     private Button deleteDependentButton;
     @FXML
     private Button updateDependentButton;
+    @FXML
+    private Button viewDependentButton;
 
     public void setAdmin(Admin admin) {
         this.admin = admin;
@@ -122,6 +123,11 @@ public class AdminController{
     protected void OnUpdateDependentButton(){
         String url = "/org/example/asm2_insurance_claim_management_system/Admin/updateDependent.fxml";
         createSceneAdmin(url, updateDependentButton);
+    }
+    @FXML
+    protected void OnViewDependentButton(){
+        String url = "/org/example/asm2_insurance_claim_management_system/Admin/viewDependent.fxml";
+        createSceneAdmin(url, viewDependentButton);
     }
     @FXML
     private void goBack(ActionEvent event) {

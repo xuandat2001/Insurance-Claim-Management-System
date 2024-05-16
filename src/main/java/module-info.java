@@ -27,4 +27,14 @@ module org.example.asm2_insurance_claim_management_system {
     opens org.example.asm2_insurance_claim_management_system.AdminGUI to javafx.fxml, org.hibernate.orm.core;
     exports org.example.asm2_insurance_claim_management_system.Alert;
     opens org.example.asm2_insurance_claim_management_system.Alert to javafx.fxml, org.hibernate.orm.core;
+    exports org.example.asm2_insurance_claim_management_system.PolicyHolderGUI to javafx.fxml;
+    opens org.example.asm2_insurance_claim_management_system.PolicyHolderGUI to javafx.fxml;
+    exports org.example.asm2_insurance_claim_management_system.PolicyOwnerGUI to javafx.fxml;
+    opens org.example.asm2_insurance_claim_management_system.PolicyOwnerGUI to javafx.fxml;
+    exports org.example.asm2_insurance_claim_management_system.DependentGUI;
+    opens org.example.asm2_insurance_claim_management_system.DependentGUI to javafx.fxml, org.hibernate.orm.core;
+    exports org.example.asm2_insurance_claim_management_system.SurveyorGUI;
+    opens org.example.asm2_insurance_claim_management_system.SurveyorGUI to javafx.fxml, org.hibernate.orm.core;
+    exports org.example.asm2_insurance_claim_management_system.ManagerGUI;
+    opens org.example.asm2_insurance_claim_management_system.ManagerGUI to javafx.fxml, org.hibernate.orm.core;
 }

@@ -2,6 +2,7 @@ package org.example.asm2_insurance_claim_management_system.Providers;
 
 import jakarta.persistence.*;
 import org.example.asm2_insurance_claim_management_system.Customers.Dependent;
+import org.example.asm2_insurance_claim_management_system.Customers.HibernateSingleton;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyHolder;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyOwner;
 import org.example.asm2_insurance_claim_management_system.Interface.CRUDoperation;
@@ -29,7 +30,35 @@ public class Manager extends Providers {
     public void setManager(boolean manager) {
         isManager = manager;
     }
+    public List<Manager> ListOfManager(){
+        // Create a Hibernate SessionFactory
+//        SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        // Obtain a Hibernate Session
+        Session session = sessionFactory.openSession();
 
+        List<Manager> ListOfManager = null;
+        try {
+            // Begin a transaction
+            session.beginTransaction();
+
+            // Perform a query
+            ListOfManager = session.createQuery("FROM Manager", Manager.class).getResultList();
+
+            // Commit the transaction
+            session.getTransaction().commit();
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        }
+//        finally {
+//            // Close the session and session factory
+//            session.close();
+//            sessionFactory.close();
+//        }
+        return ListOfManager;
+    }
 
     public boolean create() {
         Scanner scanner = new Scanner(System.in);

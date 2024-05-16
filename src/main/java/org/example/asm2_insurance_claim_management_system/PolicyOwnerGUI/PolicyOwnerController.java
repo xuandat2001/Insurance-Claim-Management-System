@@ -1,9 +1,8 @@
-package org.example.asm2_insurance_claim_management_system.Login;
-
+package org.example.asm2_insurance_claim_management_system.PolicyOwnerGUI;
 
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyOwner;
 
-public class PolicyOwnerControllerLogin {
+public class PolicyOwnerController {
     private PolicyOwner policyOwner;
 
     public void setPolicyOwner(PolicyOwner policyOwner) {

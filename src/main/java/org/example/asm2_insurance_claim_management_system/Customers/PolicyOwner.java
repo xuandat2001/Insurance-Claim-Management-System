@@ -44,7 +44,35 @@ public class PolicyOwner extends Customer implements UserAuthentication, SuperCu
         this.location = location;
     }
 
+    public List<PolicyOwner> listOfPolicyOwner() {
+        // Create a Hibernate SessionFactory
+//        SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        // Obtain a Hibernate Session
+        Session session = sessionFactory.openSession();
 
+        List<PolicyOwner> policyOwnerList = null;
+        try {
+            // Begin a transaction
+            session.beginTransaction();
+
+            // Perform a query
+            policyOwnerList = session.createQuery("FROM PolicyOwner", PolicyOwner.class).getResultList();
+
+            // Commit the transaction
+            session.getTransaction().commit();
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        }
+//        finally {
+//            // Close the session and session factory
+//            session.close();
+//            sessionFactory.close();
+//        }
+        return policyOwnerList;
+    }
     public boolean create() {
 
         Scanner scanner = new Scanner(System.in);
@@ -221,37 +249,6 @@ public class PolicyOwner extends Customer implements UserAuthentication, SuperCu
 
         return false;
     }
-
-    public List<PolicyOwner> listOfPolicyOwner() {
-        // Create a Hibernate SessionFactory
-//        SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
-        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
-        // Obtain a Hibernate Session
-        Session session = sessionFactory.openSession();
-
-        List<PolicyOwner> policyOwnerList = null;
-        try {
-            // Begin a transaction
-            session.beginTransaction();
-
-            // Perform a query
-            policyOwnerList = session.createQuery("FROM PolicyOwner", PolicyOwner.class).getResultList();
-
-            // Commit the transaction
-            session.getTransaction().commit();
-        } catch (Exception ex) {
-            // Rollback the transaction in case of an exception
-            session.getTransaction().rollback();
-            ex.printStackTrace();
-        }
-//        finally {
-//            // Close the session and session factory
-//            session.close();
-//            sessionFactory.close();
-//        }
-        return policyOwnerList;
-    }
-
     @Override
     public boolean filePolicyHolderClaim() {
         Scanner scanner = new Scanner(System.in);

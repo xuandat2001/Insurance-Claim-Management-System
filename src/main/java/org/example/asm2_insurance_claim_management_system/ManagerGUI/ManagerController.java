@@ -1,8 +1,8 @@
-package org.example.asm2_insurance_claim_management_system.Login;
+package org.example.asm2_insurance_claim_management_system.ManagerGUI;
 
 import org.example.asm2_insurance_claim_management_system.Providers.Manager;
 
-public class ManagerControllerLogin {
+public class ManagerController {
     private Manager manager;
 
     public void setManager(Manager manager) {

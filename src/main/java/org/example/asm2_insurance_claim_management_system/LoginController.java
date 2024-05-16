@@ -8,15 +8,17 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.asm2_insurance_claim_management_system.Admin.Admin;
 import org.example.asm2_insurance_claim_management_system.AdminGUI.AdminController;
-import org.example.asm2_insurance_claim_management_system.Alert.ShowAlert;
 import org.example.asm2_insurance_claim_management_system.Customers.Dependent;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyHolder;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyOwner;
-import org.example.asm2_insurance_claim_management_system.Login.AdminControllerLogin;
+import org.example.asm2_insurance_claim_management_system.DependentGUI.DependentController;
 import org.example.asm2_insurance_claim_management_system.Login.Authentication;
-import org.example.asm2_insurance_claim_management_system.Login.PolicyHolderControllerLogin;
-import org.example.asm2_insurance_claim_management_system.Login.PolicyOwnerControllerLogin;
+import org.example.asm2_insurance_claim_management_system.ManagerGUI.ManagerController;
 import org.example.asm2_insurance_claim_management_system.PolicyHolderGUI.FeaturesPolicyHolder;
+import org.example.asm2_insurance_claim_management_system.PolicyOwnerGUI.PolicyOwnerController;
+import org.example.asm2_insurance_claim_management_system.Providers.Manager;
+import org.example.asm2_insurance_claim_management_system.Providers.Surveyor;
+import org.example.asm2_insurance_claim_management_system.SurveyorGUI.SurveyorController;
 
 import java.io.IOException;
 
@@ -77,12 +79,44 @@ public class LoginController {
                     fxmlFile = "/org/example/asm2_insurance_claim_management_system/PolicyOwner/PolicyOwner.fxml";
                     loader.setLocation(getClass().getResource(fxmlFile));
                     VBox policyOwnerRoot = loader.load();
-                    //PolicyOwnerControllerLogin controller = loader.getController();
-                    //controller.setPolicyOwner((PolicyOwner) user);
+                    PolicyOwnerController controller = loader.getController();
+                    controller.setPolicyOwner((PolicyOwner) user);
                     Stage policyOwnerStage = new Stage();
                     policyOwnerStage.setTitle("Policy Owner Page");
                     policyOwnerStage.setScene(new Scene(policyOwnerRoot, 520, 440));
                     policyOwnerStage.show();
+                }else if (user instanceof Dependent) {
+                    fxmlFile = "/org/example/asm2_insurance_claim_management_system/PolicyOwner/PolicyOwner.fxml";
+                    loader.setLocation(getClass().getResource(fxmlFile));
+                    VBox policyOwnerRoot = loader.load();
+                    DependentController controller = loader.getController();
+                    controller.setDependent((Dependent) user);
+                    Stage dependentStage = new Stage();
+                    dependentStage.setTitle("Dependent Page");
+                    dependentStage.setScene(new Scene(policyOwnerRoot, 520, 440));
+                    dependentStage.show();
+                }
+                else if (user instanceof Surveyor) {
+                    fxmlFile = "/org/example/asm2_insurance_claim_management_system/PolicyOwner/PolicyOwner.fxml";
+                    loader.setLocation(getClass().getResource(fxmlFile));
+                    VBox policyOwnerRoot = loader.load();
+                    SurveyorController controller = loader.getController();
+                    controller.setSurveyor((Surveyor) user);
+                    Stage surveyorStage = new Stage();
+                    surveyorStage.setTitle("Surveyor Page");
+                    surveyorStage.setScene(new Scene(policyOwnerRoot, 520, 440));
+                    surveyorStage.show();
+                }
+                else if (user instanceof Manager) {
+                    fxmlFile = "/org/example/asm2_insurance_claim_management_system/PolicyOwner/PolicyOwner.fxml";
+                    loader.setLocation(getClass().getResource(fxmlFile));
+                    VBox policyOwnerRoot = loader.load();
+                    ManagerController controller = loader.getController();
+                    controller.setManager((Manager) user);
+                    Stage managerStage = new Stage();
+                    managerStage.setTitle("Managerr Page");
+                    managerStage.setScene(new Scene(policyOwnerRoot, 520, 440));
+                    managerStage.show();
                 }
 
                 // Close the current stage (the one containing the button)

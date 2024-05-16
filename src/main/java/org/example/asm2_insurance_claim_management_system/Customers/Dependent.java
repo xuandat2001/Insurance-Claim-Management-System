@@ -17,11 +17,11 @@ import java.util.Scanner;
 public class Dependent extends Customer implements UserAuthentication {
 
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne
     @JoinColumn(name = "PolicyHolderId") // foreign key referencing InsuranceCard's primary key
     private PolicyHolder policyHolder;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne
     @JoinColumn(name = "PolicyOwnerId") // foreign key referencing InsuranceCard's primary key
     private PolicyOwner policyOwner;
     public Dependent() {

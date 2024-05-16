@@ -23,6 +23,7 @@
         <mapping class="org.example.asm2_insurance_claim_management_system.Providers.Providers"/>
         <mapping class="org.example.asm2_insurance_claim_management_system.Providers.Surveyor"/>
         <mapping class="org.example.asm2_insurance_claim_management_system.Providers.Manager"/>
+        <mapping class="org.example.asm2_insurance_claim_management_system.Claim.BankInfo"/>
 
     </session-factory>
 </hibernate-configuration>
