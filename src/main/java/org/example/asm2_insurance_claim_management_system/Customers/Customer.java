@@ -6,7 +6,7 @@ import org.example.asm2_insurance_claim_management_system.Interface.UserAuthenti
 @Entity
 @Table(name = "Customer")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class  Customer implements UserAuthentication {
+public abstract class Customer implements UserAuthentication {
     @Id
     @Column(name = "CustomerId")
     String customerId;
@@ -14,7 +14,6 @@ public abstract class  Customer implements UserAuthentication {
     String password;
     @Column(name = "fullName")
     String fullName;
-
 
     public Customer() {
     }

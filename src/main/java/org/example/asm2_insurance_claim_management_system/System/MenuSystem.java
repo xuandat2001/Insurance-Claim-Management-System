@@ -47,7 +47,7 @@ public class MenuSystem {
 //            authenticatedPolicyHolder.updatePolicyHolderInfo();
 //            authenticatedPolicyHolder.fileClaimForDependent();
 //            authenticatedPolicyHolder.updateClaimForDependent();
-//                authenticatedPolicyHolder.retrieveClaimForDependent();
+//            authenticatedPolicyHolder.retrieveClaimForDependent();
 //            authenticatedPolicyHolder.updateInfoForDependent();
 
         } else if (user instanceof PolicyOwner) {
@@ -58,7 +58,16 @@ public class MenuSystem {
 //            authenticatedPolicyOwner.retrievePolicyHolderClaim();
 //            authenticatedPolicyOwner.updatePolicyHolderInfo();
 //            authenticatedPolicyOwner.showPolicyHolderInfo();
-
+//            authenticatedPolicyOwner.fileClaimForDependent();
+//            authenticatedPolicyOwner.updateClaimForDependent();
+//            authenticatedPolicyOwner.retrieveClaimForDependent();
+//            authenticatedPolicyOwner.updateInfoForDependent();
+//            authenticatedPolicyOwner.getAllDependent();
+//            authenticatedPolicyOwner.deletePolicyHolder();
+//            authenticatedPolicyOwner.deleteDependent();
+//            authenticatedPolicyOwner.addPolicyHolder();
+//            authenticatedPolicyOwner.addDependentForPolicyHolder();
+//            authenticatedPolicyOwner.getNumberOfPolicyHolder();
         } else if (user instanceof Dependent) {
             System.out.println("Login successfully (Dependent)");
             Dependent authenticatedDependent = (Dependent) login.authenticate(userName, password);

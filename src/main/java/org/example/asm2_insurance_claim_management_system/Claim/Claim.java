@@ -2,18 +2,10 @@ package org.example.asm2_insurance_claim_management_system.Claim;
 
 import jakarta.persistence.*;
 import org.example.asm2_insurance_claim_management_system.Customers.Dependent;
-import org.example.asm2_insurance_claim_management_system.Customers.HibernateSingleton;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyHolder;
-import org.example.asm2_insurance_claim_management_system.Customers.PolicyOwner;
 import org.example.asm2_insurance_claim_management_system.InsuranceCard.InsuranceCard;
-import org.example.asm2_insurance_claim_management_system.Interface.SuperCustomer;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Scanner;
 
 
 @Entity
@@ -50,7 +42,7 @@ public class Claim {
     @JoinColumn(name = "Dependent") // foreign key referencing Dependent primary key
     private Dependent dependent;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "BankInfo")
     private BankInfo bankInfo;
 

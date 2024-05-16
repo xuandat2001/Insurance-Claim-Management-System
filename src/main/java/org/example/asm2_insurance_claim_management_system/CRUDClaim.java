@@ -5,7 +5,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import org.example.asm2_insurance_claim_management_system.Claim.Claim;
 import org.example.asm2_insurance_claim_management_system.Claim.Status;
-import org.example.asm2_insurance_claim_management_system.Customers.Customer;
 import org.example.asm2_insurance_claim_management_system.Customers.HibernateSingleton;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyHolder;
 import org.example.asm2_insurance_claim_management_system.InsuranceCard.InsuranceCard;
@@ -14,7 +13,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import java.time.LocalDate;
-import java.util.Scanner;
 
 public class CRUDClaim extends PolicyHolder implements SuperCustomer {
 
