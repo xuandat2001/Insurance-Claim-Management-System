@@ -214,13 +214,13 @@ public class CRUDSurveyorController implements CRUDoperation {
             session.beginTransaction();
 
             // Load the entity you want to delete
-            PolicyOwner policyOwner = session.get(PolicyOwner.class, userName);
+            Surveyor surveyor = session.get(Surveyor.class, userName);
 
             // Check if the entity exists
-            if (policyOwner != null) {
+            if (surveyor  != null) {
                 // Load the Admin.fxml file
                 // Create a new stage (window)
-                displaySurveyorDetails(policyOwner);
+                displaySurveyorDetails(surveyor);
                 viewSurveyorButton.getScene().getWindow().hide();
 
 
@@ -244,7 +244,7 @@ public class CRUDSurveyorController implements CRUDoperation {
         }
         return false;
     }
-    private void displaySurveyorDetails(PolicyOwner policyOwner) {
+    private void displaySurveyorDetails(Surveyor surveyor) {
         // Create a new stage (window)
         Stage codeStage = new Stage();
         codeStage.setTitle("PolicyHolder Details");
@@ -252,10 +252,10 @@ public class CRUDSurveyorController implements CRUDoperation {
         // Create a VBox to hold the code
         VBox codeContainer = new VBox();
         Label codeLabel = new Label("PolicyHolder: " + "\n" +
-                "CustomerId: " + policyOwner.getId() + "'\n" +
-                "Password: " + policyOwner.getPassword() + "'\n" +
-                "FullName: " + policyOwner.getFullName() + "'\n" +
-                "Location: " + policyOwner.getLocation()
+                "SurveyorId: " + surveyor.getProviderId() + "'\n" +
+                "Password: " + surveyor.getPassword() + "'\n" +
+                "FullName: " + surveyor.getProviderName()
+
         );
 
         // Add the code label to the VBox

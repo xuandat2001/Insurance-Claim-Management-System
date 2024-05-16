@@ -5,14 +5,13 @@ import org.example.asm2_insurance_claim_management_system.Claim.BankInfo;
 import org.example.asm2_insurance_claim_management_system.Claim.Claim;
 import org.example.asm2_insurance_claim_management_system.Claim.Status;
 import org.example.asm2_insurance_claim_management_system.InsuranceCard.InsuranceCard;
-import org.example.asm2_insurance_claim_management_system.Interface.CRUDoperation;
 import org.example.asm2_insurance_claim_management_system.Interface.SuperCustomer;
 import org.example.asm2_insurance_claim_management_system.Interface.UserAuthentication;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 

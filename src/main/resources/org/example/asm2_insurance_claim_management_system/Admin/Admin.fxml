@@ -72,7 +72,42 @@
             <Insets bottom="10.0" />
         </VBox.margin>
     </Button>
-    <Button fx:id="createSurveyorButton" mnemonicParsing="false" text="View Dependent" onAction="#OnCreateSurveyorButton" >
+    <Button fx:id="createSurveyorButton" mnemonicParsing="false" text="Create Surveyor" onAction="#OnCreateSurveyorButton" >
+        <VBox.margin>
+            <Insets bottom="10.0" />
+        </VBox.margin>
+    </Button>
+    <Button fx:id="updateSurveyorButton" mnemonicParsing="false" text="Update Surveyor" onAction="#OnUpdateSurveyorButton" >
+        <VBox.margin>
+            <Insets bottom="10.0" />
+        </VBox.margin>
+    </Button>
+    <Button fx:id="deleteSurveyorButton" mnemonicParsing="false" text="delete Surveyor" onAction="#OnDeleteSurveyorButton" >
+        <VBox.margin>
+            <Insets bottom="10.0" />
+        </VBox.margin>
+    </Button>
+    <Button fx:id="viewSurveyorButton" mnemonicParsing="false" text="View Surveyor" onAction="#OnViewSurveyorButton" >
+        <VBox.margin>
+            <Insets bottom="10.0" />
+        </VBox.margin>
+    </Button>
+    <Button fx:id="createManagerButton" mnemonicParsing="false" text="Create Manager" onAction="#OnCreateManagerButton" >
+        <VBox.margin>
+            <Insets bottom="10.0" />
+        </VBox.margin>
+    </Button>
+    <Button fx:id="updateManagerButton" mnemonicParsing="false" text="Update Manager" onAction="#OnUpdateManagerButton" >
+        <VBox.margin>
+            <Insets bottom="10.0" />
+        </VBox.margin>
+    </Button>
+    <Button fx:id="deleteManagerButton" mnemonicParsing="false" text="Delete Manager" onAction="#OnDeleteManagerButton" >
+        <VBox.margin>
+            <Insets bottom="10.0" />
+        </VBox.margin>
+    </Button>
+    <Button fx:id="viewManagerButton" mnemonicParsing="false" text="View Manager" onAction="#OnViewManagerButton" >
         <VBox.margin>
             <Insets bottom="10.0" />
         </VBox.margin>

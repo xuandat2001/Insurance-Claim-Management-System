@@ -43,7 +43,7 @@ public class Claim {
     @JoinColumn(name = "Dependent") // foreign key referencing Dependent primary key
     private Dependent dependent;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "BankInfo")
     private BankInfo bankInfo;
 

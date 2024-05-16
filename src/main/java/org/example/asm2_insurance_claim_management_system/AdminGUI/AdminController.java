@@ -42,6 +42,20 @@ public class AdminController{
     private Button viewDependentButton;
     @FXML
     private Button createSurveyorButton;
+    @FXML
+    private Button updateSurveyorButton;
+    @FXML
+    private Button deleteSurveyorButton;
+    @FXML
+    private Button viewSurveyorButton;
+    @FXML
+    private Button createManagerButton;
+    @FXML
+    private Button updateManagerButton;
+    @FXML
+    private Button deleteManagerButton;
+    @FXML
+    private Button viewManagerButton;
     public void setAdmin(Admin admin) {
         this.admin = admin;
         // Optionally update the UI or other components with admin data
@@ -134,6 +148,42 @@ public class AdminController{
     protected void OnCreateSurveyorButton(){
         String url = "/org/example/asm2_insurance_claim_management_system/Admin/createSurveyor.fxml";
         createSceneAdmin(url, createSurveyorButton);
+    }
+
+    @FXML
+    protected void OnUpdateSurveyorButton(){
+        String url = "/org/example/asm2_insurance_claim_management_system/Admin/updateSurveyor.fxml";
+        createSceneAdmin(url, updateSurveyorButton);
+    }
+    @FXML
+    protected void OnDeleteSurveyorButton(){
+        String url = "/org/example/asm2_insurance_claim_management_system/Admin/deleteSurveyor.fxml";
+        createSceneAdmin(url, deleteSurveyorButton);
+    }
+    @FXML
+    protected void OnViewSurveyorButton(){
+        String url = "/org/example/asm2_insurance_claim_management_system/Admin/viewSurveyor.fxml";
+        createSceneAdmin(url, viewSurveyorButton);
+    }
+    @FXML
+    protected void OnCreateManagerButton(){
+        String url = "/org/example/asm2_insurance_claim_management_system/Admin/CreateManager.fxml";
+        createSceneAdmin(url, createManagerButton);
+    }
+    @FXML
+    protected void OnUpdateManagerButton(){
+        String url = "/org/example/asm2_insurance_claim_management_system/Admin/updateManager.fxml";
+        createSceneAdmin(url, updateManagerButton);
+    }
+    @FXML
+    protected void OnDeleteManagerButton(){
+        String url = "/org/example/asm2_insurance_claim_management_system/Admin/deleteManager.fxml";
+        createSceneAdmin(url, deleteManagerButton);
+    }
+    @FXML
+    protected void OnViewManagerButton(){
+        String url = "/org/example/asm2_insurance_claim_management_system/Admin/viewManager.fxml";
+        createSceneAdmin(url, viewManagerButton);
     }
     @FXML
     private void goBack(ActionEvent event) {
