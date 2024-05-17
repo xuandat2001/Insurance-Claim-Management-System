@@ -6,14 +6,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.example.asm2_insurance_claim_management_system.Customers.PolicyHolder;
 
 import java.io.IOException;
 
 public class PolicyHolderController {
 
     @FXML
-    private Button RetrieveInfoPolicyHolderButton;
+    private Button filePolicyHolderClaim;
 
 
 
@@ -38,6 +37,17 @@ public class PolicyHolderController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
+
+    @FXML
+    protected void onFilePolicyHolderClaim() {
+        String url = "/org/example/asm2_insurance_claim_management_system/Admin/createPolicyHolder.fxml";
+        createScenePolicyHolder(url, filePolicyHolderClaim);
+    }
+
+
+
+
+
+
 }

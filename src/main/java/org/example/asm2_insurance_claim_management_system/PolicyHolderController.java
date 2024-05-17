@@ -16,7 +16,7 @@ public class PolicyHolderController {
     @FXML
     protected void onCreateClaimButton(){
         try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("createClaim.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("fileClaim.fxml"));
 
             VBox policyHolderRoot = loader.load();
 
