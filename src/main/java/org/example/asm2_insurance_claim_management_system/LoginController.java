@@ -15,7 +15,7 @@ import org.example.asm2_insurance_claim_management_system.Customers.PolicyOwner;
 import org.example.asm2_insurance_claim_management_system.DependentGUI.DependentController;
 import org.example.asm2_insurance_claim_management_system.Login.Authentication;
 import org.example.asm2_insurance_claim_management_system.ManagerGUI.ManagerController;
-import org.example.asm2_insurance_claim_management_system.PolicyHolderGUI.FeaturesPolicyHolder;
+import org.example.asm2_insurance_claim_management_system.PolicyHolderGUI.PolicyHolderController;
 import org.example.asm2_insurance_claim_management_system.PolicyOwnerGUI.PolicyOwnerController;
 import org.example.asm2_insurance_claim_management_system.Providers.Manager;
 import org.example.asm2_insurance_claim_management_system.Providers.Surveyor;
@@ -67,7 +67,7 @@ public class LoginController {
                     fxmlFile = "/org/example/asm2_insurance_claim_management_system/PolicyHolder/PolicyHolder.fxml";
                     loader.setLocation(getClass().getResource(fxmlFile));
                     VBox policyHolderRoot = loader.load();
-                    FeaturesPolicyHolder controller = loader.getController();
+                    PolicyHolderController controller = loader.getController();
                     controller.setPolicyHolder((PolicyHolder)user);
                     Stage policyHolderStage = new Stage();
                     policyHolderStage.setTitle("Policy Holder Page");
@@ -84,7 +84,7 @@ public class LoginController {
                     policyOwnerStage.setScene(new Scene(policyOwnerRoot, 520, 440));
                     policyOwnerStage.show();
                 }else if (user instanceof Dependent) {
-                    fxmlFile = "/org/example/asm2_insurance_claim_management_system/PolicyOwner/PolicyOwner.fxml";
+                    fxmlFile = "/org/example/asm2_insurance_claim_management_system/Dependent/Dependent.fxml";
                     loader.setLocation(getClass().getResource(fxmlFile));
                     VBox policyOwnerRoot = loader.load();
                     DependentController controller = loader.getController();

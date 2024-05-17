@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="383.0" prefWidth="279.0" xmlns="http://javafx.com/javafx/17.0.2-ea" fx:controller="org.example.asm2_insurance_claim_management_system.PolicyHolderGUI.PolicyHolderClaimController" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Label text="Enter the Dependent ID " textAlignment="CENTER" />
+        <TextField fx:id="textCheckDependentID" />
+        <Label text="Enter the Claim ID (6 digits)" textAlignment="CENTER" />
+        <TextField fx:id="textFieldCheckClaimDependentID" />
+        <Label text="Enter the Claim Amount " />
+        <TextField fx:id="textUpdateFieldClaimAmountDependent" />
+        <Label text="Enter the Bank Name " />
+        <TextField fx:id="updateBankNameTextDependent" />
+        <Label text="Enter the Bank Holder " />
+        <TextField fx:id="updateBankHolderTextDependent" />
+        <Label text="Enter the Account Number " />
+        <TextField fx:id="updateAccNumTextDependent" />
+        <Button  mnemonicParsing="false" onAction="#updateClaimForDependent"  text="Update" />
+        <Button  mnemonicParsing="false" onAction="#goBack"  text="Back" />
+    </children>
+</VBox>

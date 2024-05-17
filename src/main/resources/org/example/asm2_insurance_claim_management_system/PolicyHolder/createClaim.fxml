@@ -3,14 +3,21 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="383.0" prefWidth="279.0" xmlns="http://javafx.com/javafx/17.0.2-ea" fx:controller="org.example.asm2_insurance_claim_management_system.CRUDClaim" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="383.0" prefWidth="279.0" xmlns="http://javafx.com/javafx/17.0.2-ea" fx:controller="org.example.asm2_insurance_claim_management_system.PolicyHolderGUI.PolicyHolderClaimController" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label text="Enter the Claim ID (6 digits)" textAlignment="CENTER" />
       <TextField fx:id="textFieldClaimID" />
       <Label text="Enter the Claim Amount " />
       <TextField fx:id="textFieldClaimAmount" />
-      <Label text="Input the document" />
-      <TextField fx:id="textFieldDocument"/>
-      <Button fx:id="saveClaimButton" mnemonicParsing="false" onAction="#createClaim"  text="Create" />
+      <Label text="Enter the Bank ID " />
+      <TextField fx:id="newBankIdText" />
+      <Label text="Enter the Bank Name " />
+      <TextField fx:id="newBankNameText" />
+      <Label text="Enter the Bank Holder " />
+      <TextField fx:id="newBankHolderText" />
+      <Label text="Enter the Account Number " />
+      <TextField fx:id="newAccNumText" />
+      <Button  mnemonicParsing="false" onAction="#filePolicyHolderClaim"  text="Create" />
+      <Button  mnemonicParsing="false" onAction="#goBack"  text="Back" />
    </children>
 </VBox>

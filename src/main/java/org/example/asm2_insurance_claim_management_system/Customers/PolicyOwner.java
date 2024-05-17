@@ -31,7 +31,6 @@ public class PolicyOwner extends Customer implements UserAuthentication, SuperCu
     private Double insuranceFee;
 
     private static final double DEPENDENT_FEE = 0.6;
-
     public PolicyOwner(String policyOwnerId, String location) {
 
         this.location = location;
@@ -194,25 +193,21 @@ public class PolicyOwner extends Customer implements UserAuthentication, SuperCu
                 System.out.println("Policy Holder does not exist");
             } else {
                 try {
-                    String desiredClaim = "SELECT c FROM Claim c JOIN c.policyHolder h WHERE h.id = :policyHolderId AND c.dependent IS NULL";
-                    List<Claim> claimList = session.createQuery(desiredClaim, Claim.class)
-                            .setParameter("policyHolderId", this.getId())
-                            .getResultList();
-                    for (Claim claim : claimList) {
-                        if (!claim.getClaimId().equals(claimID)) {
-                            System.out.println("Claim does not exist");
-                        } else {
-
-                            claim.setClaimAmount(claimAmount);
-                            claim.getBankInfo().setBankName(bankName);
-                            claim.getBankInfo().setOwnerName(ownerName);
-                            claim.getBankInfo().setAccountNumber(accountNumber);
-
-                            session.getTransaction().commit();
-                            System.out.println("Update Sucessfully");
-                            return true; // Update successful
-                        }
+                    session.beginTransaction();
+                    Claim claim = session.get(Claim.class, claimID);
+                    if (claimID == null) {
+                        System.out.println("Claim with claim ID" + claimID + "is not found");
+                        return false;
                     }
+                    claim.setClaimAmount(claimAmount);
+                    claim.getBankInfo().setBankName(bankName);
+                    claim.getBankInfo().setOwnerName(ownerName);
+                    claim.getBankInfo().setAccountNumber(accountNumber);
+
+                    session.getTransaction().commit();
+                    System.out.println("Update Sucessfully");
+                    return true; // Update successful
+
                 } catch (Exception ex) {
                     // Rollback the transaction in case of an exception
                     session.getTransaction().rollback();
@@ -288,60 +283,6 @@ public class PolicyOwner extends Customer implements UserAuthentication, SuperCu
             }
 
         }
-        return false;
-    }
-
-    public boolean deletePolicyHolderClaim() {
-
-        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
-        // Obtain a Hibernate Session
-        Session session = sessionFactory.openSession();
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter the Policy Holder ID you want to delete his/her Claim: ");
-        String policyHolderId = scanner.nextLine();
-        System.out.println("Enter the Claim ID you want to delete: ");
-        String claimID = scanner.nextLine();
-
-        // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
-        String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE o.id = :policyOwnerId";
-        List<PolicyHolder> policyHolderList = session.createQuery(desiredPolicyHolder, PolicyHolder.class)
-                .setParameter("policyOwnerId", this.getId())
-                .getResultList();
-        for (PolicyHolder policyHolder : policyHolderList) {
-            if (!policyHolder.getId().equals(policyHolderId)) {
-                System.out.println("Policy Holder does not exist");
-            } else {
-                try {
-                    String desiredClaim = "SELECT c FROM Claim c JOIN c.policyHolder h WHERE h.id = :policyHolderId AND c.dependent IS NULL";
-                    List<Claim> claimList = session.createQuery(desiredClaim, Claim.class)
-                            .setParameter("policyHolderId", policyHolderId)
-                            .getResultList();
-                    for (Claim claim : claimList) {
-                        if (!claim.getClaimId().equals(claimID)) {
-                            System.out.println("Claim does not exist");
-                        } else{
-                    // Begin a transaction
-                    session.beginTransaction();
-
-                    session.delete(claim);
-
-                    // Commit the transaction
-                    session.getTransaction().commit();
-                    System.out.println("Delete Successfully");
-                    return true;}}
-                } catch (Exception ex) {
-                    // Rollback the transaction in case of an exception
-                    session.getTransaction().rollback();
-                    ex.printStackTrace();
-                } finally {
-                    // Close the session and session factory
-                    session.close();
-                    sessionFactory.close();
-                }
-            }
-        }
-
         return false;
     }
 
@@ -548,24 +489,19 @@ public class PolicyOwner extends Customer implements UserAuthentication, SuperCu
             } else {
                 try {
                     session.beginTransaction();
-                    String desiredClaim = "SELECT c FROM Claim c JOIN c.dependent d WHERE d.id = :dependentId";
-                    List<Claim> claimList = session.createQuery(desiredClaim, Claim.class)
-                            .setParameter("dependentId", this.getId())
-                            .getResultList();
-                    for (Claim claim : claimList) {
-                        if (!claim.getClaimId().equals(claimID)) {
-                            System.out.println("Claim does not exist");
-                        } else {
-                            claim.setClaimAmount(claimAmount);
-                            claim.getBankInfo().setBankName(bankName);
-                            claim.getBankInfo().setOwnerName(ownerName);
-                            claim.getBankInfo().setAccountNumber(accountNumber);
-
-                            session.getTransaction().commit();
-                            System.out.println("Update Sucessfully");
-                            return true; // Update successful
-                        }
+                    Claim claim = session.get(Claim.class, claimID);
+                    if (claimID == null) {
+                        System.out.println("Claim with claim ID" + claimID + "is not found");
+                        return false;
                     }
+                    claim.setClaimAmount(claimAmount);
+                    claim.getBankInfo().setBankName(bankName);
+                    claim.getBankInfo().setOwnerName(ownerName);
+                    claim.getBankInfo().setAccountNumber(accountNumber);
+
+                    session.getTransaction().commit();
+                    System.out.println("Update Sucessfully");
+                    return true; // Update successful
 
                 } catch (Exception ex) {
                     // Rollback the transaction in case of an exception
@@ -647,59 +583,6 @@ public class PolicyOwner extends Customer implements UserAuthentication, SuperCu
         return false;
     }
 
-    public boolean deleteDependentClaim() {
-
-        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
-        // Obtain a Hibernate Session
-        Session session = sessionFactory.openSession();
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter the Dependent ID you want to delete his/her Claim: ");
-        String dependentId = scanner.nextLine();
-        System.out.println("Enter the Claim ID you want to delete: ");
-        String claimID = scanner.nextLine();
-
-        // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
-        String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyOwner o WHERE o.id = :policyOwnerId";
-        List<Dependent> dependentList = session.createQuery(desiredDependent, Dependent.class)
-                .setParameter("policyOwnerId", this.getId())
-                .getResultList();
-        for (Dependent dependent : dependentList) {
-            if (!dependent.getId().equals(dependentId)) {
-                System.out.println("Dependent does not exist");
-            } else {
-                try {
-                    String desiredClaim = "SELECT c FROM Claim c JOIN c.dependent d WHERE d.id = :dependentId";
-                    List<Claim> claimList = session.createQuery(desiredClaim, Claim.class)
-                            .setParameter("dependentId", dependentId)
-                            .getResultList();
-                    for (Claim claim : claimList) {
-                        if (!claim.getClaimId().equals(claimID)) {
-                            System.out.println("Claim does not exist");
-                        } else{
-                            // Begin a transaction
-                            session.beginTransaction();
-
-                            session.delete(claim);
-
-                            // Commit the transaction
-                            session.getTransaction().commit();
-                            System.out.println("Delete Successfully");
-                            return true;}}
-                } catch (Exception ex) {
-                    // Rollback the transaction in case of an exception
-                    session.getTransaction().rollback();
-                    ex.printStackTrace();
-                } finally {
-                    // Close the session and session factory
-                    session.close();
-                    sessionFactory.close();
-                }
-            }
-        }
-
-        return false;
-    }
     @Override
     public boolean updateInfoForDependent() {
         Scanner scanner = new Scanner(System.in);

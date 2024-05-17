@@ -43,7 +43,7 @@ public class MenuSystem {
 //            authenticatedPolicyHolder.updatePolicyHolderClaim();
 //            authenticatedPolicyHolder.showPolicyHolderInfo();
 //            authenticatedPolicyHolder.getAllDependent();
-//            authenticatedPolicyHolder.updatePolicyHolderInfo();
+ //          authenticatedPolicyHolder.updatePolicyHolderInfo();
 //            authenticatedPolicyHolder.fileClaimForDependent();
 //            authenticatedPolicyHolder.updateClaimForDependent();
 //            authenticatedPolicyHolder.retrieveClaimForDependent();
@@ -55,12 +55,10 @@ public class MenuSystem {
 //            authenticatedPolicyOwner.filePolicyHolderClaim();
 //            authenticatedPolicyOwner.updatePolicyHolderClaim();
 //            authenticatedPolicyOwner.retrievePolicyHolderClaim();
-//            authenticatedPolicyOwner.deletePolicyHolderClaim();
 //            authenticatedPolicyOwner.updatePolicyHolderInfo();
 //            authenticatedPolicyOwner.showPolicyHolderInfo();
 //            authenticatedPolicyOwner.fileClaimForDependent();
 //            authenticatedPolicyOwner.updateClaimForDependent();
-//            authenticatedPolicyOwner.deleteDependentClaim();
 //            authenticatedPolicyOwner.retrieveClaimForDependent();
 //            authenticatedPolicyOwner.updateInfoForDependent();
 //            authenticatedPolicyOwner.getAllDependent();
