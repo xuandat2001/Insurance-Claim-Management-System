@@ -19,4 +19,5 @@
     <Label text="Enter a expirationDate (YYYY-MM-DD)" />
     <TextField fx:id="textFieldExpirationDate" />
     <Button mnemonicParsing="false" onAction="#createPolicyHolder" text="Create" />
+    <Button mnemonicParsing="false" onAction="#goBackMainMenu" text="Back" />
 </VBox>

@@ -687,8 +687,18 @@ public class PolicyHolderClaimController implements SuperCustomer {
     @FXML
     private void goBack(ActionEvent event) {
         try {
-            // Load the previous FXML file (e.g., the main menu)
-            Parent root = FXMLLoader.load(getClass().getResource("/org/example/asm2_insurance_claim_management_system/PolicyHolder/PolicyHolder.fxml"));
+            // Initialize the FXMLLoader
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/asm2_insurance_claim_management_system/PolicyHolder/PolicyHolder.fxml"));
+
+            // Load the FXML
+            Parent root = loader.load();
+
+            // Get the controller
+            PolicyHolderController controller = loader.getController();
+            controller.setPolicyHolder(policyHolder);
+
+            // Set the necessary data in the controller if needed
+            // Example: controller.setPolicyHolder(policyHolder);
 
             // Get the source node of the event (the button)
             Node source = (Node) event.getSource();

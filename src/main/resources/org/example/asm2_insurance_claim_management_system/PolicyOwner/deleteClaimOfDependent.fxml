@@ -13,4 +13,5 @@
     <Label text="Enter the Claim ID you want to delete" />
     <TextField fx:id="textFieldClaimID" />
     <Button mnemonicParsing="false" onAction="#deleteClaimOfDependent" text="Delete" />
+    <Button mnemonicParsing="false" onAction="#goBackMainMenu" text="Back" />
 </VBox>

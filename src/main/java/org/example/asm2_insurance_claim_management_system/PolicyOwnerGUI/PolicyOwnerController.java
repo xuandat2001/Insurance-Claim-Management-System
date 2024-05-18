@@ -1,13 +1,17 @@
 package org.example.asm2_insurance_claim_management_system.PolicyOwnerGUI;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.example.asm2_insurance_claim_management_system.Customers.Dependent;
 import org.example.asm2_insurance_claim_management_system.Customers.HibernateSingleton;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyHolder;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyOwner;
@@ -53,7 +57,7 @@ public class PolicyOwnerController {
     private Button deleteDependent;
     @FXML
     private Button calcInsuranceFee;
-
+    private static final double DEPENDENT_FEE = 0.6;
 
     public void setPolicyOwner(PolicyOwner policyOwner) {
         this.policyOwner = policyOwner;
@@ -130,64 +134,68 @@ public class PolicyOwnerController {
         createScenePolicyOwner(url, createPolicyHolder);
     }
     @FXML
-    protected boolean onRetrieveInfoOfPolicyHolder() {
-//        String url = "/org/example/asm2_insurance_claim_management_system/PolicyOwner/retrieveInfoOfPolicyHolder.fxml";
-//        createScenePolicyOwner(url, retrieveInfoOfPolicyHolder);
-
-        // Create a new stage (window)
-        Stage codeStage = new Stage();
-        codeStage.setTitle("Policy Holder Information");
-
-        // Create a VBox to hold the code
-        VBox codeContainer = new VBox();
-        codeContainer.setPadding(new Insets(10));
-        codeContainer.setSpacing(10);
-
+    protected void onShowInfoPolicyHolder() {
+        // Create a Hibernate SessionFactory
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+
+        // Obtain a Hibernate Session
         Session session = sessionFactory.openSession();
 
         try {
             // Begin a transaction
             session.beginTransaction();
 
+            // Perform a query
             // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
             String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE o.id = :policyOwnerId";
             List<PolicyHolder> policyHolderList = session.createQuery(desiredPolicyHolder, PolicyHolder.class)
                     .setParameter("policyOwnerId", policyOwner.getId())
                     .getResultList();
-            for (PolicyHolder policyHolder : policyHolderList) {
-                Label codeLabel = new Label(
-                        "Policy Holder ID: " + policyHolder.getId() + "\n" +
-                                "Full Name: " + policyHolder.getFullName() + "\n" +
-                                "Password: " + policyHolder.getPassword()
-                );
-                codeContainer.getChildren().add(codeLabel);
-            }
-
+            retrievePolicyHolderDetails(policyHolderList);
             // Commit the transaction
             session.getTransaction().commit();
-            return true;
+
         } catch (Exception ex) {
             // Rollback the transaction in case of an exception
             session.getTransaction().rollback();
             ex.printStackTrace();
         } finally {
             // Close the session and session factory
-//            session.close();
-//            sessionFactory.close();
-            if (session != null) {
-                session.close();
-            }
+            session.close();
         }
+    }
+
+    private void retrievePolicyHolderDetails(List<PolicyHolder> policyHolderList) {
+        // Create a new stage (window)
+        Stage codeStage = new Stage();
+        codeStage.setTitle("PolicyHolder Details");
+
+        // Create a VBox to hold the code
+        VBox codeContainer = new VBox();
+        codeContainer.setPadding(new Insets(10));
+        codeContainer.setSpacing(10);
+
+        for (PolicyHolder policyHolder : policyHolderList) {
+            Label codeLabel = new Label(
+                    "PolicyHolder ID: " + policyHolder.getId() + "\n" +
+                            "Claim Date: " + policyHolder.getFullName() + "\n" +
+                            "Claim Amount: " + policyHolder.getPassword()
+            );
+            codeContainer.getChildren().add(codeLabel);
+
+
+        }
+        Button returnButton = new Button("Return");
+        returnButton.setOnAction(this::goBackMainMenu);
+        // Add the Close button to the VBox
+        codeContainer.getChildren().add(returnButton);
         // Create a scene with the code container
-        Scene codeScene = new Scene(codeContainer, 400, 1000);
+        Scene codeScene = new Scene(codeContainer, 400, 300);
         codeStage.setScene(codeScene);
         codeStage.show();
 
         // Hide the current window
-//    viewPolicyHolderClaimsButton.getScene().getWindow().hide();
-
-        return false;
+        retrieveInfoOfPolicyHolder.getScene().getWindow().hide();
     }
     @FXML
     protected void onUpdateInfoOfPolicyHolder() {
@@ -219,10 +227,204 @@ public class PolicyOwnerController {
         String url = "/org/example/asm2_insurance_claim_management_system/PolicyOwner/deleteDependent.fxml";
         createScenePolicyOwner(url, deleteDependent);
     }
+
     @FXML
-    protected void onCalculateInsuranceFee() {
-        String url = "/org/example/asm2_insurance_claim_management_system/PolicyOwner/calcInsuranceFee.fxml";
-        createScenePolicyOwner(url, calcInsuranceFee);
+    protected void onGetAllDependent() {
+        // Create a Hibernate SessionFactory
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+
+        // Obtain a Hibernate Session
+        Session session = sessionFactory.openSession();
+
+        try {
+            // Begin a transaction
+            session.beginTransaction();
+
+            // Perform a query
+            // Assuming policyHolderId is the ID of the PolicyOwner you want to retrieve dependents for
+            String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyOwner o WHERE o.id = :policyOwnerId";
+            List<Dependent> dependentList = session.createQuery(desiredDependent, Dependent.class)
+                    .setParameter("policyOwnerId", policyOwner.getId())
+                    .getResultList();
+            retrieveDependentDetails(dependentList);
+            // Commit the transaction
+            session.getTransaction().commit();
+
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            // Close the session and session factory
+            session.close();
+
+        }
+
+
+    }
+    private void retrieveDependentDetails(List<Dependent> dependentList) {
+        // Create a new stage (window)
+        Stage codeStage = new Stage();
+        codeStage.setTitle("Dependent Details");
+
+        // Create a VBox to hold the code
+        VBox codeContainer = new VBox();
+        codeContainer.setPadding(new Insets(10));
+        codeContainer.setSpacing(10);
+
+        for (Dependent dependent : dependentList) {
+            Label codeLabel = new Label(
+                    "Dependent ID: " + dependent.getId() + "\n" +
+                            "FullName: " + dependent.getFullName() + "\n" +
+                            "Password: " + dependent.getPassword()
+            );
+            codeContainer.getChildren().add(codeLabel);
+
+
+        }
+        Button returnButton = new Button("Return");
+        returnButton.setOnAction(this::goBackMainMenu);
+        // Add the Close button to the VBox
+        codeContainer.getChildren().add(returnButton);
+        // Create a scene with the code container
+        Scene codeScene = new Scene(codeContainer, 400, 300);
+        codeStage.setScene(codeScene);
+        codeStage.show();
+
+        // Hide the current window
+        retrieveInfoOfDependent.getScene().getWindow().hide();
+    }
+    public int getNumberOfPolicyHolder() {
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        // Obtain a Hibernate Session
+        Session session = sessionFactory.openSession();
+
+        try {
+            // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
+            String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE o.id = :policyOwnerId";
+            List<PolicyHolder> policyHolderList = session.createQuery(desiredPolicyHolder, PolicyHolder.class)
+                    .setParameter("policyOwnerId", policyOwner.getId())
+                    .getResultList();
+
+            int count = policyHolderList.size();
+            return count;
+//            System.out.println(count);
+
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            // Close the session and session factory
+            session.close();
+        }
+
+        return 0;
+    }
+    public int getNumberOfDependent() {
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        // Obtain a Hibernate Session
+        Session session = sessionFactory.openSession();
+
+        try {
+            // Perform a query
+// Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve Dependent for
+            String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyOwner o WHERE o.id = :policyOwnerId";
+            List<Dependent> dependentList = session.createQuery(desiredDependent, Dependent.class)
+                    .setParameter("policyOwnerId", policyOwner.getId())
+                    .getResultList();
+
+            int count = dependentList.size();
+            return count;
+//            System.out.println(count);
+
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            // Close the session and session factory
+            session.close();
+        }
+        return 0;
+    }
+    public double onCalcInsuranceFee() {
+        double policyHolderFee = this.getNumberOfPolicyHolder() * policyOwner.getInsuranceFee();
+        double dependentFee = this.getNumberOfDependent() * policyOwner.getInsuranceFee() * DEPENDENT_FEE;
+        double totalInsuranceFee = policyHolderFee + dependentFee;
+        // Create a new stage (window)
+        Stage codeStage = new Stage();
+        codeStage.setTitle("Insurance Fee yearly");
+        // Create a VBox to hold the code
+        VBox codeContainer = new VBox();
+        codeContainer.setPadding(new Insets(10));
+        codeContainer.setSpacing(10);
+        Label codeLabel = new Label(
+                "Total Insurance Fee have to pay yearly: " + totalInsuranceFee
+        );
+        codeContainer.getChildren().add(codeLabel);
+
+        Button returnButton = new Button("Return");
+        returnButton.setOnAction(this::goBackMainMenu);
+        // Add the Close button to the VBox
+        codeContainer.getChildren().add(returnButton);
+        // Create a scene with the code container
+        Scene codeScene = new Scene(codeContainer, 400, 300);
+        codeStage.setScene(codeScene);
+        codeStage.show();
+
+        // Hide the current window
+        calcInsuranceFee.getScene().getWindow().hide();
+        return 0;
+    }
+    @FXML
+    private void goBackMainMenu(ActionEvent event) {
+        try {
+            // Initialize the FXMLLoader
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/asm2_insurance_claim_management_system/PolicyOwner/PolicyOwner.fxml"));
+
+            // Load the FXML
+            Parent root = loader.load();
+
+            // Get the controller
+            PolicyOwnerController controller = loader.getController();
+            controller.setPolicyOwner(policyOwner);
+
+            // Set the necessary data in the controller if needed
+            // Example: controller.setPolicyHolder(policyHolder);
+
+            // Get the source node of the event (the button)
+            Node source = (Node) event.getSource();
+
+            // Get the current stage (window)
+            Stage stage = (Stage) source.getScene().getWindow();
+
+            // Set the scene to the new root (previous page)
+            stage.setScene(new Scene(root));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    private void goBackLogin(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            // Load the previous FXML file (e.g., the main menu)
+            Parent root = FXMLLoader.load(getClass().getResource("/org/example/asm2_insurance_claim_management_system/login.fxml"));
+
+            // Get the source node of the event (the button)
+            Node source = (Node) event.getSource();
+
+            // Get the current stage (window)
+            Stage stage = (Stage) source.getScene().getWindow();
+
+            // Set the scene to the new root (previous page)
+            stage.setScene(new Scene(root));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 

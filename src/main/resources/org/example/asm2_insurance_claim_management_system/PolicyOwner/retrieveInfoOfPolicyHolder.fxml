@@ -11,4 +11,5 @@
     <Label text="Enter the Policy Holder ID" />
     <TextField fx:id="textFieldPolicyHolderID" />
     <Button mnemonicParsing="false" onAction="#showPolicyHolderInfo" text="Retrieve" />
+    <Button mnemonicParsing="false" onAction="#goBackMainMenu" text="Back" />
 </VBox>

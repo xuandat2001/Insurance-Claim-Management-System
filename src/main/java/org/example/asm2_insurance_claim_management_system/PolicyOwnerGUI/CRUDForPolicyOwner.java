@@ -1,13 +1,18 @@
 package org.example.asm2_insurance_claim_management_system.PolicyOwnerGUI;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.example.asm2_insurance_claim_management_system.Alert.ShowAlert;
 import org.example.asm2_insurance_claim_management_system.Claim.BankInfo;
@@ -22,12 +27,16 @@ import org.example.asm2_insurance_claim_management_system.Interface.SuperCustome
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.List;
 
 public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
-
+    private String fileData; // This will store the encoded PDF file data
     private PolicyOwner policyOwner;
     @FXML
     private TextField textFieldPolicyHolderID;
@@ -55,6 +64,8 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
     private TextField textFieldExpirationDate;
     @FXML
     private TextField textFieldCardNumber;
+    @FXML
+    private Button uploadPDF;
 
     public void setPolicyOwner(PolicyOwner policyOwner) {
         this.policyOwner = policyOwner;
@@ -62,7 +73,37 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
 
     @FXML
     private Button saveClaimButton;
+    public void initialize() {
+        uploadPDF.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+            fileChooser.setTitle("Select PDF File");
+            File selectedFile = fileChooser.showOpenDialog(new Stage());
+            if (selectedFile != null) {
+                try {
+                    fileData = encodeFileToBase64(selectedFile);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    ShowAlert errorAlert = new ShowAlert();
+                    errorAlert.showAlert(Alert.AlertType.ERROR, "ERROR", "Failed to encode PDF file.");
+                }
+            } else {
+                ShowAlert errorAlert = new ShowAlert();
+                errorAlert.showAlert(Alert.AlertType.ERROR, "ERROR", "No file to selected.");
+            }
+        });
+    }
+    public static String encodeFileToBase64(File file) throws IOException {
+        byte[] fileContent = new byte[(int) file.length()];
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+            fileInputStream.read(fileContent);
+        }
+        return Base64.getEncoder().encodeToString(fileContent);
+    }
 
+    public static byte[] decodeBase64ToFile(String base64String) {
+        return Base64.getDecoder().decode(base64String);
+    }
     @Override
     public boolean filePolicyHolderClaim() {
         try {
@@ -129,6 +170,7 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
                 claim.setClaimId(claimID);
                 claim.setClaimDate(LocalDate.now());
                 claim.setStatus(Status.NEW);
+                claim.setListOfDocument(fileData);
                 claim.setInsuranceCard(policyHolder.getInsuranceCard());
                 claim.setPolicyHolder(policyHolder);
                 claim.setClaimAmount(claimAmount);
@@ -449,6 +491,7 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
             claim.setClaimId(claimID);
             claim.setClaimDate(LocalDate.now());
             claim.setStatus(Status.NEW);
+            claim.setListOfDocument(fileData);
             claim.setInsuranceCard(dependent.getPolicyHolder().getInsuranceCard());
             claim.setPolicyHolder(dependent.getPolicyHolder());
             claim.setClaimAmount(claimAmount);
@@ -1116,5 +1159,34 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
 
     public double calcInsuranceFee() {
         return 0;
+    }
+    @FXML
+    private void goBackMainMenu(ActionEvent event) {
+        try {
+            // Initialize the FXMLLoader
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/asm2_insurance_claim_management_system/PolicyOwner/PolicyOwner.fxml"));
+
+            // Load the FXML
+            Parent root = loader.load();
+
+            // Get the controller
+            PolicyOwnerController controller = loader.getController();
+            controller.setPolicyOwner(policyOwner);
+
+            // Set the necessary data in the controller if needed
+            // Example: controller.setPolicyHolder(policyHolder);
+
+            // Get the source node of the event (the button)
+            Node source = (Node) event.getSource();
+
+            // Get the current stage (window)
+            Stage stage = (Stage) source.getScene().getWindow();
+
+            // Set the scene to the new root (previous page)
+            stage.setScene(new Scene(root));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

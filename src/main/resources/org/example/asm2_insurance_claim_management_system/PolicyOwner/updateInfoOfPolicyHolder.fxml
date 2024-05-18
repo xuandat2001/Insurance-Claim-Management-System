@@ -15,4 +15,5 @@
     <Label text="Enter the new password" />
     <TextField fx:id="textFieldPassword" />
     <Button mnemonicParsing="false" onAction="#updatePolicyHolderInfo" text="Update" />
+    <Button mnemonicParsing="false" onAction="#goBackMainMenu" text="Back" />
 </VBox>

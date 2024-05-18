@@ -22,5 +22,7 @@
     <TextField fx:id="textFieldOwnerName" />
     <Label text="Enter the Account Number" />
     <TextField fx:id="textFieldAccountNumber" />
+    <Button fx:id="uploadPDF"  text="UploadFile" />
     <Button mnemonicParsing="false" onAction="#fileClaimForDependent" text="Create" />
+    <Button mnemonicParsing="false" onAction="#goBackMainMenu" text="Back" />
 </VBox>

@@ -14,14 +14,21 @@
       <Button mnemonicParsing="false" fx:id="retrieveClaimOfDependent" onAction="#onRetrieveClaimOfDependent" text="Retrieve Claim of Dependent" />
       <Button mnemonicParsing="false" fx:id="updateClaimOfDependent" onAction="#onUpdateClaimOfDependent" text="Update Claim of Dependent" />
       <Button mnemonicParsing="false" fx:id="deleteClaimOfDependent" onAction="#onDeleteClaimOfDependent" text="Delete Claim of Dependent" />
+
+
+
       <Button mnemonicParsing="false" fx:id="createPolicyHolder" onAction="#onCreatePolicyHolder" text="Create Policy Holder" />
-      <Button mnemonicParsing="false" fx:id="retrieveInfoOfPolicyHolder" onAction="#onRetrieveInfoOfPolicyHolder" text="Retrieve Information of Policy Holder" />
+
+      <Button mnemonicParsing="false" fx:id="retrieveInfoOfPolicyHolder" onAction="#onShowInfoPolicyHolder" text="Retrieve Information of Policy Holder" />
       <Button mnemonicParsing="false" fx:id="updateInfoOfPolicyHolder" onAction="#onUpdateInfoOfPolicyHolder" text="Update Information of Policy Holder" />
       <Button mnemonicParsing="false" fx:id="deletePolicyHolder" onAction="#onDeletePolicyHolder" text="Delete Policy Holder" />
       <Button mnemonicParsing="false" fx:id="createDependent" onAction="#onCreateDependent" text="Create Dependent for Policy Holder" />
-      <Button mnemonicParsing="false" fx:id="retrieveInfoOfDependent" onAction="#onRetrieveInfoOfDependent" text="Retrieve Information of Dependent" />
+
+
+      <Button mnemonicParsing="false" fx:id="retrieveInfoOfDependent" onAction="#onGetAllDependent" text="Retrieve Information of Dependent" />
       <Button mnemonicParsing="false" fx:id="updateInfoOfDependent" onAction="#onUpdateInfoOfDependent" text="Update Information of Dependent" />
       <Button mnemonicParsing="false" fx:id="deleteDependent" onAction="#onDeleteDependent" text="Delete Dependent" />
-      <Button mnemonicParsing="false" fx:id="calcInsuranceFee" onAction="#onCalculateInsuranceFee" text="Calculate total Insurance Fee " />
+      <Button mnemonicParsing="false" fx:id="calcInsuranceFee" onAction="#onCalcInsuranceFee" text="Calculate total Insurance Fee " />
+      <Button mnemonicParsing="false"  onAction="#goBackLogin" text="Back" />
    </children>
 </VBox>

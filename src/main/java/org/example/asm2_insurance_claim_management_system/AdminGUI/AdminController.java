@@ -3,15 +3,24 @@ package org.example.asm2_insurance_claim_management_system. AdminGUI;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.asm2_insurance_claim_management_system.Admin.Admin;
+import org.example.asm2_insurance_claim_management_system.Claim.Claim;
+import org.example.asm2_insurance_claim_management_system.Claim.Status;
+import org.example.asm2_insurance_claim_management_system.Customers.HibernateSingleton;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 public class AdminController{
     private Admin admin;
@@ -56,6 +65,8 @@ public class AdminController{
     private Button deleteManagerButton;
     @FXML
     private Button viewManagerButton;
+    @FXML
+    private Button retrieveButton;
     public void setAdmin(Admin admin) {
         this.admin = admin;
         // Optionally update the UI or other components with admin data
@@ -184,6 +195,62 @@ public class AdminController{
     protected void OnViewManagerButton(){
         String url = "/org/example/asm2_insurance_claim_management_system/Admin/viewManager.fxml";
         createSceneAdmin(url, viewManagerButton);
+    }
+    @FXML
+    protected void onRetrieveClaimButton() {
+        String url = "/org/example/asm2_insurance_claim_management_system/Admin/retrieveClaim.fxml";
+        createSceneAdmin(url, retrieveButton);
+    }
+    @FXML
+    protected void onSumUpSuccessfullyClaim() {
+        Stage codeStage = new Stage();
+        codeStage.setTitle("Successfull Claim Amount");
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        Session session = null;
+        double totalClaimAmount = 0;
+        try {
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+
+            // List of documents
+            String desiredClaimList = "SELECT c FROM Claim c WHERE c.status = :status";
+            List<Claim> claimList = session.createQuery(desiredClaimList, Claim.class)
+                    .setParameter("status", Status.DONE)
+                    .getResultList();
+            VBox codeContainer = new VBox();
+            codeContainer.setPadding(new Insets(10));
+            codeContainer.setSpacing(10);
+
+            if (claimList.isEmpty()) {
+                Label noClaimsLabel = new Label("No New Successfull Claims ");
+                codeContainer.getChildren().add(noClaimsLabel);
+            } else {
+                for (Claim claim : claimList) {
+                    totalClaimAmount += claim.getClaimAmount();
+                }
+                Label codeLabel = new Label("The total amount of Successfull Claim: " + totalClaimAmount);
+                codeContainer.getChildren().add(codeLabel);
+
+                Button returnButton = new Button("Return");
+                returnButton.setOnAction(this::goBack);
+                // Add the Close button to the VBox
+                codeContainer.getChildren().add(returnButton);
+                // Create a scene with the code container
+                Scene codeScene = new Scene(codeContainer, 400, 300);
+                codeStage.setScene(codeScene);
+                codeStage.show();
+            }
+            session.getTransaction().commit();
+        } catch (HibernateException e) {
+            if (session != null) {
+                session.getTransaction().rollback();
+            }
+            throw new RuntimeException(e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
     }
     @FXML
     private void goBack(ActionEvent event) {

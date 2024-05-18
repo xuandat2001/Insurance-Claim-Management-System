@@ -121,6 +121,15 @@
          <Insets top="10.0" />
       </VBox.margin>
    </HBox>
+    <HBox prefHeight="38.0" prefWidth="310.0" spacing="109.0">
+        <children>
+            <Button fx:id="retrieveButton" mnemonicParsing="false" text="Retrieve Claim" onAction="#onRetrieveClaimButton" />
+            <Button mnemonicParsing="false" text="Calculate Sum up Successfully Amounts" onAction="#onSumUpSuccessfullyClaim" />
+        </children>
+        <VBox.margin>
+            <Insets top="10.0" />
+        </VBox.margin>
+    </HBox>
     <Button onAction="#goBack" text="Back">
       <VBox.margin>
          <Insets top="20.0" />

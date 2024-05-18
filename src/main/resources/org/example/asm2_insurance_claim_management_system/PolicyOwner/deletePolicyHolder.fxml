@@ -11,4 +11,5 @@
     <Label text="Enter the Policy Holder ID you want to delete" />
     <TextField fx:id="textFieldPolicyHolderID" />
     <Button mnemonicParsing="false" onAction="#deletePolicyHolder" text="Delete" />
+    <Button mnemonicParsing="false" onAction="#goBackMainMenu" text="Back" />
 </VBox>

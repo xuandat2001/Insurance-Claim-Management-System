@@ -37,5 +37,11 @@
     <Button mnemonicParsing="false" onAction="#createEntity" text="Create">
       <VBox.margin>
          <Insets top="10.0" />
-      </VBox.margin></Button>
+      </VBox.margin>
+    </Button>
+    <Button mnemonicParsing="false" onAction="#goBack" text="Back">
+        <VBox.margin>
+            <Insets top="10.0" />
+        </VBox.margin>
+    </Button>
 </VBox>
