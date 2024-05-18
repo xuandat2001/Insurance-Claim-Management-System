@@ -16,7 +16,6 @@ import org.example.asm2_insurance_claim_management_system.Alert.ShowAlert;
 import org.example.asm2_insurance_claim_management_system.Customers.Dependent;
 import org.example.asm2_insurance_claim_management_system.Customers.HibernateSingleton;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyHolder;
-import org.example.asm2_insurance_claim_management_system.Customers.PolicyOwner;
 import org.example.asm2_insurance_claim_management_system.Interface.CRUDoperation;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -56,7 +55,6 @@ public class CRUDDependentController implements CRUDoperation {
     private Button viewDependentButton;
 
 
-
     @Override
     public boolean createEntity() {
         String userName = textFieldId.getText();
@@ -70,16 +68,29 @@ public class CRUDDependentController implements CRUDoperation {
             return false; // Abort the create operation
         }
 
-
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         // Obtain a Hibernate Session
         Session session = sessionFactory.openSession();
-        PolicyHolder policyHolder = new PolicyHolder();
-        List<PolicyHolder> policyHolderList = session.createQuery("FROM PolicyHolder ", PolicyHolder.class).getResultList();
-        for (PolicyHolder testPolicyHolder : policyHolderList){
-            if (testPolicyHolder.getId().equals(policyHolderId)){
-                policyHolder = testPolicyHolder;
-            }
+
+        String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE h.id = :policyHolderID";
+        List<PolicyHolder> policyHolderList = session.createQuery(desiredPolicyHolder, PolicyHolder.class)
+                .setParameter("policyHolderID", policyHolderId)
+                .getResultList();
+
+        if (policyHolderList.isEmpty()) {
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Policy Holder does not exist.");
+            return false;
+        }
+        PolicyHolder policyHolder = policyHolderList.get(0);
+        String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyOwner o WHERE d.id = :dependentID";
+        List<Dependent> dependentList = session.createQuery(desiredDependent, Dependent.class)
+                .setParameter("dependentID", userName)
+                .getResultList();
+        if (!dependentList.isEmpty()) {
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Dependent has been created");
+            return false;
         }
         Dependent dependent = new Dependent();
         dependent.setCustomerId(userName);
@@ -88,19 +99,18 @@ public class CRUDDependentController implements CRUDoperation {
         dependent.setPolicyHolder(policyHolder);
         dependent.setPolicyOwner(policyHolder.getPolicyOwner());
 
-
         try {
             // Begin a transaction
             session.beginTransaction();
 
             // Perform a query
-            session.save(dependent);// or session.persist(policyHolder)
+            session.save(dependent);
 
             // Commit the transaction
             session.getTransaction().commit();
             //Alert
             ShowAlert showAlert = new ShowAlert();
-            showAlert.showAlert(Alert.AlertType.INFORMATION,"Successful","Create Successfully");
+            showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Create Successfully");
 
             //clear field
             textFieldId.clear();
@@ -140,7 +150,7 @@ public class CRUDDependentController implements CRUDoperation {
             Dependent dependent = session.get(Dependent.class, userName);
             if (dependent == null) {
                 ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.ERROR,"ERROR","dependent not found");
+                showAlert.showAlert(Alert.AlertType.ERROR, "ERROR", "Dependent not found");
                 return false;
             }
             // Update only non-empty fields
@@ -157,7 +167,7 @@ public class CRUDDependentController implements CRUDoperation {
 
             // alert
             ShowAlert showAlert = new ShowAlert();
-            showAlert.showAlert(Alert.AlertType.INFORMATION,"Successful","Update Successfully");
+            showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Update Successfully");
             //clear the field
             checkUpdateId.clear();
             updatePassword.clear();
@@ -200,12 +210,12 @@ public class CRUDDependentController implements CRUDoperation {
                 // Delete the entity
                 session.delete(dependent);
                 ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.INFORMATION,"Successful","Record deleted successfully.");
+                showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Record deleted successfully.");
 
 
             } else {
                 ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.ERROR,"ERROR","Record with ID " + userName + " not found.");
+                showAlert.showAlert(Alert.AlertType.ERROR, "ERROR", "Record with ID " + userName + " not found.");
             }
 
             // Commit the transaction
@@ -249,7 +259,7 @@ public class CRUDDependentController implements CRUDoperation {
 
             } else {
                 ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.ERROR,"ERROR","Record with ID " + userName + " not found.");
+                showAlert.showAlert(Alert.AlertType.ERROR, "ERROR", "Record with ID " + userName + " not found.");
             }
 
             // Commit the transaction
@@ -280,7 +290,7 @@ public class CRUDDependentController implements CRUDoperation {
         Label codeLabel = new Label("Dependent: " + "\n" +
                 "CustomerId: " + dependent.getId() + "'\n" +
                 "Password: " + dependent.getPassword() + "'\n" +
-                "FullName: " +dependent.getFullName() + "'\n" +
+                "FullName: " + dependent.getFullName() + "'\n" +
                 "InsuranceCard: " + dependent.getPolicyHolder().getInsuranceCard().getCardNumber() + "\n" +
                 "PolicyOwner: " + dependent.getPolicyOwner().getFullName()
         );
@@ -294,6 +304,7 @@ public class CRUDDependentController implements CRUDoperation {
         // Show the new stage
         codeStage.show();
     }
+
     @FXML
     private void goBack(ActionEvent event) {
         try {

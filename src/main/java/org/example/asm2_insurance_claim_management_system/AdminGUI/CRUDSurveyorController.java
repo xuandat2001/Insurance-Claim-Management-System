@@ -13,10 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.asm2_insurance_claim_management_system.Alert.ShowAlert;
-import org.example.asm2_insurance_claim_management_system.Customers.Dependent;
 import org.example.asm2_insurance_claim_management_system.Customers.HibernateSingleton;
-import org.example.asm2_insurance_claim_management_system.Customers.PolicyHolder;
-import org.example.asm2_insurance_claim_management_system.Customers.PolicyOwner;
 import org.example.asm2_insurance_claim_management_system.Interface.CRUDoperation;
 import org.example.asm2_insurance_claim_management_system.Providers.Surveyor;
 import org.hibernate.Session;
@@ -51,6 +48,10 @@ public class CRUDSurveyorController implements CRUDoperation {
     private Button viewSurveyorButton;
     @Override
     public boolean createEntity() {
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        // Obtain a Hibernate Session
+        Session session = sessionFactory.openSession();
+
         String userName = textFieldId.getText();
         String password = textFieldPassword.getText();
         String fullName = textFieldFullName.getText();
@@ -60,22 +61,28 @@ public class CRUDSurveyorController implements CRUDoperation {
             showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
             return false; // Abort the create operation
         }
-        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
-        // Obtain a Hibernate Session
-        Session session = sessionFactory.openSession();
+
+        List<Surveyor> surveyorList = session.createQuery("FROM Surveyor WHERE providerId = :surveyorId", Surveyor.class)
+                .setParameter("surveyorId", userName)
+                .getResultList();
+
+        if (!surveyorList.isEmpty()) {
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Surveyor has been created.");
+            return false;
+        }
         Surveyor surveyor = new Surveyor();
 
         surveyor.setProviderId(userName);
         surveyor.setPassword(password);
         surveyor.setProviderName(fullName);
 
-
         try {
             // Begin a transaction
             session.beginTransaction();
 
             // Perform a query
-            session.save(surveyor);// or session.persist(policyHolder)
+            session.save(surveyor);//
 
             // Commit the transaction
             session.getTransaction().commit();
@@ -115,12 +122,16 @@ public class CRUDSurveyorController implements CRUDoperation {
             session.beginTransaction();
 
             // Retrieve the entity to update
-            Surveyor surveyor = session.get(Surveyor.class, userName);
-            if (surveyor == null) {
+            List<Surveyor> surveyorList = session.createQuery("FROM Surveyor WHERE providerId = :surveyorId", Surveyor.class)
+                    .setParameter("surveyorId", userName)
+                    .getResultList();
+
+            if (surveyorList.isEmpty()) {
                 ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.ERROR,"ERROR","dependent not found");
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Surveyor does not exist.");
                 return false;
             }
+            Surveyor surveyor = surveyorList.get(0);
             // Update only non-empty fields
             if (!newPassword.isEmpty()) {
                 surveyor.setPassword(newPassword);
@@ -181,7 +192,7 @@ public class CRUDSurveyorController implements CRUDoperation {
 
             } else {
                 ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.ERROR,"ERROR","Record with ID " + userName + " not found.");
+                showAlert.showAlert(Alert.AlertType.ERROR,"ERROR","Surveyor with ID " + userName + " not found.");
             }
 
             // Commit the transaction
@@ -226,7 +237,7 @@ public class CRUDSurveyorController implements CRUDoperation {
 
             } else {
                 ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.ERROR,"ERROR","Record with ID " + userName + " not found.");
+                showAlert.showAlert(Alert.AlertType.ERROR,"ERROR","Surveyor with ID " + userName + " not found.");
             }
 
             // Commit the transaction

@@ -1,11 +1,15 @@
 package org.example.asm2_insurance_claim_management_system.AdminGUI;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.asm2_insurance_claim_management_system.Alert.ShowAlert;
@@ -16,7 +20,6 @@ import org.example.asm2_insurance_claim_management_system.InsuranceCard.Insuranc
 import org.example.asm2_insurance_claim_management_system.Interface.CRUDoperation;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -41,7 +44,6 @@ public class CRUDPolicyHolderController implements CRUDoperation {
     private TextField textFieldDate;
 
 
-
     // Attributes of update()
     @FXML
     private TextField checkUpdateId;
@@ -60,18 +62,20 @@ public class CRUDPolicyHolderController implements CRUDoperation {
     private Button viewPolicyHolderButton;
 
 
-
-
     @FXML
     @Override
     public boolean createEntity() {
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        // Obtain a Hibernate Session
+        Session session = sessionFactory.openSession();
+
         String userName = textFieldId.getText();
         String password = textFieldPassword.getText();
         String fullName = textFieldFullName.getText();
         String cardNum = textCardNum.getText();
-        String policyHolderId = textFieldPolicyOwner.getText();
+        String policyOwnerId = textFieldPolicyOwner.getText();
         String userExpirationDate = textFieldDate.getText();
-        if (userName.isEmpty() || password.isEmpty() || fullName.isEmpty() || cardNum.isEmpty() || policyHolderId.isEmpty()) {
+        if (userName.isEmpty() || password.isEmpty() || fullName.isEmpty() || cardNum.isEmpty() || policyOwnerId.isEmpty()) {
             // If any required field is empty, show an alert message
             ShowAlert showAlert = new ShowAlert();
             showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
@@ -88,19 +92,43 @@ public class CRUDPolicyHolderController implements CRUDoperation {
         } catch (Exception e) {
             // If the credentials are incorrect, show an alert message
             ShowAlert showAlert = new ShowAlert();
-            showAlert.showAlert(Alert.AlertType.ERROR,"Date Error","Invalid date format. Please enter date in YYYY-MM-DD format.");
+            showAlert.showAlert(Alert.AlertType.ERROR, "Date Error", "Invalid date format. Please enter date in YYYY-MM-DD format.");
             return false;
         }
 
-        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
-        // Obtain a Hibernate Session
-        Session session = sessionFactory.openSession();
-        PolicyOwner policyOwner = new PolicyOwner();
-        List<PolicyOwner> policyOwnerListList = session.createQuery("FROM PolicyOwner ", PolicyOwner.class).getResultList();
-        for (PolicyOwner testPolicyOwner : policyOwnerListList) {
-            if (testPolicyOwner.getId().equals(policyHolderId)) {
-                policyOwner = testPolicyOwner;
-            }
+        // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
+        String desiredOwner = "SELECT o FROM PolicyOwner o WHERE o.id = :policyOwnerId";
+        List<PolicyOwner> policyOwnerList = session.createQuery(desiredOwner, PolicyOwner.class)
+                .setParameter("policyOwnerId", policyOwnerId)
+                .getResultList();
+
+        if (policyOwnerList.isEmpty()) {
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Policy Owner does not exist");
+            return false;
+        }
+        PolicyOwner policyOwner = policyOwnerList.get(0);
+        // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
+        String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE o.id = :policyOwnerId AND h.id = :policyHolderID";
+        List<PolicyHolder> policyHolderList = session.createQuery(desiredPolicyHolder, PolicyHolder.class)
+                .setParameter("policyOwnerId", policyOwnerId)
+                .setParameter("policyHolderID", userName)
+                .getResultList();
+
+        if (!policyHolderList.isEmpty()) {
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Policy Holder has been created");
+            return false;
+        }
+
+        List<InsuranceCard> insuranceCardList = session.createQuery("FROM InsuranceCard WHERE cardNumber = :cardNum", InsuranceCard.class)
+                .setParameter("cardNum", cardNum)
+                .getResultList();
+
+        if (!insuranceCardList.isEmpty()) {
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Card Number has been existed.");
+            return false;
         }
         InsuranceCard insuranceCard = new InsuranceCard();
         insuranceCard.setCardNumber(cardNum);
@@ -122,13 +150,13 @@ public class CRUDPolicyHolderController implements CRUDoperation {
 
             // Perform a query
             session.save(insuranceCard);
-            session.save(policyHolder);// or session.persist(policyHolder)
+            session.save(policyHolder);
 
             // Commit the transaction
             session.getTransaction().commit();
             //Alert
             ShowAlert showAlert = new ShowAlert();
-            showAlert.showAlert(Alert.AlertType.INFORMATION,"Successful","Create Successfully");
+            showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Create Successfully");
 
             //clear field
             textFieldId.clear();
@@ -159,18 +187,22 @@ public class CRUDPolicyHolderController implements CRUDoperation {
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         Session session = null;
 
-
         try {
             session = sessionFactory.openSession();
             session.beginTransaction();
 
-            // Retrieve the entity to update
-            PolicyHolder policyHolder = session.get(PolicyHolder.class, userName);
-            if (policyHolder == null) {
+            // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
+            String desiredPolicyHolder = "SELECT h FROM PolicyHolder h WHERE h.id = :policyHolderID";
+            List<PolicyHolder> policyHolderList = session.createQuery(desiredPolicyHolder, PolicyHolder.class)
+                    .setParameter("policyHolderID", userName)
+                    .getResultList();
+
+            if (policyHolderList.isEmpty()) {
                 ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.ERROR,"ERROR","PolicyHolder not found");
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Policy Holder does not exist");
                 return false;
             }
+            PolicyHolder policyHolder = policyHolderList.get(0);
             // Update only non-empty fields
             if (!newPassword.isEmpty()) {
                 policyHolder.setPassword(newPassword);
@@ -179,13 +211,12 @@ public class CRUDPolicyHolderController implements CRUDoperation {
                 policyHolder.setFullName(newFullName);
             }
 
-
             // Commit the transaction
             session.getTransaction().commit();
 
             // alert
             ShowAlert showAlert = new ShowAlert();
-            showAlert.showAlert(Alert.AlertType.INFORMATION,"Successful","Update Successfully");
+            showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Update Successfully");
             //clear the field
             checkUpdateId.clear();
             updatePassword.clear();
@@ -227,18 +258,18 @@ public class CRUDPolicyHolderController implements CRUDoperation {
                 // Delete the entity
                 session.delete(policyHolder);
                 ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.INFORMATION,"Successful","Record deleted successfully.");
+                showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Record deleted successfully.");
 
 
             } else {
                 ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.ERROR,"ERROR","Record with ID " + userName + " not found.");
+                showAlert.showAlert(Alert.AlertType.ERROR, "ERROR", "Policy Holder with ID " + userName + " not found.");
             }
 
             // Commit the transaction
             session.getTransaction().commit();
-        deletePolicyHolder.clear();
-        return true;
+            deletePolicyHolder.clear();
+            return true;
         } catch (Exception ex) {
             // Rollback the transaction in case of an exception
             session.getTransaction().rollback();
@@ -276,7 +307,7 @@ public class CRUDPolicyHolderController implements CRUDoperation {
 
             } else {
                 ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.ERROR,"ERROR","Record with ID " + userName + " not found.");
+                showAlert.showAlert(Alert.AlertType.ERROR, "ERROR", "Policy Holder with ID " + userName + " not found.");
             }
 
             // Commit the transaction
@@ -321,6 +352,7 @@ public class CRUDPolicyHolderController implements CRUDoperation {
         // Show the new stage
         codeStage.show();
     }
+
     @FXML
     private void goBack(ActionEvent event) {
         try {
@@ -340,7 +372,6 @@ public class CRUDPolicyHolderController implements CRUDoperation {
             e.printStackTrace();
         }
     }
-
 
 
 }

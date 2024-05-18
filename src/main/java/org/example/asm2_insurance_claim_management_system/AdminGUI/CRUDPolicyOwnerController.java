@@ -14,12 +14,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.asm2_insurance_claim_management_system.Alert.ShowAlert;
 import org.example.asm2_insurance_claim_management_system.Customers.HibernateSingleton;
-import org.example.asm2_insurance_claim_management_system.Customers.PolicyHolder;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyOwner;
 import org.example.asm2_insurance_claim_management_system.Interface.CRUDoperation;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+
 import java.io.IOException;
+import java.util.List;
 
 
 public class CRUDPolicyOwnerController implements CRUDoperation {
@@ -57,6 +58,10 @@ public class CRUDPolicyOwnerController implements CRUDoperation {
     @FXML
     @Override
     public boolean createEntity() {
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        // Obtain a Hibernate Session
+        Session session = sessionFactory.openSession();
+
         String userName = textFieldId.getText();
         String password = textFieldPassword.getText();
         String fullName = textFieldFullName.getText();
@@ -69,9 +74,18 @@ public class CRUDPolicyOwnerController implements CRUDoperation {
             showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
             return false; // Abort the create operation
         }
-        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
-        // Obtain a Hibernate Session
-        Session session = sessionFactory.openSession();
+
+        String desiredPolicyOwner= "SELECT o FROM PolicyOwner o WHERE o.id = :policyOwnerId";
+        List<PolicyOwner> policyOwnerList = session.createQuery(desiredPolicyOwner, PolicyOwner.class)
+                .setParameter("policyOwnerId", userName)
+                .getResultList();
+
+        if (!policyOwnerList.isEmpty()) {
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Policy Owner has been created");
+            return false;
+        }
+
         PolicyOwner policyOwner = new PolicyOwner();
         policyOwner.setCustomerId(userName);
         policyOwner.setPassword(password);
@@ -123,13 +137,17 @@ public class CRUDPolicyOwnerController implements CRUDoperation {
         try {
             session.beginTransaction();
 
-            // Retrieve the entity to update
-            PolicyOwner policyOwner = session.get(PolicyOwner.class, userName);
-            if (policyOwner == null) {
+            String desiredPolicyOwner= "SELECT o FROM PolicyOwner o WHERE o.id = :policyOwnerId";
+            List<PolicyOwner> policyOwnerList = session.createQuery(desiredPolicyOwner, PolicyOwner.class)
+                    .setParameter("policyOwnerId", userName)
+                    .getResultList();
+
+            if (policyOwnerList.isEmpty()) {
                 ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.ERROR,"ERROR","PolicyOwner not found");
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Policy Holder does not exist");
                 return false;
             }
+            PolicyOwner policyOwner = policyOwnerList.get(0);
             // Update only non-empty fields
             if (!newPassword.isEmpty()) {
                 policyOwner.setPassword(newPassword);
@@ -197,7 +215,7 @@ public class CRUDPolicyOwnerController implements CRUDoperation {
 
             } else {
                 ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.ERROR,"ERROR","Record with ID " + userName + " not found.");
+                showAlert.showAlert(Alert.AlertType.ERROR,"ERROR","Policy Owner with ID " + userName + " not found.");
             }
 
             // Commit the transaction
@@ -241,7 +259,7 @@ public class CRUDPolicyOwnerController implements CRUDoperation {
 
             } else {
                 ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.ERROR,"ERROR","Record with ID " + userName + " not found.");
+                showAlert.showAlert(Alert.AlertType.ERROR,"ERROR","Policy Owner with ID " + userName + " not found.");
             }
 
             // Commit the transaction
