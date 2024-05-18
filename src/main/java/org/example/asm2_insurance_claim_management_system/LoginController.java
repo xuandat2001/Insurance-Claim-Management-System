@@ -106,14 +106,14 @@ public class LoginController {
                     surveyorStage.show();
                 }
                 else if (user instanceof Manager) {
-                    fxmlFile = "/org/example/asm2_insurance_claim_management_system/Manager/Manager.fxml";
+                    fxmlFile = "/org/example/asm2_insurance_claim_management_system/PolicyOwner/PolicyOwner.fxml";
                     loader.setLocation(getClass().getResource(fxmlFile));
-                    VBox managerRoot = loader.load();
+                    VBox policyOwnerRoot = loader.load();
                     ManagerController controller = loader.getController();
                     controller.setManager((Manager) user);
                     Stage managerStage = new Stage();
-                    managerStage.setTitle("Manager Page");
-                    managerStage.setScene(new Scene(managerRoot, 520, 440));
+                    managerStage.setTitle("Managerr Page");
+                    managerStage.setScene(new Scene(policyOwnerRoot, 520, 440));
                     managerStage.show();
                 }
 

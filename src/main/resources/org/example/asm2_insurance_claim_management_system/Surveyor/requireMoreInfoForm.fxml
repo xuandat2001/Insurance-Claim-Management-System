@@ -15,14 +15,17 @@
         <Label text="All New Available Claims:">
             <font>
                 <Font name="System Bold" size="15.0" />
-            </font></Label>
-        <Label fx:id="availableClaims" alignment="TOP_LEFT" contentDisplay="TOP" prefHeight="617.0" prefWidth="503.0" text="No New Claim Available" />
+            </font>
+        </Label>
+        <VBox fx:id="availableClaimsContainer" alignment="TOP_LEFT" prefHeight="617.0" prefWidth="503.0">
+            <Label text="No New Claim Available" />
+        </VBox>
+        <Button fx:id="viewDocument" onAction="#onViewDocument" scaleShape="false" text="View Document" />
         <Label text="Enter ClaimID (6 digits):" />
         <TextField fx:id="textClaimId" alignment="CENTER" prefHeight="25.0" prefWidth="428.0" promptText="ClaimId" scaleShape="false" />
         <Label text="Comment on what information should be added for approval:" />
         <TextField fx:id="textRequiredInfo" alignment="CENTER" promptText="Comment" />
-        <Button alignment="BOTTOM_CENTER" contentDisplay="CENTER" onAction="#requireMoreInfoOnClaim" scaleShape="false" text="Enter" textAlignment="CENTER">
-        </Button>
+        <Button alignment="BOTTOM_CENTER" contentDisplay="CENTER" onAction="#requireMoreInfoOnClaim" scaleShape="false" text="Enter" textAlignment="CENTER" />
         <Button alignment="BOTTOM_LEFT" contentDisplay="RIGHT" onAction="#goBack" text="Back" />
     </children>
 </VBox>

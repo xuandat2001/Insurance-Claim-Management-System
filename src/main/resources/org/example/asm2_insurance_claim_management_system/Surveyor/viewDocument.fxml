@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefHeight="800.0" prefWidth="503.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.SurveyorGUI.FeaturesSurveyor">
+    <children>
+        <Label alignment="CENTER" text="Require More Information On A Claim" textAlignment="CENTER"/>
+      <TextField fx:id="textClaimIdForDocument" />
+        <Button mnemonicParsing="false" onAction="#downloadDocument" text="Download Document" />
+        <Button mnemonicParsing="false" onAction="#goBack" text="Download Document" />
+
+    </children>
+</VBox>
