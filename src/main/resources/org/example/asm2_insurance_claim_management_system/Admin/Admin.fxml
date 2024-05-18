@@ -3,114 +3,126 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.AdminGUI.AdminController">
+<VBox maxWidth="-Infinity" prefHeight="365.0" prefWidth="330.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.AdminGUI.AdminController">
     <padding>
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
     <Label text="Admin Page">
       <VBox.margin>
          <Insets bottom="10.0" />
-      </VBox.margin></Label>
-    <Button fx:id="createPolicyHolderButton" onAction="#OnCreatePolicyHolderButton" text="Create PolicyHolder">
+      </VBox.margin>
+      <font>
+         <Font name="System Bold" size="15.0" />
+      </font></Label>
+   <HBox prefHeight="37.0" prefWidth="310.0" spacing="50.0">
+      <children>
+         <Button fx:id="updatePolicyHolderButton" mnemonicParsing="false" onAction="#OnUpdatePolicyHolderButton" text="Update PolicyHolder" />
+          <Button fx:id="createPolicyHolderButton" alignment="TOP_LEFT" onAction="#OnCreatePolicyHolderButton" prefHeight="25.0" prefWidth="128.0" text="Create PolicyHolder" textAlignment="RIGHT">
+            <opaqueInsets>
+               <Insets left="20.0" />
+            </opaqueInsets>
+         </Button>
+      </children>
       <VBox.margin>
-         <Insets bottom="10.0" />
+         <Insets />
+      </VBox.margin>
+   </HBox>
+   <HBox prefHeight="40.0" prefWidth="310.0" spacing="70.0">
+      <children>
+         <Button fx:id="deletePolicyHolderButton" mnemonicParsing="false" onAction="#OnDeletePolicyHolderButton" text="Delete PolicyHolder">
+            <HBox.margin>
+               <Insets />
+            </HBox.margin></Button>
+         <Button fx:id="viewPolicyHolderButton" mnemonicParsing="false" onAction="#OnViewPolicyHolderButton" text="View PolicyHolder" />
+      </children>
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin>
+   </HBox>
+   <HBox prefHeight="38.0" prefWidth="310.0" spacing="59.0">
+      <children>
+          <Button fx:id="createPolicyOwnerButton" mnemonicParsing="false" onAction="#OnCreatePolicyOwnerButton" text="Create PolicyOwner" />
+          <Button fx:id="updatePolicyOwnerButton" mnemonicParsing="false" onAction="#OnUpdatePolicyOwnerButton" text="Update PolicyOwner">
+            <HBox.margin>
+               <Insets />
+            </HBox.margin></Button>
+      </children>
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin>
+   </HBox>
+   <HBox prefHeight="28.0" prefWidth="310.0" spacing="72.0">
+      <children>
+          <Button fx:id="deletePolicyOwnerButton" mnemonicParsing="false" onAction="#OnDeletePolicyOwnerButton" text="Delete PolicyOwner">
+            <HBox.margin>
+               <Insets />
+            </HBox.margin>
+          </Button>
+          <Button fx:id="viewPolicyOwnerButton" mnemonicParsing="false" onAction="#OnViewPolicyOwnerButton" text="View PolicyOwner" />
+      </children>
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin>
+   </HBox>
+   <HBox prefHeight="42.0" prefWidth="310.0" spacing="77.0">
+      <children>
+      
+          <Button fx:id="createDependentButton" mnemonicParsing="false" onAction="#OnCreateDependentButton" text="Create Dependent" />
+          <Button fx:id="deleteDependentButton" mnemonicParsing="false" onAction="#OnDeleteDependentButton" text="Delete Dependent" />
+      </children>
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin>
+   </HBox>
+   <HBox prefHeight="39.0" prefWidth="310.0" spacing="81.0">
+      <children>
+          <Button fx:id="updateDependentButton" mnemonicParsing="false" onAction="#OnUpdateDependentButton" text="Update Dependent" />
+          <Button fx:id="viewDependentButton" mnemonicParsing="false" onAction="#OnViewDependentButton" text="View Dependent" />
+      </children>
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin>
+   </HBox>
+   <HBox prefHeight="32.0" prefWidth="310.0" spacing="97.0">
+      <children>
+          <Button fx:id="createSurveyorButton" mnemonicParsing="false" onAction="#OnCreateSurveyorButton" text="Create Surveyor" />
+          <Button fx:id="updateSurveyorButton" mnemonicParsing="false" onAction="#OnUpdateSurveyorButton" text="Update Surveyor" />
+      </children>
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin>
+   </HBox>
+   <HBox prefHeight="30.0" prefWidth="310.0" spacing="111.0">
+      <children>
+          <Button fx:id="deleteSurveyorButton" mnemonicParsing="false" onAction="#OnDeleteSurveyorButton" text="Delete Surveyor" />
+          <Button fx:id="viewSurveyorButton" mnemonicParsing="false" onAction="#OnViewSurveyorButton" text="View Surveyor" />
+      </children>
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin>
+   </HBox>
+   <HBox prefHeight="30.0" prefWidth="310.0" spacing="95.0">
+      <children>
+          <Button fx:id="createManagerButton" mnemonicParsing="false" onAction="#OnCreateManagerButton" text="Create Manager" />
+          <Button fx:id="updateManagerButton" mnemonicParsing="false" onAction="#OnUpdateManagerButton" text="Update Manager" />
+      </children>
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin>
+   </HBox>
+   <HBox prefHeight="38.0" prefWidth="310.0" spacing="109.0">
+      <children>
+          <Button fx:id="deleteManagerButton" mnemonicParsing="false" onAction="#OnDeleteManagerButton" text="Delete Manager" />
+          <Button fx:id="viewManagerButton" mnemonicParsing="false" onAction="#OnViewManagerButton" text="View Manager" />
+      </children>
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin>
+   </HBox>
+    <Button onAction="#goBack" text="Back">
+      <VBox.margin>
+         <Insets top="20.0" />
       </VBox.margin></Button>
-   <Button fx:id="updatePolicyHolderButton" mnemonicParsing="false" text="Update PolicyHolder" onAction="#OnUpdatePolicyHolderButton">
-      <VBox.margin>
-         <Insets bottom="10.0" />
-      </VBox.margin>
-   </Button>
-   <Button fx:id="deletePolicyHolderButton" mnemonicParsing="false" text="Delete PolicyHolder" onAction="#OnDeletePolicyHolderButton">
-      <VBox.margin>
-         <Insets bottom="10.0" />
-      </VBox.margin>
-   </Button>
-   <Button fx:id="viewPolicyHolderButton" mnemonicParsing="false" text="View PolicyHolder" onAction="#OnViewPolicyHolderButton" >
-      <VBox.margin>
-         <Insets bottom="10.0" />
-      </VBox.margin>
-   </Button>
-    <Button fx:id="createPolicyOwnerButton" mnemonicParsing="false" text="Create PolicyOwner" onAction="#OnCreatePolicyOwnerButton" >
-        <VBox.margin>
-            <Insets bottom="10.0" />
-        </VBox.margin>
-    </Button>
-    <Button fx:id="updatePolicyOwnerButton" mnemonicParsing="false" text="Update PolicyOwner" onAction="#OnUpdatePolicyOwnerButton" >
-        <VBox.margin>
-            <Insets bottom="10.0" />
-        </VBox.margin>
-    </Button>
-    <Button fx:id="deletePolicyOwnerButton" mnemonicParsing="false" text="Delete PolicyOwner" onAction="#OnDeletePolicyOwnerButton" >
-        <VBox.margin>
-            <Insets bottom="10.0" />
-        </VBox.margin>
-    </Button>
-    <Button fx:id="viewPolicyOwnerButton" mnemonicParsing="false" text="View PolicyOwner" onAction="#OnViewPolicyOwnerButton" >
-        <VBox.margin>
-            <Insets bottom="10.0" />
-        </VBox.margin>
-    </Button>
-
-    <Button fx:id="createDependentButton" mnemonicParsing="false" text="Create Dependent" onAction="#OnCreateDependentButton" >
-        <VBox.margin>
-            <Insets bottom="10.0" />
-        </VBox.margin>
-    </Button>
-    <Button fx:id="deleteDependentButton" mnemonicParsing="false" text="Delete Dependent" onAction="#OnDeleteDependentButton" >
-        <VBox.margin>
-            <Insets bottom="10.0" />
-        </VBox.margin>
-    </Button>
-    <Button fx:id="updateDependentButton" mnemonicParsing="false" text="Update Dependent" onAction="#OnUpdateDependentButton" >
-        <VBox.margin>
-            <Insets bottom="10.0" />
-        </VBox.margin>
-    </Button>
-    <Button fx:id="viewDependentButton" mnemonicParsing="false" text="View Dependent" onAction="#OnViewDependentButton" >
-        <VBox.margin>
-            <Insets bottom="10.0" />
-        </VBox.margin>
-    </Button>
-    <Button fx:id="createSurveyorButton" mnemonicParsing="false" text="Create Surveyor" onAction="#OnCreateSurveyorButton" >
-        <VBox.margin>
-            <Insets bottom="10.0" />
-        </VBox.margin>
-    </Button>
-    <Button fx:id="updateSurveyorButton" mnemonicParsing="false" text="Update Surveyor" onAction="#OnUpdateSurveyorButton" >
-        <VBox.margin>
-            <Insets bottom="10.0" />
-        </VBox.margin>
-    </Button>
-    <Button fx:id="deleteSurveyorButton" mnemonicParsing="false" text="delete Surveyor" onAction="#OnDeleteSurveyorButton" >
-        <VBox.margin>
-            <Insets bottom="10.0" />
-        </VBox.margin>
-    </Button>
-    <Button fx:id="viewSurveyorButton" mnemonicParsing="false" text="View Surveyor" onAction="#OnViewSurveyorButton" >
-        <VBox.margin>
-            <Insets bottom="10.0" />
-        </VBox.margin>
-    </Button>
-    <Button fx:id="createManagerButton" mnemonicParsing="false" text="Create Manager" onAction="#OnCreateManagerButton" >
-        <VBox.margin>
-            <Insets bottom="10.0" />
-        </VBox.margin>
-    </Button>
-    <Button fx:id="updateManagerButton" mnemonicParsing="false" text="Update Manager" onAction="#OnUpdateManagerButton" >
-        <VBox.margin>
-            <Insets bottom="10.0" />
-        </VBox.margin>
-    </Button>
-    <Button fx:id="deleteManagerButton" mnemonicParsing="false" text="Delete Manager" onAction="#OnDeleteManagerButton" >
-        <VBox.margin>
-            <Insets bottom="10.0" />
-        </VBox.margin>
-    </Button>
-    <Button fx:id="viewManagerButton" mnemonicParsing="false" text="View Manager" onAction="#OnViewManagerButton" >
-        <VBox.margin>
-            <Insets bottom="10.0" />
-        </VBox.margin>
-    </Button>
-    <Button text="Back" onAction="#goBack" />
 </VBox>

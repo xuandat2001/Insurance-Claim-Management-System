@@ -3,18 +3,39 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.AdminGUI.CRUDDependentController">
     <padding>
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
-    <Label text="Set your ID(username)" />
-    <TextField fx:id="textFieldId" />
-    <Label text="Set your password" />
-    <TextField fx:id="textFieldPassword" />
-    <Label text="Set your FullName" />
-    <TextField fx:id="textFieldFullName" />
-    <Label  text="PolicyHolder ID" />
-    <TextField fx:id="textFieldPolicyHolder" />
-    <Button mnemonicParsing="false" onAction="#createEntity" text="Create" />
+   <Label text="Create Dependent Account">
+      <font>
+         <Font name="System Bold" size="15.0" />
+      </font>
+   </Label>
+    <Label text="Set the Username (ID)">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+    <TextField fx:id="textFieldId" promptText="Username" />
+    <Label text="Set password">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+    <TextField fx:id="textFieldPassword" promptText="Password" />
+    <Label text="Set Full Name">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+    <TextField fx:id="textFieldFullName" promptText="Full Name" />
+    <Label text="PolicyHolder ID">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+    <TextField fx:id="textFieldPolicyHolder" promptText="Ex: p12345" />
+    <Button mnemonicParsing="false" onAction="#createEntity" text="Create">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Button>
 </VBox>

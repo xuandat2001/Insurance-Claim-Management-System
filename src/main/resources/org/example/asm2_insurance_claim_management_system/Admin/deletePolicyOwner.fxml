@@ -3,13 +3,29 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.AdminGUI.CRUDPolicyOwnerController">
     <padding>
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
-    <Label text="Enter the username(Id)" />
-    <TextField fx:id="deletePolicyOwner" />
-    <Button mnemonicParsing="false" onAction="#deleteEntity" text="Delete" />
-    <Button  text="Back" onAction="#goBack" />
+   <Label text="Delete Policy Owner Account">
+      <font>
+         <Font name="System Bold" size="15.0" />
+      </font>
+   </Label>
+    <Label text="Enter the Username (ID)">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+    <TextField fx:id="deletePolicyOwner" promptText="Username" />
+   <HBox prefHeight="0.0" prefWidth="205.0" spacing="110.0">
+      <children>
+          <Button mnemonicParsing="false" onAction="#deleteEntity" text="Delete" />
+          <Button onAction="#goBack" text="Back" />
+      </children>
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin>
+   </HBox>
 </VBox>

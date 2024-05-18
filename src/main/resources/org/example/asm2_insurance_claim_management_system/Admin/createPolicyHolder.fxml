@@ -3,23 +3,61 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.AdminGUI.CRUDPolicyHolderController">
    <padding>
       <Insets bottom="10" left="10" right="10" top="10" />
    </padding>
-   <Label text="Set your ID(username)" />
-   <TextField fx:id="textFieldId" />
-   <Label text="Set your password" />
-   <TextField fx:id="textFieldPassword" />
-   <Label text="Set your FullName" />
-   <TextField fx:id="textFieldFullName" />
-   <Label  text="Set Insurance Card Number(6 digits)" />
-   <TextField fx:id="textCardNum" />
-   <Label text="Set your Policy Owner(6 digits)" />
-   <TextField fx:id="textFieldPolicyOwner" />
-   <Label text="Enter a date (YYYY-MM-DD)" />
-   <TextField fx:id="textFieldDate" />
-   <Button mnemonicParsing="false" onAction="#createEntity" text="Create" />
-   <Button fx:id="backButton" text="Back" onAction="#goBack" />
+   <Label text="Create Policy Holder Account">
+      <font>
+         <Font name="System Bold" size="15.0" />
+      </font>
+   </Label>
+   <Label text="Set the Username (ID)">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+   <TextField fx:id="textFieldId" promptText="Username" />
+   <Label text="Set password">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+   <TextField fx:id="textFieldPassword" promptText="Password" />
+   <Label text="Set Full Name">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+   <TextField fx:id="textFieldFullName" promptText="Full Name" />
+   <Label text="Set Insurance Card Number (6 digits)">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+   <TextField fx:id="textCardNum" promptText="Ex: c12345" />
+   <Label text="Set Policy Owner (6 digits)">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+   <TextField fx:id="textFieldPolicyOwner" promptText="Ex: o12345">
+      <VBox.margin>
+         <Insets />
+      </VBox.margin></TextField>
+   <Label text="Set expiry date (YYYY-MM-DD)">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+   <TextField fx:id="textFieldDate" promptText="Ex: 2026-06-30" />
+   <HBox prefHeight="0.0" prefWidth="207.0">
+      <children>
+         <Button mnemonicParsing="false" onAction="#createEntity" text="Create" />
+         <Button fx:id="backButton" onAction="#goBack" text="Back">
+            <HBox.margin>
+               <Insets left="115.0" />
+            </HBox.margin>
+         </Button>
+      </children>
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin>
+   </HBox>
 </VBox>

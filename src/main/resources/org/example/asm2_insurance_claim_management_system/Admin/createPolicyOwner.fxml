@@ -3,21 +3,53 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.AdminGUI.CRUDPolicyOwnerController">
     <padding>
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
-    <Label text="Set your ID(username)" />
-    <TextField fx:id="textFieldId" />
-    <Label text="Set your password" />
-    <TextField fx:id="textFieldPassword" />
-    <Label text="Set your FullName" />
-    <TextField fx:id="textFieldFullName" />
-    <Label  text="Set Your Location" />
-    <TextField fx:id="textLocation" />
-    <Label  text="Set Your InsuranceFee" />
-    <TextField fx:id="textInsuranceFee" />
-    <Button mnemonicParsing="false" onAction="#createEntity" text="Create" />
-    <Button  text="Back" onAction="#goBack" />
+   <Label alignment="CENTER" text="Create Policy Owner Account">
+      <font>
+         <Font name="System Bold" size="15.0" />
+      </font>
+   </Label>
+    <Label text="Set the Username (ID)">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+    <TextField fx:id="textFieldId" promptText="Username" />
+    <Label text="Set password">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+    <TextField fx:id="textFieldPassword" promptText="Password" />
+    <Label text="Set Full Name">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+    <TextField fx:id="textFieldFullName" promptText="Full Name" />
+    <Label text="Set Location">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+    <TextField fx:id="textLocation" promptText="Ex: Q7, HCM" />
+    <Label text="Set Insurance Fee">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+    <TextField fx:id="textInsuranceFee" promptText="Ex: 2000" />
+   <HBox prefHeight="0.0" prefWidth="200.0" spacing="105.0">
+      <children>
+          <Button onAction="#goBack" text="Back" />
+          <Button mnemonicParsing="false" onAction="#createEntity" text="Create">
+            <HBox.margin>
+               <Insets />
+            </HBox.margin>
+         </Button>
+      </children>
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin>
+   </HBox>
 </VBox>
