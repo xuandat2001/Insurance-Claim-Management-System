@@ -139,6 +139,12 @@ public class PolicyHolderClaimController implements SuperCustomer {
         String ownerName = newBankHolderText.getText() ;
 
         String accountNumber = newAccNumText.getText();
+        if (claimID.isEmpty() || textFieldClaimAmount.getText().isEmpty() || bankID.isEmpty() || bankName.isEmpty() || ownerName.isEmpty() || accountNumber.isEmpty()) {
+            // If any required field is empty, show an alert message
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
+            return false; // Abort the create operation
+        }
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         Session session = sessionFactory.openSession();
 
@@ -175,6 +181,8 @@ public class PolicyHolderClaimController implements SuperCustomer {
             // Rollback the transaction in case of an exception
             session.getTransaction().rollback();
             ex.printStackTrace();
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while filing the claim.");
         } finally {
             // Close the session and session factory
 //            session.close();
@@ -198,9 +206,7 @@ public class PolicyHolderClaimController implements SuperCustomer {
 
             String claimID = textFieldUpdateClaimID.getText() ;
             Double claimAmount =  null;
-            claimAmount = Double.parseDouble(textFieldUpdateClaimAmount.getText()) ;
-
-
+            claimAmount = Double.parseDouble(textFieldUpdateClaimAmount.getText());
             String bankName = BankNameText.getText();
 
             String ownerName = BankHolderText.getText() ;
@@ -215,7 +221,7 @@ public class PolicyHolderClaimController implements SuperCustomer {
                     .getResultList();
             for (Claim claim : claimList) {
                 if (claim.getClaimId().equals(claimID)) {
-                    if (claim != null){
+                    if (!textFieldUpdateClaimAmount.getText().isEmpty()){
                         claim.setClaimAmount(claimAmount);
                     }
                     if (!bankName.isEmpty()){
@@ -241,11 +247,21 @@ public class PolicyHolderClaimController implements SuperCustomer {
                 }
 
             }
+            for (Claim claim : claimList){
+                if (!claim.getClaimId().equals(claimID)) {
+                    ShowAlert showAlert = new ShowAlert();
+                    showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Claim does not exist.");
+                    return false;
+                }
+            }
+
 
         } catch (Exception ex) {
             // Rollback the transaction in case of an exception
             if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
                 session.getTransaction().rollback();
+                ShowAlert showAlert = new ShowAlert();
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Something wrong.");
             }
             ex.printStackTrace(); // Print error details
         } finally {
@@ -341,6 +357,12 @@ public class PolicyHolderClaimController implements SuperCustomer {
         String accountNumber = newAccNumTextDependent.getText() ;
 
 
+        if (dependentId.isEmpty()|| claimID.isEmpty() || textFieldClaimAmountDependent.getText().isEmpty() || bankID.isEmpty() || bankName.isEmpty() || ownerName.isEmpty() || accountNumber.isEmpty()) {
+            // If any required field is empty, show an alert message
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
+            return false; // Abort the create operation
+        }
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         Session session = sessionFactory.openSession();
 
@@ -388,6 +410,8 @@ public class PolicyHolderClaimController implements SuperCustomer {
                     // Rollback the transaction in case of an exception
                     session.getTransaction().rollback();
                     ex.printStackTrace();
+                    ShowAlert successfulAlert = new ShowAlert();
+                    successfulAlert.showAlert(Alert.AlertType.ERROR,"ERROR", "Something Wrong");
                 } finally {
                     // Close the session and session factory
                     if (session != null) {
@@ -440,8 +464,10 @@ public class PolicyHolderClaimController implements SuperCustomer {
                         successfulAlert.showAlert(Alert.AlertType.ERROR,"ERROR", "Claim Not Found");
                         return false;
                     }
+                    if (!textUpdateFieldClaimAmountDependent.getText().isEmpty()){
+                        claim.setClaimAmount(claimAmount);
+                    }
 
-                    claim.setClaimAmount(claimAmount);
                     BankInfo bankInfo = claim.getBankInfo();
                     if (!bankName.isEmpty()){
                         bankInfo.setBankName(bankName);
@@ -468,6 +494,8 @@ public class PolicyHolderClaimController implements SuperCustomer {
                     // Rollback the transaction in case of an exception
                     session.getTransaction().rollback();
                     ex.printStackTrace();
+                    ShowAlert successfulAlert = new ShowAlert();
+                    successfulAlert.showAlert(Alert.AlertType.ERROR,"ERROR", "Something Wrong ");
                 } finally {
                     // Close the session and session factory
 //            session.close();
@@ -487,8 +515,12 @@ public class PolicyHolderClaimController implements SuperCustomer {
     @Override
     public boolean retrieveClaimForDependent() {
         String dependentId = retrieveClaimForDependent.getText();
-
-
+        if (dependentId.isEmpty()) {
+            // If any required field is empty, show an alert message
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
+            return false; // Abort the create operation
+        }
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         Session session = sessionFactory.openSession();
 
@@ -498,10 +530,7 @@ public class PolicyHolderClaimController implements SuperCustomer {
                 .setParameter("policyHolderId", policyHolder.getId())
                 .getResultList();
         for (Dependent dependent : dependentList) {
-            if (!dependent.getId().equals(dependentId)) {
-                ShowAlert successfulAlert = new ShowAlert();
-                successfulAlert.showAlert(Alert.AlertType.ERROR,"ERROR", "Dependent Not Found");
-            } else {
+            if (dependent.getId().equals(dependentId)) {
                 try {
                     session.beginTransaction();
                     String desiredClaim = "SELECT c FROM Claim c WHERE c.dependent IS NOT NULL";
@@ -515,15 +544,16 @@ public class PolicyHolderClaimController implements SuperCustomer {
                     ex.printStackTrace();
                 } finally {
                     // Close the session and session factory
-//            session.close();
 //            sessionFactory.close();
                     if (session != null) {
                         session.close();
                     }
                 }
-
             }
-
+        }
+        for (Dependent dependent : dependentList){
+            ShowAlert successfulAlert = new ShowAlert();
+            successfulAlert.showAlert(Alert.AlertType.ERROR,"ERROR", "Dependent Not Found");
         }
         return false;
     }
