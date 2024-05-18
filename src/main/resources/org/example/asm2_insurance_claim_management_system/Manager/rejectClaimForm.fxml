@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox prefHeight="800.0" prefWidth="503.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.ManagerGUI.FeaturesManager">
+    <children>
+        <Label alignment="CENTER" text="Reject A Claim" textAlignment="CENTER">
+            <font>
+                <Font name="System Bold Italic" size="15.0" />
+            </font>
+        </Label>
+        <Button fx:id="loadclaimsbutton" mnemonicParsing="false" onAction="#initializeProcessingClaimList" text="Load Processing Claims" />
+        <Label text="All Processing Claims:">
+            <font>
+                <Font name="System Bold" size="15.0" />
+            </font></Label>
+        <Label fx:id="availableClaims" alignment="TOP_LEFT" contentDisplay="TOP" prefHeight="617.0" prefWidth="503.0" text="No Processing Claim Available" />
+        <Label text="Enter ClaimID (6 digits):" />
+        <TextField fx:id="textClaimId" alignment="CENTER" prefHeight="25.0" prefWidth="428.0" promptText="ClaimId" scaleShape="false" />
+        <Label text="Reason for rejection:" />
+        <TextField fx:id="textReasonForRejection" alignment="CENTER" promptText="Comment" />
+        <Button alignment="BOTTOM_CENTER" contentDisplay="CENTER" onAction="#rejectClaim" scaleShape="false" text="Reject" textAlignment="CENTER">
+        </Button>
+        <Button alignment="BOTTOM_LEFT" contentDisplay="RIGHT" onAction="#goBack" text="Back" />
+    </children>
+</VBox>

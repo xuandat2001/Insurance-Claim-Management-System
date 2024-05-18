@@ -1,4 +1,4 @@
-package org.example.asm2_insurance_claim_management_system.SurveyorGUI;
+package org.example.asm2_insurance_claim_management_system.ManagerGUI;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -6,7 +6,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.example.asm2_insurance_claim_management_system.Alert.ShowAlert;
 import org.example.asm2_insurance_claim_management_system.Claim.Claim;
@@ -19,7 +22,7 @@ import org.hibernate.SessionFactory;
 import java.io.IOException;
 import java.util.List;
 
-public class FeaturesSurveyor {
+public class FeaturesManager {
     @FXML
     private TextField textClaimId;
 
@@ -29,17 +32,17 @@ public class FeaturesSurveyor {
     String availableClaimsList = null;
 
     @FXML
-    private TextField textRequiredInfo;
+    private TextField textReasonForRejection;
 
     @FXML
     private Button loadclaimsbutton;
 
-    public boolean requireMoreInfoOnClaim() {
+    public boolean rejectClaim() {
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         Session session = null;
 
         String claimId = textClaimId.getText();
-        String comment = textRequiredInfo.getText();
+        String comment = textReasonForRejection.getText();
         String availableClaimsList = null;
 
         try {
@@ -49,15 +52,17 @@ public class FeaturesSurveyor {
             // List of documents
             String desiredClaimList = "SELECT c FROM Claim c WHERE c.status = :status";
             List<Claim> claimList = session.createQuery(desiredClaimList, Claim.class)
-                    .setParameter("status", Status.NEW)
+                    .setParameter("status", Status.PROCESSING)
                     .getResultList();
 
             Claim claim = session.get(Claim.class, claimId);
             if (claim != null) {
-                claim.setRequiredinfo("Surveyor: " + comment);
+                claim.setStatus(Status.DONE);
+                claim.setRequiredinfo("Manager: " + comment);
+                claim.setApproval("NO");
 
                 ShowAlert showCommentAddedSuccessfully = new ShowAlert();
-                showCommentAddedSuccessfully.showAlert(Alert.AlertType.INFORMATION,"Successful","You have successfully added the request for more information on " + claimId + " claim.");
+                showCommentAddedSuccessfully.showAlert(Alert.AlertType.INFORMATION,"Successful","You have successfully rejected " + claimId + " claim.");
 
                 session.getTransaction().commit();
                 return true; // Update successful
@@ -83,7 +88,7 @@ public class FeaturesSurveyor {
         }
     }
 
-    public boolean proposeClaim(){
+    public boolean approveClaim(){
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         Session session = null;
 
@@ -96,15 +101,17 @@ public class FeaturesSurveyor {
             // List of documents
             String desiredClaimList = "SELECT c FROM Claim c WHERE c.status = :status";
             List<Claim> claimList = session.createQuery(desiredClaimList, Claim.class)
-                    .setParameter("status", Status.NEW)
+                    .setParameter("status", Status.PROCESSING)
                     .getResultList();
 
             Claim claim = session.get(Claim.class, claimId);
             if (claim != null) {
                 ShowAlert showCommentAddedSuccessfully = new ShowAlert();
-                showCommentAddedSuccessfully.showAlert(Alert.AlertType.INFORMATION,"Successful","You have successfully proposed " + claimId + " claim to the manager.");
+                showCommentAddedSuccessfully.showAlert(Alert.AlertType.INFORMATION,"Successful","You have successfully approved " + claimId);
 
-                claim.setStatus(Status.PROCESSING);
+                claim.setStatus(Status.DONE);
+                claim.setApproval("YES");
+
                 session.getTransaction().commit();
                 return true; // Update successful
             } else {
@@ -128,7 +135,7 @@ public class FeaturesSurveyor {
         }
     }
 
-    public void initializeClaimList() {
+    public void initializeProcessingClaimList() {
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         Session session = null;
 
@@ -139,14 +146,14 @@ public class FeaturesSurveyor {
             // List of documents
             String desiredClaimList = "SELECT c FROM Claim c WHERE c.status = :status";
             List<Claim> claimList = session.createQuery(desiredClaimList, Claim.class)
-                    .setParameter("status", Status.NEW)
+                    .setParameter("status", Status.PROCESSING)
                     .getResultList();
 
             for (Claim claim : claimList) {
                 availableClaimsList = claimList.toString();
             }
             if (availableClaimsList == null){
-                availableClaims.setText("No New Claim Available to interact with.");
+                availableClaims.setText("No Processing Claim Available to Approve or Reject.");
             } else {
                 availableClaims.setText(availableClaimsList);
             }
@@ -159,7 +166,7 @@ public class FeaturesSurveyor {
     private void goBack(ActionEvent event) {
         try {
             // Load the previous FXML file (e.g., the main menu)
-            Parent root = FXMLLoader.load(getClass().getResource("/org/example/asm2_insurance_claim_management_system/Surveyor/Surveyor.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/org/example/asm2_insurance_claim_management_system/Manager/Manager.fxml"));
 
             // Get the source node of the event (the button)
             Node source = (Node) event.getSource();
