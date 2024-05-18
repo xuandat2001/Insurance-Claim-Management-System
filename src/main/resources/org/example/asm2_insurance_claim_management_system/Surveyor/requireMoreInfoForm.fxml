@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox prefHeight="800.0" prefWidth="503.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.SurveyorGUI.FeaturesSurveyor">
+    <children>
+        <Label alignment="CENTER" text="Require More Information On A Claim" textAlignment="CENTER">
+            <font>
+                <Font name="System Bold Italic" size="15.0" />
+            </font>
+        </Label>
+        <Button fx:id="loadclaimsbutton" mnemonicParsing="false" onAction="#initializeClaimList" text="Load New Claims" />
+        <Label text="All New Available Claims:">
+            <font>
+                <Font name="System Bold" size="15.0" />
+            </font></Label>
+        <Label fx:id="availableClaims" alignment="TOP_LEFT" contentDisplay="TOP" prefHeight="617.0" prefWidth="503.0" text="No New Claim Available" />
+        <Label text="Enter ClaimID (6 digits):" />
+        <TextField fx:id="textClaimId" alignment="CENTER" prefHeight="25.0" prefWidth="428.0" promptText="ClaimId" scaleShape="false" />
+        <Label text="Comment on what information should be added for approval:" />
+        <TextField fx:id="textRequiredInfo" alignment="CENTER" promptText="Comment" />
+        <Button alignment="BOTTOM_CENTER" contentDisplay="CENTER" onAction="#requireMoreInfoOnClaim" scaleShape="false" text="Enter" textAlignment="CENTER">
+        </Button>
+        <Button alignment="BOTTOM_LEFT" contentDisplay="RIGHT" onAction="#goBack" text="Back" />
+    </children>
+</VBox>

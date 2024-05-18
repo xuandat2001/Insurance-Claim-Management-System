@@ -156,14 +156,10 @@ public class Claim {
 
     @Override
     public String toString() {
-        return "ClaimId = " + claimId + '\n' +
-                "claimDate = " + claimDate +
+        return "ClaimId = " + claimId +
+                ", claimDate = " + claimDate +
                 ", listOfDocument = " + listOfDocument +
-                ", claimAmount = " + claimAmount + '\n' +
-                "insuranceCard = " + insuranceCard.getCardNumber() +
-                ", policyHolder = " + policyHolder.getFullName() +
-                ", dependent = " + dependent.getFullName() +
-                ", bankInfo = " + bankInfo.getBankID() + "\n";
+                ", claimAmount = " + claimAmount + '\n';
     }
 
     public void showInfo(){
