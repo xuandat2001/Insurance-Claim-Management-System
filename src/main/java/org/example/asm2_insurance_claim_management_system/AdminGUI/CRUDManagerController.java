@@ -13,13 +13,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.asm2_insurance_claim_management_system.Alert.ShowAlert;
-import org.example.asm2_insurance_claim_management_system.Customers.Dependent;
 import org.example.asm2_insurance_claim_management_system.Customers.HibernateSingleton;
-import org.example.asm2_insurance_claim_management_system.Customers.PolicyHolder;
-import org.example.asm2_insurance_claim_management_system.Customers.PolicyOwner;
 import org.example.asm2_insurance_claim_management_system.Interface.CRUDoperation;
 import org.example.asm2_insurance_claim_management_system.Providers.Manager;
-import org.example.asm2_insurance_claim_management_system.Providers.Surveyor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -50,8 +46,12 @@ public class CRUDManagerController implements CRUDoperation {
     private TextField viewManager;
     @FXML
     private Button viewManagerButton;
+
     @Override
     public boolean createEntity() {
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        // Obtain a Hibernate Session
+        Session session = sessionFactory.openSession();
         String userName = textFieldId.getText();
         String password = textFieldPassword.getText();
         String fullName = textFieldFullName.getText();
@@ -61,28 +61,35 @@ public class CRUDManagerController implements CRUDoperation {
             showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
             return false; // Abort the create operation
         }
-        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
-        // Obtain a Hibernate Session
-        Session session = sessionFactory.openSession();
+
+        List<Manager> managerList = session.createQuery("FROM Manager WHERE providerId = :managerId", Manager.class)
+                .setParameter("managerId", userName)
+                .getResultList();
+
+        if (!managerList.isEmpty()) {
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Manager has been created.");
+            return false;
+        }
+
         Manager manager = new Manager();
 
         manager.setProviderId(userName);
         manager.setPassword(password);
         manager.setProviderName(fullName);
 
-
         try {
             // Begin a transaction
             session.beginTransaction();
 
             // Perform a query
-            session.save(manager);// or session.persist(policyHolder)
+            session.save(manager);
 
             // Commit the transaction
             session.getTransaction().commit();
             //Alert
             ShowAlert showAlert = new ShowAlert();
-            showAlert.showAlert(Alert.AlertType.INFORMATION,"Successful","Create Successfully");
+            showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Create Successfully");
 
             //clear field
             textFieldId.clear();
@@ -117,11 +124,16 @@ public class CRUDManagerController implements CRUDoperation {
 
             // Retrieve the entity to update
             Manager manager = session.get(Manager.class, userName);
-            if (manager == null) {
+            List<Manager> managerList = session.createQuery("FROM Manager WHERE providerId = :managerId", Manager.class)
+                    .setParameter("managerId", userName)
+                    .getResultList();
+
+            if (managerList.isEmpty()) {
                 ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.ERROR,"ERROR","dependent not found");
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Manager does not exist.");
                 return false;
             }
+
             // Update only non-empty fields
             if (!newPassword.isEmpty()) {
                 manager.setPassword(newPassword);
@@ -136,7 +148,7 @@ public class CRUDManagerController implements CRUDoperation {
 
             // alert
             ShowAlert showAlert = new ShowAlert();
-            showAlert.showAlert(Alert.AlertType.INFORMATION,"Successful","Update Successfully");
+            showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Update Successfully");
             //clear the field
             checkUpdateId.clear();
             updatePassword.clear();
@@ -177,12 +189,12 @@ public class CRUDManagerController implements CRUDoperation {
                 // Delete the entity
                 session.delete(manager);
                 ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.INFORMATION,"Successful","Record deleted successfully.");
+                showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Record deleted successfully.");
 
 
             } else {
                 ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.ERROR,"ERROR","Record with ID " + userName + " not found.");
+                showAlert.showAlert(Alert.AlertType.ERROR, "ERROR", "Manager with ID " + userName + " not found.");
             }
 
             // Commit the transaction
@@ -218,7 +230,7 @@ public class CRUDManagerController implements CRUDoperation {
             Manager manager = session.get(Manager.class, userName);
 
             // Check if the entity exists
-            if (manager  != null) {
+            if (manager != null) {
                 // Load the Admin.fxml file
                 // Create a new stage (window)
                 displaySurveyorDetails(manager);
@@ -227,7 +239,7 @@ public class CRUDManagerController implements CRUDoperation {
 
             } else {
                 ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.ERROR,"ERROR","Record with ID " + userName + " not found.");
+                showAlert.showAlert(Alert.AlertType.ERROR, "ERROR", "Manager with ID " + userName + " not found.");
             }
 
             // Commit the transaction
@@ -245,6 +257,7 @@ public class CRUDManagerController implements CRUDoperation {
         }
         return false;
     }
+
     private void displaySurveyorDetails(Manager manager) {
         // Create a new stage (window)
         Stage codeStage = new Stage();
@@ -268,6 +281,7 @@ public class CRUDManagerController implements CRUDoperation {
         // Show the new stage
         codeStage.show();
     }
+
     @FXML
     private void goBack(ActionEvent event) {
         try {
