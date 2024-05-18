@@ -34,6 +34,11 @@
          <Insets top="10.0" />
       </VBox.margin></Label>
     <TextField fx:id="updateLocation" promptText="Location" />
+    <Label text="Set new Insurance Fee">
+        <VBox.margin>
+            <Insets top="10.0" />
+        </VBox.margin></Label>
+    <TextField fx:id="updateInsuranceFee" promptText="Insurance Fee" />
    <HBox prefHeight="0.0" prefWidth="200.0" spacing="104.0">
       <children>
           <Button mnemonicParsing="false" onAction="#updateEntity" text="Update" />

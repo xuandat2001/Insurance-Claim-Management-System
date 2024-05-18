@@ -86,7 +86,7 @@ public class PolicyHolderClaimController implements SuperCustomer {
     @FXML
     private TextField newAccNumTextDependent;
     @FXML
-    private Button uploadPDF;
+    private Button uploadPDF = new Button();
 
 // Attributes for UpdateClaimForDependent
     @FXML
@@ -440,10 +440,18 @@ public class PolicyHolderClaimController implements SuperCustomer {
                         successfulAlert.showAlert(Alert.AlertType.ERROR,"ERROR", "Claim Not Found");
                         return false;
                     }
+
                     claim.setClaimAmount(claimAmount);
-                    claim.getBankInfo().setBankName(bankName);
-                    claim.getBankInfo().setOwnerName(ownerName);
-                    claim.getBankInfo().setAccountNumber(accountNumber);
+                    BankInfo bankInfo = claim.getBankInfo();
+                    if (!bankName.isEmpty()){
+                        bankInfo.setBankName(bankName);
+                    }
+                    if (!ownerName.isEmpty()){
+                        bankInfo.setOwnerName(ownerName);
+                    }
+                    if (!accountNumber.isEmpty()){
+                        bankInfo.setAccountNumber(accountNumber);
+                    }
 
                     session.getTransaction().commit();
                     ShowAlert successfulAlert = new ShowAlert();

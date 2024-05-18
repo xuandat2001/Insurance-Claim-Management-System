@@ -7,10 +7,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -65,7 +62,7 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
     @FXML
     private TextField textFieldCardNumber;
     @FXML
-    private Button uploadPDF;
+    private Button uploadPDF = new Button();
 
     public void setPolicyOwner(PolicyOwner policyOwner) {
         this.policyOwner = policyOwner;
@@ -73,37 +70,7 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
 
     @FXML
     private Button saveClaimButton;
-    public void initialize() {
-        uploadPDF.setOnAction(e -> {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
-            fileChooser.setTitle("Select PDF File");
-            File selectedFile = fileChooser.showOpenDialog(new Stage());
-            if (selectedFile != null) {
-                try {
-                    fileData = encodeFileToBase64(selectedFile);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                    ShowAlert errorAlert = new ShowAlert();
-                    errorAlert.showAlert(Alert.AlertType.ERROR, "ERROR", "Failed to encode PDF file.");
-                }
-            } else {
-                ShowAlert errorAlert = new ShowAlert();
-                errorAlert.showAlert(Alert.AlertType.ERROR, "ERROR", "No file to selected.");
-            }
-        });
-    }
-    public static String encodeFileToBase64(File file) throws IOException {
-        byte[] fileContent = new byte[(int) file.length()];
-        try (FileInputStream fileInputStream = new FileInputStream(file)) {
-            fileInputStream.read(fileContent);
-        }
-        return Base64.getEncoder().encodeToString(fileContent);
-    }
 
-    public static byte[] decodeBase64ToFile(String base64String) {
-        return Base64.getDecoder().decode(base64String);
-    }
     @Override
     public boolean filePolicyHolderClaim() {
         try {
@@ -273,8 +240,14 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
                     session.close();
                 }
             }
+            Button returnButton = new Button("Return");
+            returnButton.setOnAction(this::goBackMainMenu);
+            codeContainer.getChildren().add(returnButton);
+            ScrollPane scrollPane = new ScrollPane();
+            scrollPane.setContent(codeContainer);
+            scrollPane.setFitToWidth(true);
             // Create a scene with the code container
-            Scene codeScene = new Scene(codeContainer, 400, 1000);
+            Scene codeScene = new Scene(scrollPane, 400, 1000);
             codeStage.setScene(codeScene);
             codeStage.show();
 
@@ -337,11 +310,19 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
                 }
 
                 Claim claim = claimList.get(0);
-                claim.setClaimAmount(claimAmount);
+                if (!claimList.isEmpty()){
+                    claim.setClaimAmount(claimAmount);
+                }
                 BankInfo bankInfo = claim.getBankInfo();
-                bankInfo.setBankName(bankName);
-                bankInfo.setOwnerName(ownerName);
-                bankInfo.setAccountNumber(accountNumber);
+                if (!bankName.isEmpty()){
+                    bankInfo.setBankName(bankName);
+                }
+                if (!ownerName.isEmpty()){
+                    bankInfo.setOwnerName(ownerName);
+                }
+                if (!accountNumber.isEmpty()){
+                    bankInfo.setAccountNumber(accountNumber);
+                }
                 // Commit the transaction
                 session.getTransaction().commit();
                 ShowAlert showAlert = new ShowAlert();
@@ -596,8 +577,15 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
                 session.close();
             }
         }
+        Button returnButton = new Button("Return");
+        returnButton.setOnAction(this::goBackMainMenu);
+        codeContainer.getChildren().add(returnButton);
+        // Create a ScrollPane and set the VBox as its content
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(codeContainer);
+        scrollPane.setFitToWidth(true);
         // Create a scene with the code container
-        Scene codeScene = new Scene(codeContainer, 400, 1000);
+        Scene codeScene = new Scene(scrollPane, 400, 1000);
         codeStage.setScene(codeScene);
         codeStage.show();
         // Hide the current window
@@ -649,10 +637,19 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
             }
 
             Claim claim = claimList.get(0);
-            claim.setClaimAmount(claimAmount);
-            claim.getBankInfo().setBankName(bankName);
-            claim.getBankInfo().setOwnerName(ownerName);
-            claim.getBankInfo().setAccountNumber(accountNumber);
+
+                claim.setClaimAmount(claimAmount);
+
+            BankInfo bankInfo = claim.getBankInfo();
+            if (!bankName.isEmpty()){
+                bankInfo.setBankName(bankName);
+            }
+            if (!ownerName.isEmpty()){
+                bankInfo.setOwnerName(ownerName);
+            }
+            if (!accountNumber.isEmpty()){
+                bankInfo.setAccountNumber(accountNumber);
+            }
 
             session.getTransaction().commit();
             ShowAlert showAlert = new ShowAlert();
@@ -876,10 +873,10 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
         Session session = sessionFactory.openSession();
         try {
             String policyHolderId = textFieldPolicyHolderID.getText();
-            String newDependentName = textFieldFullName.getText();
+            String newPolicyHolderName = textFieldFullName.getText();
             String newPassword = textFieldPassword.getText();
 
-            if (policyHolderId.isEmpty() || newDependentName.isEmpty() || newPassword.isEmpty()) {
+            if (policyHolderId.isEmpty() || newPolicyHolderName.isEmpty() || newPassword.isEmpty()) {
                 // If any required field is empty, show an alert message
                 ShowAlert showAlert = new ShowAlert();
                 showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
@@ -904,8 +901,12 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
             session.beginTransaction();
 
             policyHolder = session.get(PolicyHolder.class, policyHolderId);
-            policyHolder.setFullName(newDependentName);
-            policyHolder.setPassword(newPassword);
+            if (!newPolicyHolderName.isEmpty()){
+                policyHolder.setFullName(newPolicyHolderName);
+            }
+            if (!newPassword.isEmpty()){
+                policyHolder.setPassword(newPassword);
+            }
 
             session.getTransaction().commit();
             ShowAlert showAlert = new ShowAlert();
@@ -1093,8 +1094,12 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
             session.beginTransaction();
 
             dependent = session.get(Dependent.class, dependentId);
-            dependent.setFullName(newDependentName);
-            dependent.setPassword(newPassword);
+            if (!newDependentName.isEmpty()){
+                dependent.setFullName(newDependentName);
+            }
+            if (!newPassword.isEmpty()){
+                dependent.setPassword(newPassword);
+            }
 
             session.getTransaction().commit();
             ShowAlert showAlert = new ShowAlert();
@@ -1188,5 +1193,37 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    @FXML
+    public void initialize() {
+        uploadPDF.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+            fileChooser.setTitle("Select PDF File");
+            File selectedFile = fileChooser.showOpenDialog(new Stage());
+            if (selectedFile != null) {
+                try {
+                    fileData = encodeFileToBase64(selectedFile);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    ShowAlert errorAlert = new ShowAlert();
+                    errorAlert.showAlert(Alert.AlertType.ERROR, "ERROR", "Failed to encode PDF file.");
+                }
+            } else {
+                ShowAlert errorAlert = new ShowAlert();
+                errorAlert.showAlert(Alert.AlertType.ERROR, "ERROR", "No file to selected.");
+            }
+        });
+    }
+    public static String encodeFileToBase64(File file) throws IOException {
+        byte[] fileContent = new byte[(int) file.length()];
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+            fileInputStream.read(fileContent);
+        }
+        return Base64.getEncoder().encodeToString(fileContent);
+    }
+
+    public static byte[] decodeBase64ToFile(String base64String) {
+        return Base64.getDecoder().decode(base64String);
     }
 }

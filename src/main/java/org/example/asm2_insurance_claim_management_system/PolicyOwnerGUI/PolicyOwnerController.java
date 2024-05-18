@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.asm2_insurance_claim_management_system.Customers.Dependent;
@@ -88,6 +89,7 @@ public class PolicyOwnerController {
         }
     }
 
+
     @FXML
     protected void onFileClaimForPolicyHolder() {
         String url = "/org/example/asm2_insurance_claim_management_system/PolicyOwner/fileClaimForPolicyHolder.fxml";
@@ -96,7 +98,7 @@ public class PolicyOwnerController {
     @FXML
     protected void onRetrieveClaimOfPolicyHolder() {
         String url = "/org/example/asm2_insurance_claim_management_system/PolicyOwner/retrieveClaimOfPolicyHolder.fxml";
-        createScenePolicyOwner(url, retrieveClaimOfPolicyHolder);
+        createScenePolicyOwner (url, retrieveClaimOfPolicyHolder);
     }
     @FXML
     protected void onUpdateClaimOfPolicyHolder() {
@@ -116,7 +118,7 @@ public class PolicyOwnerController {
     @FXML
     protected void onRetrieveClaimOfDependent() {
         String url = "/org/example/asm2_insurance_claim_management_system/PolicyOwner/retrieveClaimOfDependent.fxml";
-        createScenePolicyOwner(url, retrieveClaimOfDependent);
+        createScenePolicyOwner (url, retrieveClaimOfDependent);
     }
     @FXML
     protected void onUpdateClaimOfDependent() {
@@ -189,8 +191,12 @@ public class PolicyOwnerController {
         returnButton.setOnAction(this::goBackMainMenu);
         // Add the Close button to the VBox
         codeContainer.getChildren().add(returnButton);
+        // Create a ScrollPane and set the VBox as its content
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(codeContainer);
+        scrollPane.setFitToWidth(true);
         // Create a scene with the code container
-        Scene codeScene = new Scene(codeContainer, 400, 300);
+        Scene codeScene = new Scene(scrollPane, 400, 300);
         codeStage.setScene(codeScene);
         codeStage.show();
 
@@ -212,11 +218,7 @@ public class PolicyOwnerController {
         String url = "/org/example/asm2_insurance_claim_management_system/PolicyOwner/createDependent.fxml";
         createScenePolicyOwner(url, createDependent);
     }
-    @FXML
-    protected void onRetrieveInfoOfDependent() {
-        String url = "/org/example/asm2_insurance_claim_management_system/PolicyOwner/retrieveInfoOfDependent.fxml";
-        createScenePolicyOwner(url, retrieveInfoOfDependent);
-    }
+
     @FXML
     protected void onUpdateInfoOfDependent() {
         String url = "/org/example/asm2_insurance_claim_management_system/PolicyOwner/updateInfoOfDependent.fxml";
@@ -286,8 +288,12 @@ public class PolicyOwnerController {
         returnButton.setOnAction(this::goBackMainMenu);
         // Add the Close button to the VBox
         codeContainer.getChildren().add(returnButton);
+        // Create a ScrollPane and set the VBox as its content
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(codeContainer);
+        scrollPane.setFitToWidth(true);
         // Create a scene with the code container
-        Scene codeScene = new Scene(codeContainer, 400, 300);
+        Scene codeScene = new Scene(scrollPane, 400, 300);
         codeStage.setScene(codeScene);
         codeStage.show();
 

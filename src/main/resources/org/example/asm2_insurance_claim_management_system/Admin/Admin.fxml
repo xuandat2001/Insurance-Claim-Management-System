@@ -68,7 +68,7 @@
    </HBox>
    <HBox prefHeight="42.0" prefWidth="310.0" spacing="77.0">
       <children>
-      
+
           <Button fx:id="createDependentButton" mnemonicParsing="false" onAction="#OnCreateDependentButton" text="Create Dependent" />
           <Button fx:id="deleteDependentButton" mnemonicParsing="false" onAction="#OnDeleteDependentButton" text="Delete Dependent" />
       </children>

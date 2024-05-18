@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -136,8 +137,32 @@ public class PolicyHolderController implements SuperCustomer {
         createPolicyHolderClaimForm(url,"Update Claim For Dependent", updateFromFileClaimForDependent);
     }
     public  void retrieveClaimForDependentForm(){
-        String url = "/org/example/asm2_insurance_claim_management_system/PolicyHolder/retrieveClaimForDependent.fxml";
-        createPolicyHolderClaimForm(url,"Update Claim For Dependent", retrieveFromFileClaimForDependent);
+        try {
+            // Load the CreateClaim.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/asm2_insurance_claim_management_system/PolicyHolder/retrieveClaimForDependent.fxml"));
+
+            // Load the root element (in this case, VBox)
+            ScrollPane root = loader.load();
+
+            // Get the controller associated with CreateClaim.fxml
+            PolicyHolderClaimController policyHolderClaimController = loader.getController();
+
+            // Pass necessary data or references to the controller, if needed
+            policyHolderClaimController.setPolicyHolder(policyHolder);
+
+            // Create a new stage for the Create Claim UI
+            Stage createClaimStage = new Stage();
+            createClaimStage.setTitle("Get Claim For Dependent");
+            createClaimStage.setScene(new Scene(root, 600, 400));
+
+            // Show the Create Claim UI stage
+            createClaimStage.show();
+
+            // Close the current stage (the one containing the button)
+            retrieveFromFileClaimForDependent.getScene().getWindow().hide();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     public  void updateForDependentForm(){
         String url = "/org/example/asm2_insurance_claim_management_system/PolicyHolder/updateDependentInfo.fxml";
@@ -182,7 +207,6 @@ public class PolicyHolderController implements SuperCustomer {
         } finally {
             // Close the session and session factory
             session.close();
-            sessionFactory.close();
         }
         return false;
     }
@@ -191,11 +215,12 @@ public class PolicyHolderController implements SuperCustomer {
         Stage codeStage = new Stage();
         codeStage.setTitle("PolicyHolder Details");
 
-        // Create a VBox to hold the code
-        VBox codeContainer = new VBox();
-        codeContainer.setPadding(new Insets(10));
-        codeContainer.setSpacing(10);
+        // Create a VBox to hold the content
+        VBox contentBox = new VBox();
+        contentBox.setPadding(new Insets(10));
+        contentBox.setSpacing(10);
 
+        // Add claim details to the VBox
         for (Claim claim : claimList) {
             if (policyHolder.getId().equals(claim.getPolicyHolder().getId())) {
                 Label codeLabel = new Label(
@@ -211,22 +236,29 @@ public class PolicyHolderController implements SuperCustomer {
                                 "Owner Name: " + claim.getBankInfo().getOwnerName() + "\n" +
                                 "Bank Account Number: " + claim.getBankInfo().getAccountNumber()
                 );
-                codeContainer.getChildren().add(codeLabel);
+                contentBox.getChildren().add(codeLabel);
             }
         }
 
-        // Create a scene with the code container
+        // Add the Return button to the VBox
         Button returnButton = new Button("Return");
         returnButton.setOnAction(this::goBackMainMenu);
-        // Add the Close button to the VBox
-        codeContainer.getChildren().add(returnButton);
-        Scene codeScene = new Scene(codeContainer, 400, 300);
+        contentBox.getChildren().add(returnButton);
+
+        // Create a ScrollPane and set the VBox as its content
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(contentBox);
+        scrollPane.setFitToWidth(true);
+
+        // Create a scene with the ScrollPane
+        Scene codeScene = new Scene(scrollPane, 400, 300);
         codeStage.setScene(codeScene);
         codeStage.show();
 
         // Hide the current window
         viewPolicyHolderClaimsButton.getScene().getWindow().hide();
     }
+
 
 
 
@@ -292,8 +324,13 @@ public class PolicyHolderController implements SuperCustomer {
         returnButton.setOnAction(this::goBackMainMenu);
         // Add the Close button to the VBox
         codeContainer.getChildren().add(returnButton);
+
+        // Create a ScrollPane and set the VBox as its content
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(codeContainer);
+        scrollPane.setFitToWidth(true);
         // Set the scene of the new stage with the VBox
-        codeStage.setScene(new Scene(codeContainer, 400, 200));
+        codeStage.setScene(new Scene(scrollPane, 400, 200));
 
         // Show the new stage
         codeStage.show();
