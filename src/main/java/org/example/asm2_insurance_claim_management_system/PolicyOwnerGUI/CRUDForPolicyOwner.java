@@ -87,53 +87,64 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
             try {
                 session.beginTransaction();
                 // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
-                String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE o.id = :policyOwnerId";
+                String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE o.id = :policyOwnerId AND h.id = :policyHolderID";
                 List<PolicyHolder> policyHolderList = session.createQuery(desiredPolicyHolder, PolicyHolder.class)
                         .setParameter("policyOwnerId", policyOwner.getId())
+                        .setParameter("policyHolderID", policyHolderId)
                         .getResultList();
 
-                for (PolicyHolder policyHolder : policyHolderList) {
-                    if (policyHolder.getId().equals(policyHolderId)) {
-                        List<Claim> claimList = session.createQuery("FROM Claim WHERE claimId = :claimID", Claim.class)
-                                .setParameter("claimID", claimID)
-                                .getResultList();
-
-                        if (claimList.isEmpty()) {
-                            BankInfo bankInfo = new BankInfo();
-                            bankInfo.setBankID(bankID);
-                            bankInfo.setBankName(bankName);
-                            bankInfo.setOwnerName(ownerName);
-                            bankInfo.setAccountNumber(accountNumber);
-
-                            Claim claim = new Claim();
-                            claim.setClaimId(claimID);
-                            claim.setClaimDate(LocalDate.now());
-                            claim.setStatus(Status.NEW);
-                            claim.setInsuranceCard(policyHolder.getInsuranceCard());
-                            claim.setPolicyHolder(policyHolder);
-                            claim.setClaimAmount(claimAmount);
-                            claim.setDependent(null);
-                            claim.setBankInfo(bankInfo);
-
-                            // Save the bankInfo and claim
-                            session.save(bankInfo);
-                            session.save(claim);
-
-                            session.getTransaction().commit();
-
-                            ShowAlert showAlert = new ShowAlert();
-                            showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Create Successfully");
-                            return true;
-                        } else {
-                            ShowAlert showAlert = new ShowAlert();
-                            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Claim with this ID already exists.");
-                            return false;
-                        }
-                    }
+                if (policyHolderList.isEmpty()) {
+                    ShowAlert showAlert = new ShowAlert();
+                    showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Policy Holder does not exist.");
+                    return false;
                 }
+                PolicyHolder policyHolder = policyHolderList.get(0);
+
+                List<Claim> claimList = session.createQuery("FROM Claim WHERE claimId = :claimID", Claim.class)
+                        .setParameter("claimID", claimID)
+                        .getResultList();
+
+                if (!claimList.isEmpty()) {
+                    ShowAlert showAlert = new ShowAlert();
+                    showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Claim has been existed.");
+                    return false;
+                }
+
+                List<BankInfo> bankInfoList = session.createQuery("FROM BankInfo WHERE bankID = :bankID", BankInfo.class)
+                        .setParameter("bankID", bankID)
+                        .getResultList();
+
+                if (!bankInfoList.isEmpty()) {
+                    ShowAlert showAlert = new ShowAlert();
+                    showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Bank ID has been existed.");
+                    return false;
+                }
+                BankInfo bankInfo = new BankInfo();
+                bankInfo.setBankID(bankID);
+                bankInfo.setBankName(bankName);
+                bankInfo.setOwnerName(ownerName);
+                bankInfo.setAccountNumber(accountNumber);
+
+                Claim claim = new Claim();
+                claim.setClaimId(claimID);
+                claim.setClaimDate(LocalDate.now());
+                claim.setStatus(Status.NEW);
+                claim.setInsuranceCard(policyHolder.getInsuranceCard());
+                claim.setPolicyHolder(policyHolder);
+                claim.setClaimAmount(claimAmount);
+                claim.setDependent(null);
+                claim.setBankInfo(bankInfo);
+
+                // Save the bankInfo and claim
+                session.save(bankInfo);
+                session.save(claim);
+
+                session.getTransaction().commit();
+
                 ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Policy Holder does not exist.");
-                return false;
+                showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Create Successfully");
+                return true;
+
 
             } catch (Exception ex) {
                 session.getTransaction().rollback();
@@ -168,276 +179,305 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
 
         String policyHolderId = textFieldPolicyHolderID.getText();
 
+        if (policyHolderId.isEmpty()) {
+            // If any required field is empty, show an alert message
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
+            return false; // Abort the create operation
+        }
+
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         Session session = sessionFactory.openSession();
 
 // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
-        String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE o.id = :policyOwnerId";
+        String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE o.id = :policyOwnerId AND h.id = :policyHolderID";
         List<PolicyHolder> policyHolderList = session.createQuery(desiredPolicyHolder, PolicyHolder.class)
-                .setParameter("policyOwnerId", policyOwner.getId())
+                .setParameter("policyOwnerId", policyOwner.getId()).setParameter("policyHolderID", policyHolderId)
                 .getResultList();
-        for (PolicyHolder policyHolder : policyHolderList) {
-            if (policyHolder.getId().equals(policyHolderId)) {
-                try {
-                    session.beginTransaction();
-                    String desiredClaim = "SELECT c FROM Claim c WHERE c.policyHolder IS NOT NULL AND c.dependent IS NULL";
-                    List<Claim> claimList = session.createQuery(desiredClaim, Claim.class)
-                            .getResultList();
-                    for (Claim claim : claimList) {
-                        if (policyHolder.getId().equals(claim.getPolicyHolder().getId())) {
-                            Label codeLabel = new Label(
-                                    "Claim ID: " + claim.getClaimId() + "\n" +
-                                            "Claim Date: " + claim.getClaimDate() + "\n" +
-                                            "Claim Amount: " + claim.getClaimAmount() + "\n" +
-                                            "List of Document: " + claim.getListOfDocument() + "\n" +
-                                            "Claim Status: " + claim.getStatus() + "\n" +
-                                            "Card Number: " + claim.getInsuranceCard().getCardNumber() + "\n" +
-                                            "Policy Holder: " + claim.getPolicyHolder().getId() + "\n" +
-                                            "Bank ID: " + claim.getBankInfo().getBankID() + "\n" +
-                                            "Bank Name: " + claim.getBankInfo().getBankName() + "\n" +
-                                            "Owner Name: " + claim.getBankInfo().getOwnerName() + "\n" +
-                                            "Bank Account Number: " + claim.getBankInfo().getAccountNumber()
-                            );
-                            codeContainer.getChildren().add(codeLabel);
-                        }
-                    }
-                } catch (Exception ex) {
-                    // Rollback the transaction in case of an exception
-                    session.getTransaction().rollback();
-                    ex.printStackTrace();
-                } finally {
-                    // Close the session and session factory
-//            session.close();
-//            sessionFactory.close();
-                    if (session != null) {
-                        session.close();
+
+        if (!policyHolderList.isEmpty()) {
+            try {
+                session.beginTransaction();
+                String desiredClaim = "SELECT c FROM Claim c WHERE c.policyHolder IS NOT NULL AND c.dependent IS NULL";
+                List<Claim> claimList = session.createQuery(desiredClaim, Claim.class)
+                        .getResultList();
+                for (Claim claim : claimList) {
+                    if (policyHolderList.get(0).getId().equals(claim.getPolicyHolder().getId())) {
+                        Label codeLabel = new Label(
+                                "Claim ID: " + claim.getClaimId() + "\n" +
+                                        "Claim Date: " + claim.getClaimDate() + "\n" +
+                                        "Claim Amount: " + claim.getClaimAmount() + "\n" +
+                                        "List of Document: " + claim.getListOfDocument() + "\n" +
+                                        "Claim Status: " + claim.getStatus() + "\n" +
+                                        "Card Number: " + claim.getInsuranceCard().getCardNumber() + "\n" +
+                                        "Policy Holder: " + claim.getPolicyHolder().getId() + "\n" +
+                                        "Bank ID: " + claim.getBankInfo().getBankID() + "\n" +
+                                        "Bank Name: " + claim.getBankInfo().getBankName() + "\n" +
+                                        "Owner Name: " + claim.getBankInfo().getOwnerName() + "\n" +
+                                        "Bank Account Number: " + claim.getBankInfo().getAccountNumber()
+                        );
+                        codeContainer.getChildren().add(codeLabel);
                     }
                 }
-                // Create a scene with the code container
-                Scene codeScene = new Scene(codeContainer, 400, 1000);
-                codeStage.setScene(codeScene);
-                codeStage.show();
+            } catch (Exception ex) {
+                // Rollback the transaction in case of an exception
+                session.getTransaction().rollback();
+                ex.printStackTrace();
+            } finally {
+                // Close the session and session factory
+//            session.close();
+//            sessionFactory.close();
+                if (session != null) {
+                    session.close();
+                }
+            }
+            // Create a scene with the code container
+            Scene codeScene = new Scene(codeContainer, 400, 1000);
+            codeStage.setScene(codeScene);
+            codeStage.show();
 
-                // Hide the current window
+            // Hide the current window
 //    viewPolicyHolderClaimsButton.getScene().getWindow().hide();
-
-            }
-        }
-        for (PolicyHolder policyHolder : policyHolderList) {
-            if (!policyHolder.getId().equals(policyHolderId)) {
-                ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Policy Holder does not exist");
-                break;
-            }
+        } else {
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Policy Holder does not exist");
+            return false;
         }
         return false;
     }
 
     @Override
     public boolean updatePolicyHolderClaim() {
-        String policyHolderId = textFieldPolicyHolderID.getText();
-        String claimID = textFieldClaimID.getText();
-        double claimAmount = Double.parseDouble(textFieldClaimAmount.getText());
-        String bankName = textFieldBankName.getText();
-        String ownerName = textFieldOwnerName.getText();
-        String accountNumber = textFieldAccountNumber.getText();
+        try {
+            String policyHolderId = textFieldPolicyHolderID.getText();
+            String claimID = textFieldClaimID.getText();
+            double claimAmount = Double.parseDouble(textFieldClaimAmount.getText());
+            String bankName = textFieldBankName.getText();
+            String ownerName = textFieldOwnerName.getText();
+            String accountNumber = textFieldAccountNumber.getText();
 
-        if (policyHolderId.isEmpty() || claimID.isEmpty() || bankName.isEmpty() || ownerName.isEmpty() || accountNumber.isEmpty()) {
-            // If any required field is empty, show an alert message
-            ShowAlert showAlert = new ShowAlert();
-            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
-            return false; // Abort the create operation
-        }
+            if (policyHolderId.isEmpty() || claimID.isEmpty() || bankName.isEmpty() || ownerName.isEmpty() || accountNumber.isEmpty()) {
+                // If any required field is empty, show an alert message
+                ShowAlert showAlert = new ShowAlert();
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
+                return false; // Abort the update operation
+            }
 
-        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
-        Session session = sessionFactory.openSession();
+            SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+            Session session = sessionFactory.openSession();
+            try {
+                // Start a transaction
+                session.beginTransaction();
 
-// Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
-        String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE o.id = :policyOwnerId";
-        List<PolicyHolder> policyHolderList = session.createQuery(desiredPolicyHolder, PolicyHolder.class)
-                .setParameter("policyOwnerId", policyOwner.getId())
-                .getResultList();
-        for (PolicyHolder policyHolder : policyHolderList) {
-            if (policyHolder.getId().equals(policyHolderId)) {
-                try {
-                    String desiredClaim = "SELECT c FROM Claim c JOIN c.policyHolder h WHERE h.id = :policyHolderId AND c.dependent IS NULL";
-                    List<Claim> claimList = session.createQuery(desiredClaim, Claim.class)
-                            .setParameter("policyHolderId", policyHolderId)
-                            .getResultList();
-                    for (Claim claim : claimList) {
-                        if (claim.getClaimId().equals(claimID)) {
-                            {
-                                session.beginTransaction();
-                                claim.setClaimAmount(claimAmount);
-                                claim.getBankInfo().setBankName(bankName);
-                                claim.getBankInfo().setOwnerName(ownerName);
-                                claim.getBankInfo().setAccountNumber(accountNumber);
+                // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
+                String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE o.id = :policyOwnerId AND h.id = :policyHolderID";
+                List<PolicyHolder> policyHolderList = session.createQuery(desiredPolicyHolder, PolicyHolder.class)
+                        .setParameter("policyOwnerId", policyOwner.getId())
+                        .setParameter("policyHolderID", policyHolderId)
+                        .getResultList();
 
-                                session.getTransaction().commit();
-                                ShowAlert showAlert = new ShowAlert();
-                                showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Update Successfully");
-                                return true; // Update successful
-                            }
-                        }
-                    }
-                } catch (Exception ex) {
-                    // Rollback the transaction in case of an exception
-                    session.getTransaction().rollback();
-                    ex.printStackTrace();
-                } finally {
-                    // Close the session and session factory
-//            session.close();
-//            sessionFactory.close();
-                    if (session != null) {
-                        session.close();
-                    }
+                if (policyHolderList.isEmpty()) {
+                    ShowAlert showAlert = new ShowAlert();
+                    showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Policy Holder does not exist.");
+                    return false;
                 }
 
-            }
+                String desiredClaim = "SELECT c FROM Claim c JOIN c.policyHolder h WHERE h.id = :policyHolderId AND c.dependent IS NULL AND c.id = :claimId";
+                List<Claim> claimList = session.createQuery(desiredClaim, Claim.class)
+                        .setParameter("policyHolderId", policyHolderId)
+                        .setParameter("claimId", claimID)
+                        .getResultList();
 
-        }
-        for (PolicyHolder policyHolder : policyHolderList) {
-            if (!policyHolder.getId().equals(policyHolderId)) {
-                ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Policy Holder or Claim does not exist");
-                break;
-            }
-        }
-
-        return false;
-    }
-
-    public boolean deleteClaimOfPolicyHolder() {
-
-        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
-        // Obtain a Hibernate Session
-        Session session = sessionFactory.openSession();
-
-        String policyHolderId = textFieldPolicyHolderID.getText();
-        String claimID = textFieldClaimID.getText();
-
-        // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
-        String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE o.id = :policyOwnerId";
-        List<PolicyHolder> policyHolderList = session.createQuery(desiredPolicyHolder, PolicyHolder.class)
-                .setParameter("policyOwnerId", policyOwner.getId())
-                .getResultList();
-        for (PolicyHolder policyHolder : policyHolderList) {
-            if (policyHolder.getId().equals(policyHolderId)) {
-                try {
-                    String desiredClaim = "SELECT c FROM Claim c JOIN c.policyHolder h WHERE h.id = :policyHolderId AND c.dependent IS NULL";
-                    List<Claim> claimList = session.createQuery(desiredClaim, Claim.class)
-                            .setParameter("policyHolderId", policyHolderId)
-                            .getResultList();
-                    for (Claim claim : claimList) {
-                        if (claim.getClaimId().equals(claimID)) {
-                            // Begin a transaction
-                            session.beginTransaction();
-
-                            session.delete(claim);
-
-                            // Commit the transaction
-                            session.getTransaction().commit();
-                            ShowAlert showAlert = new ShowAlert();
-                            showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Delete Successfully");
-                            return true;
-                        }
-                    }
-                } catch (Exception ex) {
-                    // Rollback the transaction in case of an exception
-                    session.getTransaction().rollback();
-                    ex.printStackTrace();
-                } finally {
-                    // Close the session and session factory
-                    session.close();
-//                    sessionFactory.close();
+                if (claimList.isEmpty()) {
+                    ShowAlert showAlert = new ShowAlert();
+                    showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Claim does not exist.");
+                    return false;
                 }
-            }
-        }
-        for (PolicyHolder policyHolder : policyHolderList) {
-            if (!policyHolder.getId().equals(policyHolderId)) {
-                ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Policy Holder or Claim does not exist");
-                break;
-            }
-        }
-        return false;
-    }
 
-
-    @Override
-    public boolean fileClaimForDependent() {
-        String dependentId = textFieldDependentID.getText();
-        String claimID = textFieldClaimID.getText();
-        double claimAmount = Double.parseDouble(textFieldClaimAmount.getText());
-        String bankID = textFieldBankID.getText();
-        String bankName = textFieldBankName.getText();
-        String ownerName = textFieldOwnerName.getText();
-        String accountNumber = textFieldAccountNumber.getText();
-
-        if (dependentId.isEmpty() || claimID.isEmpty() || bankID.isEmpty() || bankName.isEmpty() || ownerName.isEmpty() || accountNumber.isEmpty()) {
-            // If any required field is empty, show an alert message
-            ShowAlert showAlert = new ShowAlert();
-            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
-            return false; // Abort the create operation
-        }
-
-        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
-        Session session = sessionFactory.openSession();
-        ;
-// Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
-        String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyOwner o WHERE o.id = :policyOwnerId";
-        List<Dependent> dependentList = session.createQuery(desiredDependent, Dependent.class)
-                .setParameter("policyOwnerId", policyOwner.getId())
-                .getResultList();
-        for (Dependent dependent : dependentList) {
-            if (dependent.getId().equals(dependentId)) {
-                BankInfo bankInfo = new BankInfo();
-                bankInfo.setBankID(bankID);
+                Claim claim = claimList.get(0);
+                claim.setClaimAmount(claimAmount);
+                BankInfo bankInfo = claim.getBankInfo();
                 bankInfo.setBankName(bankName);
                 bankInfo.setOwnerName(ownerName);
                 bankInfo.setAccountNumber(accountNumber);
-                Claim claim = new Claim();
-                claim.setClaimId(claimID);
-                claim.setClaimDate(LocalDate.now());
-                claim.setStatus(Status.NEW);
-                claim.setInsuranceCard(dependent.getPolicyHolder().getInsuranceCard());
-                claim.setPolicyHolder(dependent.getPolicyHolder());
-                claim.setClaimAmount(claimAmount);
-                claim.setDependent(dependent);
-                claim.setBankInfo(bankInfo);
-//         List of document
+                // Commit the transaction
+                session.getTransaction().commit();
+                ShowAlert showAlert = new ShowAlert();
+                showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Update Successfully");
+                return true; // Update successful
 
-                try {
-                    session.beginTransaction();
-                    session.save(bankInfo);
-                    session.save(claim);
-                    session.getTransaction().commit();
-                    ShowAlert showAlert = new ShowAlert();
-                    showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "File Claim Successfully");
-                    return true;
-
-
-                } catch (Exception ex) {
-                    // Rollback the transaction in case of an exception
+            } catch (Exception ex) {
+                // Rollback the transaction in case of an exception
+                if (session.getTransaction().isActive()) {
                     session.getTransaction().rollback();
-                    ex.printStackTrace();
-                } finally {
-                    // Close the session and session factory
-//            session.close();
-//            sessionFactory.close();
-                    if (session != null) {
-                        session.close();
-                    }
                 }
+                ex.printStackTrace();
+                return false;
+            } finally {
+                // Ensure the session is closed
+                if (session != null) {
+                    session.close();
+                }
+            }
+        } catch (NumberFormatException e) {
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please enter a valid number for the claim amount.");
+            return false;
+        }
+    }
 
+
+    public boolean deleteClaimOfPolicyHolder() {
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        try {
+            String policyHolderId = textFieldPolicyHolderID.getText();
+            String claimID = textFieldClaimID.getText();
+
+            if (policyHolderId.isEmpty() || claimID.isEmpty()) {
+                // If any required field is empty, show an alert message
+                ShowAlert showAlert = new ShowAlert();
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
+                return false; // Abort the update operation
             }
 
-        }
-        for (Dependent dependent : dependentList) {
-            if (!dependent.getId().equals(dependentId)) {
+            // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
+            String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE o.id = :policyOwnerId AND h.id = :policyHolderID";
+            List<PolicyHolder> policyHolderList = session.createQuery(desiredPolicyHolder, PolicyHolder.class)
+                    .setParameter("policyOwnerId", policyOwner.getId())
+                    .setParameter("policyHolderID", policyHolderId)
+                    .getResultList();
+
+            if (policyHolderList.isEmpty()) {
                 ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Dependent does not exist");
-                break;
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Policy Holder does not exist.");
+                return false;
+            }
+
+            String desiredClaim = "SELECT c FROM Claim c JOIN c.policyHolder h WHERE h.id = :policyHolderId AND c.dependent IS NULL AND c.id = :claimId";
+            List<Claim> claimList = session.createQuery(desiredClaim, Claim.class)
+                    .setParameter("policyHolderId", policyHolderId)
+                    .setParameter("claimId", claimID)
+                    .getResultList();
+
+            if (claimList.isEmpty()) {
+                ShowAlert showAlert = new ShowAlert();
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Claim does not exist.");
+                return false;
+            }
+            Claim claim = claimList.get(0);
+
+            // Begin a transaction
+            session.beginTransaction();
+            session.delete(claim);
+            // Commit the transaction
+            session.getTransaction().commit();
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Delete Successfully");
+            return true;
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            // Close the session and session factory
+            session.close();
+//                    sessionFactory.close();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean fileClaimForDependent() {
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        try {
+            String dependentId = textFieldDependentID.getText();
+            String claimID = textFieldClaimID.getText();
+            double claimAmount = Double.parseDouble(textFieldClaimAmount.getText());
+            String bankID = textFieldBankID.getText();
+            String bankName = textFieldBankName.getText();
+            String ownerName = textFieldOwnerName.getText();
+            String accountNumber = textFieldAccountNumber.getText();
+
+            if (dependentId.isEmpty() || claimID.isEmpty() || bankID.isEmpty() || bankName.isEmpty() || ownerName.isEmpty() || accountNumber.isEmpty()) {
+                // If any required field is empty, show an alert message
+                ShowAlert showAlert = new ShowAlert();
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
+                return false; // Abort the create operation
+            }
+
+            // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
+            String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyOwner o WHERE o.id = :policyOwnerId AND d.id = :dependentId";
+            List<Dependent> dependentList = session.createQuery(desiredDependent, Dependent.class)
+                    .setParameter("policyOwnerId", policyOwner.getId())
+                    .setParameter("dependentId", dependentId)
+                    .getResultList();
+
+
+            if (dependentList.isEmpty()) {
+                ShowAlert showAlert = new ShowAlert();
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Dependent does not exist.");
+                return false;
+            }
+
+            List<Claim> claimList = session.createQuery("FROM Claim WHERE claimId = :claimID", Claim.class)
+                    .setParameter("claimID", claimID)
+                    .getResultList();
+
+            if (!claimList.isEmpty()) {
+                ShowAlert showAlert = new ShowAlert();
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Claim has been existed.");
+                return false;
+            }
+            List<BankInfo> bankInfoList = session.createQuery("FROM BankInfo WHERE bankID = :bankID", BankInfo.class)
+                    .setParameter("bankID", bankID)
+                    .getResultList();
+
+            if (!bankInfoList.isEmpty()) {
+                ShowAlert showAlert = new ShowAlert();
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Bank ID has been existed.");
+                return false;
+            }
+            Dependent dependent = dependentList.get(0);
+            BankInfo bankInfo = new BankInfo();
+            bankInfo.setBankID(bankID);
+            bankInfo.setBankName(bankName);
+            bankInfo.setOwnerName(ownerName);
+            bankInfo.setAccountNumber(accountNumber);
+            Claim claim = new Claim();
+            claim.setClaimId(claimID);
+            claim.setClaimDate(LocalDate.now());
+            claim.setStatus(Status.NEW);
+            claim.setInsuranceCard(dependent.getPolicyHolder().getInsuranceCard());
+            claim.setPolicyHolder(dependent.getPolicyHolder());
+            claim.setClaimAmount(claimAmount);
+            claim.setDependent(dependent);
+            claim.setBankInfo(bankInfo);
+//         List of document
+            session.beginTransaction();
+            session.save(bankInfo);
+            session.save(claim);
+            session.getTransaction().commit();
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "File Claim Successfully");
+            return true;
+
+
+        } catch (NumberFormatException e) {
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please enter a valid number for the claim amount.");
+            return false;
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            // Close the session and session factory
+//            session.close();
+//            sessionFactory.close();
+            if (session != null) {
+                session.close();
             }
         }
 
@@ -458,44 +498,124 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
 
         String dependentId = textFieldDependentID.getText();
 
+        if (dependentId.isEmpty()) {
+            // If any required field is empty, show an alert message
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
+            return false; // Abort the create operation
+        }
+
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         Session session = sessionFactory.openSession();
         try {
-// Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve Dependent for
-            String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyOwner o WHERE o.id = :policyOwnerId";
+            // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
+            String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyOwner o WHERE o.id = :policyOwnerId AND d.id = :dependentId";
             List<Dependent> dependentList = session.createQuery(desiredDependent, Dependent.class)
                     .setParameter("policyOwnerId", policyOwner.getId())
+                    .setParameter("dependentId", dependentId)
                     .getResultList();
-            for (Dependent dependent : dependentList) {
-                if (dependent.getId().equals(dependentId)) {
 
-                    session.beginTransaction();
-                    String desiredClaim = "SELECT c FROM Claim c WHERE c.dependent IS NOT NULL";
-                    List<Claim> claimList = session.createQuery(desiredClaim, Claim.class)
-                            .getResultList();
-                    for (Claim claim : claimList) {
-                        if (dependent.getId().equals(claim.getDependent().getId())) {
-                            Label codeLabel = new Label(
-                                    "Claim ID: " + claim.getClaimId() + "\n" +
-                                            "Claim Date: " + claim.getClaimDate() + "\n" +
-                                            "Claim Amount: " + claim.getClaimAmount() + "\n" +
-                                            "List of Document: " + claim.getListOfDocument() + "\n" +
-                                            "Claim Status: " + claim.getStatus() + "\n" +
-                                            "Card Number: " + claim.getInsuranceCard().getCardNumber() + "\n" +
-                                            "Policy Holder: " + claim.getPolicyHolder().getId() + "\n" +
-                                            "Bank ID: " + claim.getBankInfo().getBankID() + "\n" +
-                                            "Bank Name: " + claim.getBankInfo().getBankName() + "\n" +
-                                            "Owner Name: " + claim.getBankInfo().getOwnerName() + "\n" +
-                                            "Bank Account Number: " + claim.getBankInfo().getAccountNumber()
-                            );
-                            codeContainer.getChildren().add(codeLabel);
-                        }
-                    }
+            if (dependentList.isEmpty()) {
+                ShowAlert showAlert = new ShowAlert();
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Dependent does not exist.");
+                return false;
+            }
+            Dependent dependent = dependentList.get(0);
+            session.beginTransaction();
+            String desiredClaim = "SELECT c FROM Claim c WHERE c.dependent IS NOT NULL";
+            List<Claim> claimList = session.createQuery(desiredClaim, Claim.class)
+                    .getResultList();
+            for (Claim claim : claimList) {
+                if (dependent.getId().equals(claim.getDependent().getId())) {
+                    Label codeLabel = new Label(
+                            "Claim ID: " + claim.getClaimId() + "\n" +
+                                    "Claim Date: " + claim.getClaimDate() + "\n" +
+                                    "Claim Amount: " + claim.getClaimAmount() + "\n" +
+                                    "List of Document: " + claim.getListOfDocument() + "\n" +
+                                    "Claim Status: " + claim.getStatus() + "\n" +
+                                    "Card Number: " + claim.getInsuranceCard().getCardNumber() + "\n" +
+                                    "Policy Holder: " + claim.getPolicyHolder().getId() + "\n" +
+                                    "Bank ID: " + claim.getBankInfo().getBankID() + "\n" +
+                                    "Bank Name: " + claim.getBankInfo().getBankName() + "\n" +
+                                    "Owner Name: " + claim.getBankInfo().getOwnerName() + "\n" +
+                                    "Bank Account Number: " + claim.getBankInfo().getAccountNumber()
+                    );
+                    codeContainer.getChildren().add(codeLabel);
                 }
             }
-//            ShowAlert showAlert = new ShowAlert();
-//            showAlert.showAlert(Alert.AlertType.ERROR,"Error","Dependent does not exist");
-//            return false;
+
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        // Create a scene with the code container
+        Scene codeScene = new Scene(codeContainer, 400, 1000);
+        codeStage.setScene(codeScene);
+        codeStage.show();
+        // Hide the current window
+//    viewPolicyHolderClaimsButton.getScene().getWindow().hide();
+        return false;
+    }
+
+    @Override
+    public boolean updateClaimForDependent() {
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        try {
+            String dependentId = textFieldDependentID.getText();
+            String claimID = textFieldClaimID.getText();
+            double claimAmount = Double.parseDouble(textFieldClaimAmount.getText());
+            String bankName = textFieldBankName.getText();
+            String ownerName = textFieldOwnerName.getText();
+            String accountNumber = textFieldAccountNumber.getText();
+
+            if (dependentId.isEmpty() || claimID.isEmpty() || bankName.isEmpty() || ownerName.isEmpty() || accountNumber.isEmpty()) {
+                // If any required field is empty, show an alert message
+                ShowAlert showAlert = new ShowAlert();
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
+                return false; // Abort the create operation
+            }
+
+            // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
+            String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyOwner o WHERE o.id = :policyOwnerId AND d.id = :dependentId";
+            List<Dependent> dependentList = session.createQuery(desiredDependent, Dependent.class)
+                    .setParameter("policyOwnerId", policyOwner.getId())
+                    .setParameter("dependentId", dependentId)
+                    .getResultList();
+
+            if (dependentList.isEmpty()) {
+                ShowAlert showAlert = new ShowAlert();
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Dependent does not exist.");
+                return false;
+            }
+
+            session.beginTransaction();
+            List<Claim> claimList = session.createQuery("FROM Claim WHERE claimId = :claimID", Claim.class)
+                    .setParameter("claimID", claimID)
+                    .getResultList();
+
+            if (claimList.isEmpty()) {
+                ShowAlert showAlert = new ShowAlert();
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Claim does not exist.");
+                return false;
+            }
+
+            Claim claim = claimList.get(0);
+            claim.setClaimAmount(claimAmount);
+            claim.getBankInfo().setBankName(bankName);
+            claim.getBankInfo().setOwnerName(ownerName);
+            claim.getBankInfo().setAccountNumber(accountNumber);
+
+            session.getTransaction().commit();
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Update Successfully");
+            return true; // Update successful
+
         } catch (Exception ex) {
             // Rollback the transaction in case of an exception
             session.getTransaction().rollback();
@@ -508,146 +628,72 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
                 session.close();
             }
         }
-        // Create a scene with the code container
-        Scene codeScene = new Scene(codeContainer, 400, 1000);
-        codeStage.setScene(codeScene);
-        codeStage.show();
-
-        // Hide the current window
-//    viewPolicyHolderClaimsButton.getScene().getWindow().hide();
-
-        return false;
-    }
-
-
-    @Override
-    public boolean updateClaimForDependent() {
-        String dependentId = textFieldDependentID.getText();
-        String claimID = textFieldClaimID.getText();
-        double claimAmount = Double.parseDouble(textFieldClaimAmount.getText());
-        String bankName = textFieldBankName.getText();
-        String ownerName = textFieldOwnerName.getText();
-        String accountNumber = textFieldAccountNumber.getText();
-
-        if (dependentId.isEmpty() || claimID.isEmpty() || bankName.isEmpty() || ownerName.isEmpty() || accountNumber.isEmpty()) {
-            // If any required field is empty, show an alert message
-            ShowAlert showAlert = new ShowAlert();
-            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
-            return false; // Abort the create operation
-        }
-
-        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
-        Session session = sessionFactory.openSession();
-
-// Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
-        String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyOwner o WHERE o.id = :policyOwnerId";
-        List<Dependent> dependentList = session.createQuery(desiredDependent, Dependent.class)
-                .setParameter("policyOwnerId", policyOwner.getId())
-                .getResultList();
-        for (Dependent dependent : dependentList) {
-            if (dependent.getId().equals(dependentId)) {
-                try {
-                    session.beginTransaction();
-                    String desiredClaim = "SELECT c FROM Claim c JOIN c.dependent d WHERE d.id = :dependentId";
-                    List<Claim> claimList = session.createQuery(desiredClaim, Claim.class)
-                            .setParameter("dependentId", dependentId)
-                            .getResultList();
-                    for (Claim claim : claimList) {
-                        if (claim.getClaimId().equals(claimID)) {
-                            claim.setClaimAmount(claimAmount);
-                            claim.getBankInfo().setBankName(bankName);
-                            claim.getBankInfo().setOwnerName(ownerName);
-                            claim.getBankInfo().setAccountNumber(accountNumber);
-
-                            session.getTransaction().commit();
-                            ShowAlert showAlert = new ShowAlert();
-                            showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Update Successfully");
-                            return true; // Update successful
-                        }
-                    }
-                } catch (Exception ex) {
-                    // Rollback the transaction in case of an exception
-                    session.getTransaction().rollback();
-                    ex.printStackTrace();
-                } finally {
-                    // Close the session and session factory
-//            session.close();
-//            sessionFactory.close();
-                    if (session != null) {
-                        session.close();
-                    }
-                }
-
-            }
-
-        }
-        for (Dependent dependent : dependentList) {
-            if (!dependent.getId().equals(dependentId)) {
-                ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Dependent or Claim does not exist");
-                break;
-            }
-        }
         return false;
     }
 
     public boolean deleteClaimOfDependent() {
-
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
-        // Obtain a Hibernate Session
         Session session = sessionFactory.openSession();
 
-        String dependentId = textFieldDependentID.getText();
-        String claimID = textFieldClaimID.getText();
+        try {
+            String dependentId = textFieldDependentID.getText();
+            String claimID = textFieldClaimID.getText();
 
-// Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve Dependent for
-        String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyOwner o WHERE o.id = :policyOwnerId";
-        List<Dependent> dependentList = session.createQuery(desiredDependent, Dependent.class)
-                .setParameter("policyOwnerId", policyOwner.getId())
-                .getResultList();
-        for (Dependent dependent : dependentList) {
-            if (dependent.getId().equals(dependentId)) {
-                try {
-                    String desiredClaim = "SELECT c FROM Claim c JOIN c.dependent d WHERE d.id = :dependentId";
-                    List<Claim> claimList = session.createQuery(desiredClaim, Claim.class)
-                            .setParameter("dependentId", dependentId)
-                            .getResultList();
-                    for (Claim claim : claimList) {
-                        if (!claim.getClaimId().equals(claimID)) {
-                            System.out.println("Claim does not exist");
-                        } else {
-                            // Begin a transaction
-                            session.beginTransaction();
-
-                            session.delete(claim);
-                            // Commit the transaction
-                            session.getTransaction().commit();
-                            ShowAlert showAlert = new ShowAlert();
-                            showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Delete Successfully");
-                            return true; // Update successful
-                        }
-                    }
-                } catch (Exception ex) {
-                    // Rollback the transaction in case of an exception
-                    session.getTransaction().rollback();
-                    ex.printStackTrace();
-                } finally {
-                    // Close the session and session factory
-                    session.close();
-                }
-            }
-        }
-        for (Dependent dependent : dependentList) {
-            if (!dependent.getId().equals(dependentId)) {
+            if (dependentId.isEmpty() || claimID.isEmpty()) {
+                // If any required field is empty, show an alert message
                 ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Dependent or Claim does not exist");
-                break;
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
+                return false; // Abort the create operation
             }
+
+            // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
+            String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyOwner o WHERE o.id = :policyOwnerId AND d.id = :dependentId";
+            List<Dependent> dependentList = session.createQuery(desiredDependent, Dependent.class)
+                    .setParameter("policyOwnerId", policyOwner.getId())
+                    .setParameter("dependentId", dependentId)
+                    .getResultList();
+
+            if (dependentList.isEmpty()) {
+                ShowAlert showAlert = new ShowAlert();
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Dependent does not exist.");
+                return false;
+            }
+
+            List<Claim> claimList = session.createQuery("FROM Claim WHERE claimId = :claimID", Claim.class)
+                    .setParameter("claimID", claimID)
+                    .getResultList();
+
+            if (claimList.isEmpty()) {
+                ShowAlert showAlert = new ShowAlert();
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Claim does not exist.");
+                return false;
+            }
+
+            Claim claim = claimList.get(0);
+            // Begin a transaction
+            session.beginTransaction();
+            session.delete(claim);
+            // Commit the transaction
+            session.getTransaction().commit();
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Delete Successfully");
+            return true; // Update successful
+
+
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            // Close the session and session factory
+            session.close();
         }
         return false;
     }
 
-    public boolean createPolicyHolder(){
+    public boolean createPolicyHolder() {
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        Session session = sessionFactory.openSession();
 
         String policyHolderId = textFieldPolicyHolderID.getText();
         String password = textFieldPassword.getText();
@@ -659,17 +705,32 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
         try {
             // Parse the user input into a LocalDate object using the defined format
             ExpirationDate = LocalDate.parse(InputExpirationDate, dateFormatter);
-//            // Print the parsed LocalDate object
-//            System.out.println("Parsed date: " + ExpirationDate);
         } catch (Exception e) {
             ShowAlert showAlert = new ShowAlert();
             showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Invalid date format. Please enter date in YYYY-MM-DD format.");
         }
-//        SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
-        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
-        // Obtain a Hibernate Session
-        Session session = sessionFactory.openSession();
 
+        // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
+        String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE o.id = :policyOwnerId AND h.id = :policyHolderID";
+        List<PolicyHolder> policyHolderList = session.createQuery(desiredPolicyHolder, PolicyHolder.class)
+                .setParameter("policyOwnerId", policyOwner.getId())
+                .setParameter("policyHolderID", policyHolderId)
+                .getResultList();
+
+        if (!policyHolderList.isEmpty()) {
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Policy Holder has been created");
+            return false;
+        }
+        List<InsuranceCard> insuranceCardList = session.createQuery("FROM InsuranceCard WHERE cardNumber = :cardNum", InsuranceCard.class)
+                .setParameter("cardNum", cardNum)
+                .getResultList();
+
+        if (!insuranceCardList.isEmpty()) {
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Card Number has been existed.");
+            return false;
+        }
         InsuranceCard insuranceCard = new InsuranceCard();
         insuranceCard.setCardNumber(cardNum);
         insuranceCard.setExpirationDate(ExpirationDate);
@@ -709,7 +770,7 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
     }
 
     @Override
-    public boolean showPolicyHolderInfo(){
+    public boolean showPolicyHolderInfo() {
 
 
         // Create a new stage (window)
@@ -765,103 +826,108 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
 
         return false;
     }
+
     @Override
     public boolean updatePolicyHolderInfo() {
-        String policyHolderId = textFieldPolicyHolderID.getText();
-        String newDependentName = textFieldFullName.getText();
-        String newPassword = textFieldPassword.getText();
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        try {
+            String policyHolderId = textFieldPolicyHolderID.getText();
+            String newDependentName = textFieldFullName.getText();
+            String newPassword = textFieldPassword.getText();
 
-        if (policyHolderId.isEmpty() || newDependentName.isEmpty() || newPassword.isEmpty()) {
-            // If any required field is empty, show an alert message
+            if (policyHolderId.isEmpty() || newDependentName.isEmpty() || newPassword.isEmpty()) {
+                // If any required field is empty, show an alert message
+                ShowAlert showAlert = new ShowAlert();
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
+                return false; // Abort the create operation
+            }
+
+            // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
+            String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE o.id = :policyOwnerId AND h.id = :policyHolderID";
+            List<PolicyHolder> policyHolderList = session.createQuery(desiredPolicyHolder, PolicyHolder.class)
+                    .setParameter("policyOwnerId", policyOwner.getId())
+                    .setParameter("policyHolderID", policyHolderId)
+                    .getResultList();
+
+            if (policyHolderList.isEmpty()) {
+                ShowAlert showAlert = new ShowAlert();
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Policy Holder does not exist");
+                return false;
+            }
+            PolicyHolder policyHolder = policyHolderList.get(0);
+
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+
+            policyHolder = session.get(PolicyHolder.class, policyHolderId);
+            policyHolder.setFullName(newDependentName);
+            policyHolder.setPassword(newPassword);
+
+            session.getTransaction().commit();
             ShowAlert showAlert = new ShowAlert();
-            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
-            return false; // Abort the create operation
-        }
-        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
-        Session session = sessionFactory.openSession();
+            showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Update Policy Holder Successfully");
+            return true; // Update successful
 
-// Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
-        String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE o.id = :policyOwnerId";
-        List<PolicyHolder> policyHolderList = session.createQuery(desiredPolicyHolder, PolicyHolder.class)
-                .setParameter("policyOwnerId", policyOwner.getId())
-                .getResultList();
-        for (PolicyHolder policyHolder : policyHolderList) {
-            if (!policyHolder.getId().equals(policyHolderId)) {
-//                System.out.println("Policy Holder does not exist");
-            } else {
-                try {
-                    session = sessionFactory.openSession();
-                    session.beginTransaction();
-
-                    policyHolder = session.get(PolicyHolder.class, policyHolderId);
-                    policyHolder.setFullName(newDependentName);
-                    policyHolder.setPassword(newPassword);
-
-                    session.getTransaction().commit();
-                    ShowAlert showAlert = new ShowAlert();
-                    showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Update Policy Holder Successfully");
-                    return true; // Update successful
-                } catch (Exception ex) {
-                    // Rollback the transaction in case of an exception
-                    session.getTransaction().rollback();
-                    ex.printStackTrace();
-                } finally {
-                    // Close the session and session factory
-                    if (session != null) {
-                        session.close();
-                    }
-                }
-
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            // Close the session and session factory
+            if (session != null) {
+                session.close();
             }
-
         }
-
         return false;
     }
 
-    public boolean deletePolicyHolder(){
-
+    public boolean deletePolicyHolder() {
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
-        // Obtain a Hibernate Session
         Session session = sessionFactory.openSession();
 
-        String policyHolderId = textFieldPolicyHolderID.getText();
+        try {
+            String policyHolderId = textFieldPolicyHolderID.getText();
 
-        // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
-        String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE o.id = :policyOwnerId";
-        List<PolicyHolder> policyHolderList = session.createQuery(desiredPolicyHolder, PolicyHolder.class)
-                .setParameter("policyOwnerId", policyOwner.getId())
-                .getResultList();
-        for (PolicyHolder policyHolder : policyHolderList) {
-            if (!policyHolder.getId().equals(policyHolderId)) {
-//                System.out.println("Policy Holder does not exist");
-            } else {
-                try {
-                    // Begin a transaction
-                    session.beginTransaction();
+            // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
+            String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE o.id = :policyOwnerId AND h.id = :policyHolderID";
+            List<PolicyHolder> policyHolderList = session.createQuery(desiredPolicyHolder, PolicyHolder.class)
+                    .setParameter("policyOwnerId", policyOwner.getId())
+                    .setParameter("policyHolderID", policyHolderId)
+                    .getResultList();
 
-                    session.delete(policyHolder);
-
-                    // Commit the transaction
-                    session.getTransaction().commit();
-                    ShowAlert showAlert = new ShowAlert();
-                    showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Update Policy Holder Successfully");
-                    return true;
-                } catch (Exception ex) {
-                    // Rollback the transaction in case of an exception
-                    session.getTransaction().rollback();
-                    ex.printStackTrace();
-                } finally {
-                    // Close the session and session factory
-                    session.close();
-                }
+            if (policyHolderList.isEmpty()) {
+                ShowAlert showAlert = new ShowAlert();
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Policy Holder does not exist");
+                return false;
             }
-        }
 
+            PolicyHolder policyHolder = policyHolderList.get(0);
+            // Begin a transaction
+            session.beginTransaction();
+
+            session.delete(policyHolder);
+
+            // Commit the transaction
+            session.getTransaction().commit();
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Delete Policy Holder Successfully");
+            return true;
+
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            // Close the session and session factory
+            session.close();
+        }
         return false;
     }
 
-    public boolean createDependent(){
+    public boolean createDependent() {
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        Session session = sessionFactory.openSession();
 
         String policyHolderId = textFieldPolicyHolderID.getText();
         String dependentId = textFieldDependentID.getText();
@@ -880,10 +946,6 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
             showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Invalid date format. Please enter date in YYYY-MM-DD format.");
         }
 
-        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
-        // Obtain a Hibernate Session
-        Session session = sessionFactory.openSession();
-
         try {
             // Parse the user input into a LocalDate object using the defined format
             ExpirationDate = LocalDate.parse(InputExpirationDate, dateFormatter);
@@ -895,53 +957,69 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
         }
 
         // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
-        String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE o.id = :policyOwnerId";
+        String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE o.id = :policyOwnerId AND h.id = :policyHolderID";
         List<PolicyHolder> policyHolderList = session.createQuery(desiredPolicyHolder, PolicyHolder.class)
                 .setParameter("policyOwnerId", policyOwner.getId())
+                .setParameter("policyHolderID", policyHolderId)
                 .getResultList();
-        for (PolicyHolder policyHolder : policyHolderList) {
-            if (!policyHolder.getId().equals(policyHolderId)) {
-//                System.out.println("Policy Holder does not exist");
-            } else {
-                Dependent dependent = new Dependent();
-                dependent.setCustomerId(dependentId);
-                dependent.setPassword(password);
-                dependent.setFullName(fullName);
-                dependent.setPolicyOwner(policyOwner);
-                dependent.setPolicyHolder(policyHolder);
-                try {
-                    // Begin a transaction
-                    session.beginTransaction();
 
-                    session.save(dependent);// or session.persist(policyHolder)
+        if (policyHolderList.isEmpty()) {
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Policy Holder does not exist");
+            return false;
+        }
+        PolicyHolder policyHolder = policyHolderList.get(0);
+        // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve Dependent for
+        String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyOwner o WHERE o.id = :policyOwnerId AND d.id = :dependentID";
+        List<Dependent> dependentList = session.createQuery(desiredDependent, Dependent.class)
+                .setParameter("policyOwnerId", policyOwner.getId())
+                .setParameter("dependentID", dependentId)
+                .getResultList();
 
-                    // Commit the transaction
-                    session.getTransaction().commit();
-                    ShowAlert showAlert = new ShowAlert();
-                    showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Create Dependent Successfully");
-                    return true;
-                } catch (Exception ex) {
-                    // Rollback the transaction in case of an exception
-                    session.getTransaction().rollback();
-                    ex.printStackTrace();
-                } finally {
-                    // Close the session and session factory
-                    session.close();
-                    sessionFactory.close();
-                }
+        if (!dependentList.isEmpty()) {
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Dependent has been created");
+            return false;
+        }
+        Dependent dependent = new Dependent();
+        dependent.setCustomerId(dependentId);
+        dependent.setPassword(password);
+        dependent.setFullName(fullName);
+        dependent.setPolicyOwner(policyOwner);
+        dependent.setPolicyHolder(policyHolder);
 
-
-            }
+        try {
+            // Begin a transaction
+            session.beginTransaction();
+            session.save(dependent);//
+            // Commit the transaction
+            session.getTransaction().commit();
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Create Dependent Successfully");
+            return true;
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            // Close the session and session factory
+            session.close();
+            sessionFactory.close();
         }
         return false;
     }
+
     @Override
-    public boolean getAllDependent(){
+    public boolean getAllDependent() {
 
         return false;
     }
+
     @Override
     public boolean updateInfoForDependent() {
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        Session session = sessionFactory.openSession();
+
         String dependentId = textFieldDependentID.getText();
         String newDependentName = textFieldFullName.getText();
         String newPassword = textFieldPassword.getText();
@@ -952,88 +1030,91 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
             showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
             return false; // Abort the create operation
         }
-        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
-        Session session = sessionFactory.openSession();
 
-// Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve Dependent for
-        String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyOwner o WHERE o.id = :policyOwnerId";
+        // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve Dependent for
+        String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyOwner o WHERE o.id = :policyOwnerId AND d.id = :dependentID";
         List<Dependent> dependentList = session.createQuery(desiredDependent, Dependent.class)
                 .setParameter("policyOwnerId", policyOwner.getId())
+                .setParameter("dependentID", dependentId)
                 .getResultList();
-        for (Dependent dependent : dependentList) {
-            if (!dependent.getId().equals(dependentId)) {
-//                System.out.println("Dependent does not exist");
-            } else {
-                try {
-                    session = sessionFactory.openSession();
-                    session.beginTransaction();
 
-                    dependent = session.get(Dependent.class, dependentId);
-                    dependent.setFullName(newDependentName);
-                    dependent.setPassword(newPassword);
-
-                    session.getTransaction().commit();
-                    ShowAlert showAlert = new ShowAlert();
-                    showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Create Dependent Successfully");
-                    return true; // Update successful
-                } catch (Exception ex) {
-                    // Rollback the transaction in case of an exception
-                    session.getTransaction().rollback();
-                    ex.printStackTrace();
-                } finally {
-                    // Close the session and session factory
-                    if (session != null) {
-                        session.close();
-                    }
-                }
-
-            }
-
+        if (dependentList.isEmpty()) {
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Dependent does not exist");
+            return false;
         }
+        Dependent dependent = dependentList.get(0);
+
+        try {
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+
+            dependent = session.get(Dependent.class, dependentId);
+            dependent.setFullName(newDependentName);
+            dependent.setPassword(newPassword);
+
+            session.getTransaction().commit();
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Create Dependent Successfully");
+            return true; // Update successful
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            // Close the session and session factory
+            if (session != null) {
+                session.close();
+            }
+        }
+
 
         return false;
     }
 
-    public boolean deleteDependent(){
+    public boolean deleteDependent() {
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         // Obtain a Hibernate Session
         Session session = sessionFactory.openSession();
         String dependentId = textFieldDependentID.getText();
 
-        // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
-        String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyOwner o WHERE o.id = :policyOwnerId";
+        // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve Dependent for
+        String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyOwner o WHERE o.id = :policyOwnerId AND d.id = :dependentID";
         List<Dependent> dependentList = session.createQuery(desiredDependent, Dependent.class)
                 .setParameter("policyOwnerId", policyOwner.getId())
+                .setParameter("dependentID", dependentId)
                 .getResultList();
-        for (Dependent dependent : dependentList) {
-            if (!dependent.getId().equals(dependentId)) {
-//                System.out.println("Dependent does not exist");
-            } else {
-                try {
-                    // Begin a transaction
-                    session.beginTransaction();
 
-                    session.delete(dependent);
-
-                    // Commit the transaction
-                    session.getTransaction().commit();
-                    ShowAlert showAlert = new ShowAlert();
-                    showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Delete Dependent Successfully");
-                    return true;
-                } catch (Exception ex) {
-                    // Rollback the transaction in case of an exception
-                    session.getTransaction().rollback();
-                    ex.printStackTrace();
-                } finally {
-                    // Close the session and session factory
-                    session.close();
-                }
-            }
+        if (dependentList.isEmpty()) {
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Dependent does not exist");
+            return false;
         }
+        Dependent dependent = dependentList.get(0);
+        try {
+            // Begin a transaction
+            session.beginTransaction();
+
+            session.delete(dependent);
+
+            // Commit the transaction
+            session.getTransaction().commit();
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Delete Dependent Successfully");
+            return true;
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            // Close the session and session factory
+            session.close();
+        }
+
         return false;
     }
 
-    public double calcInsuranceFee(){
+    public double calcInsuranceFee() {
         return 0;
     }
 }
