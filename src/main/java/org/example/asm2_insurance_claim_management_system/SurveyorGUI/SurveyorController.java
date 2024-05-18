@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.asm2_insurance_claim_management_system.Providers.Surveyor;
@@ -16,14 +17,23 @@ public class SurveyorController {
     @FXML
     private Button ProposeClaimFormButton;
 
+    @FXML
+    private Button RequireMoreInfoOnClaimButton;
+
     public void setSurveyor(Surveyor surveyor) {
         this.surveyor = surveyor;
     }
 
     @FXML
-    public void ProposeClaimForm(){
-        String url = "/org/example/asm2_insurance_claim_management_system/Surveyor/ProposeClaimForm.fxml";
+    public void proposeClaimForm(){
+        String url = "/org/example/asm2_insurance_claim_management_system/Surveyor/proposeClaimForm.fxml";
         createSceneSurveyor(url, ProposeClaimFormButton);
+    }
+
+    @FXML
+    public void requireMoreInfoForm(){
+        String url = "/org/example/asm2_insurance_claim_management_system/Surveyor/requireMoreInfoForm.fxml";
+        createSceneSurveyor(url, RequireMoreInfoOnClaimButton);
     }
 
     public void createSceneSurveyor (String url, Button button) {
@@ -37,7 +47,7 @@ public class SurveyorController {
             // Create a new stage for the Surveyor UI
             Stage surveyorStage = new Stage();
             surveyorStage.setTitle("Surveyor Page");
-            surveyorStage.setScene(new Scene(surveyorRoot, 400, 320));
+            surveyorStage.setScene(new Scene(surveyorRoot, 500, 800));
 
             // Show the Surveyor UI stage
             surveyorStage.show();
@@ -47,7 +57,6 @@ public class SurveyorController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }
 
