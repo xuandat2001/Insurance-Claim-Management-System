@@ -19,6 +19,7 @@
         <TextField fx:id="newBankHolderTextDependent" />
         <Label text="Enter the Account Number " />
         <TextField fx:id="newAccNumTextDependent" />
+        <Button fx:id="uploadPDF" mnemonicParsing="false"  text="UploadPDFDocument"/>
         <Button  mnemonicParsing="false" onAction="#fileClaimForDependent"  text="Create" />
         <Button  mnemonicParsing="false" onAction="#goBack"  text="Back" />
     </children>

@@ -17,6 +17,7 @@
       <TextField fx:id="newBankHolderText" />
       <Label text="Enter the Account Number " />
       <TextField fx:id="newAccNumText" />
+      <Button fx:id="uploadPDF"  mnemonicParsing="false"   text="UploadDocument" />
       <Button  mnemonicParsing="false" onAction="#filePolicyHolderClaim"  text="Create" />
       <Button  mnemonicParsing="false" onAction="#goBack"  text="Back" />
    </children>

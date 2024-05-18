@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.example.asm2_insurance_claim_management_system.Alert.ShowAlert;
 import org.example.asm2_insurance_claim_management_system.Claim.BankInfo;
@@ -23,13 +24,18 @@ import org.example.asm2_insurance_claim_management_system.Customers.PolicyHolder
 import org.example.asm2_insurance_claim_management_system.Interface.SuperCustomer;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.w3c.dom.Document;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.List;
 import java.util.Scanner;
 
 public class PolicyHolderClaimController implements SuperCustomer {
+    private String fileData; // This will store the encoded PDF file data
     //Atrributes for Flie Claim
     @FXML
     private TextField textFieldClaimID;
@@ -43,6 +49,7 @@ public class PolicyHolderClaimController implements SuperCustomer {
     private TextField newBankHolderText;
     @FXML
     private TextField newAccNumText;
+
 
     //Attribute for Update Claim
     @FXML
@@ -78,6 +85,8 @@ public class PolicyHolderClaimController implements SuperCustomer {
     private TextField newBankHolderTextDependent;
     @FXML
     private TextField newAccNumTextDependent;
+    @FXML
+    private Button uploadPDF;
 
 // Attributes for UpdateClaimForDependent
     @FXML
@@ -141,6 +150,7 @@ public class PolicyHolderClaimController implements SuperCustomer {
         Claim claim = new Claim();
         claim.setClaimId(claimID);
         claim.setClaimDate(LocalDate.now());
+        claim.setListOfDocument(fileData);
         claim.setStatus(Status.NEW);
         claim.setInsuranceCard(policyHolder.getInsuranceCard());
         claim.setPolicyHolder(policyHolder);
@@ -290,12 +300,31 @@ public class PolicyHolderClaimController implements SuperCustomer {
     public boolean showPolicyHolderInfo() {
         return false;
     }
-
-
-
+    @FXML
+    public void initialize() {
+        uploadPDF.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+            fileChooser.setTitle("Select PDF File");
+            File selectedFile = fileChooser.showOpenDialog(new Stage());
+            if (selectedFile != null) {
+                try {
+                    fileData = encodeFileToBase64(selectedFile);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    ShowAlert errorAlert = new ShowAlert();
+                    errorAlert.showAlert(Alert.AlertType.ERROR, "ERROR", "Failed to encode PDF file.");
+                }
+            } else {
+                ShowAlert errorAlert = new ShowAlert();
+                errorAlert.showAlert(Alert.AlertType.ERROR, "ERROR", "No file to selected.");
+            }
+        });
+    }
 
     @Override
     public boolean fileClaimForDependent() {
+
         String dependentId = textDependentID.getText();
 
         String claimID = textFieldClaimDependentID.getText();
@@ -321,10 +350,7 @@ public class PolicyHolderClaimController implements SuperCustomer {
                 .setParameter("policyHolderId", policyHolder.getId())
                 .getResultList();
         for (Dependent dependent : dependentList) {
-            if (!dependent.getId().equals(dependentId)) {
-                ShowAlert successfulAlert = new ShowAlert();
-                successfulAlert.showAlert(Alert.AlertType.ERROR,"ERROR", "Dependent Not Found");
-            } else {
+            if (dependent.getId().equals(dependentId)) {
                 BankInfo bankInfo = new BankInfo();
                 bankInfo.setBankID(bankID);
                 bankInfo.setBankName(bankName);
@@ -334,6 +360,7 @@ public class PolicyHolderClaimController implements SuperCustomer {
                 claim.setClaimId(claimID);
                 claim.setClaimDate(LocalDate.now());
                 claim.setStatus(Status.NEW);
+                claim.setListOfDocument(fileData);
                 claim.setInsuranceCard(policyHolder.getInsuranceCard());
                 claim.setPolicyHolder(policyHolder);
                 claim.setClaimAmount(claimAmount);
@@ -367,6 +394,12 @@ public class PolicyHolderClaimController implements SuperCustomer {
                         session.close();
                     }
                 }
+            }
+        }
+        for (Dependent dependent : dependentList){
+            if (!dependent.getId().equals(dependentId)) {
+                ShowAlert successfulAlert = new ShowAlert();
+                successfulAlert.showAlert(Alert.AlertType.ERROR,"ERROR", "Dependent Not Found");
             }
         }
         return false;
@@ -670,4 +703,17 @@ public class PolicyHolderClaimController implements SuperCustomer {
             e.printStackTrace();
         }
     }
+
+    public static String encodeFileToBase64(File file) throws IOException {
+        byte[] fileContent = new byte[(int) file.length()];
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+            fileInputStream.read(fileContent);
+        }
+        return Base64.getEncoder().encodeToString(fileContent);
+    }
+
+    public static byte[] decodeBase64ToFile(String base64String) {
+        return Base64.getDecoder().decode(base64String);
+    }
+
 }
