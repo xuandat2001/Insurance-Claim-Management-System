@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefHeight="169.0" prefWidth="365.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.PolicyOwnerGUI.CRUDForPolicyOwner">
+    <padding>
+        <Insets bottom="10" left="10" right="10" top="10" />
+    </padding>
+    <Label text="Enter the Policy Holder ID you want to delete" />
+    <TextField fx:id="textFieldPolicyHolderID" />
+    <Button mnemonicParsing="false" onAction="#deletePolicyHolder" text="Delete" />
+</VBox>

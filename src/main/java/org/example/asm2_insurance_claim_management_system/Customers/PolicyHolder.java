@@ -11,7 +11,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 
@@ -72,11 +71,11 @@ public class PolicyHolder extends Customer implements SuperCustomer, UserAuthent
             session.getTransaction().rollback();
             ex.printStackTrace();
         }
-        finally {
-            // Close the session and session factory
-            session.close();
-
-        }
+//        finally {
+//            // Close the session and session factory
+//            session.close();
+//            sessionFactory.close();
+//        }
         return policyHolderList;
     }
 
@@ -166,37 +165,35 @@ public class PolicyHolder extends Customer implements SuperCustomer, UserAuthent
             // List of document
 
             session.beginTransaction();
-            Claim claim = session.get(Claim.class, claimID);
-            if (claimID == null) {
-                System.out.println("Claim with claim ID" + claimID + "is not found");
-                return false;
+            String desiredClaim = "SELECT c FROM Claim c JOIN c.policyHolder h WHERE h.id = :policyHolderId AND c.dependent IS NULL";
+            List<Claim> claimList = session.createQuery(desiredClaim, Claim.class)
+                    .setParameter("policyHolderId", this.getId())
+                    .getResultList();
+            for (Claim claim : claimList) {
+                if (!claim.getClaimId().equals(claimID)) {
+                    System.out.println("Claim does not exist");
+                } else {
+
+                    claim.setClaimAmount(claimAmount);
+                    claim.getBankInfo().setBankName(bankName);
+                    claim.getBankInfo().setOwnerName(ownerName);
+                    claim.getBankInfo().setAccountNumber(accountNumber);
+
+                    session.getTransaction().commit();
+                    System.out.println("Update Sucessfully");
+                    return true; // Update successful
+                }
             }
-
-            claim.setClaimAmount(claimAmount);
-            claim.getBankInfo().setBankName(bankName);
-            claim.getBankInfo().setOwnerName(ownerName);
-            claim.getBankInfo().setAccountNumber(accountNumber);
-
-            session.getTransaction().commit();
-            System.out.println("Update Sucessfully");
-            return true; // Update successful
-
         } catch (Exception ex) {
             // Rollback the transaction in case of an exception
-            if (session != null && session.getTransaction() != null && session.getTransaction().isActive()) {
-                session.getTransaction().rollback();
-            }
-            ex.printStackTrace(); // Print error details
-            return false; // Update failed
+            session.getTransaction().rollback();
+            ex.printStackTrace();
         } finally {
             // Close the session and session factory
-            if (session != null) {
-                session.close();
-            }
+            session.close();
             sessionFactory.close();
         }
-
-
+        return false;
     }
 
 
@@ -428,21 +425,25 @@ public class PolicyHolder extends Customer implements SuperCustomer, UserAuthent
                 System.out.println("Dependent does not exist");
             } else {
                 try {
-                    session.beginTransaction();
-                    Claim claim = session.get(Claim.class, claimID);
-                    if (claimID == null) {
-                        System.out.println("Claim with claim ID" + claimID + "is not found");
-                        return false;
+                    String desiredClaim = "SELECT c FROM Claim c JOIN c.dependent d WHERE d.id = :dependentId";
+                    List<Claim> claimList = session.createQuery(desiredClaim, Claim.class)
+                            .setParameter("dependentId", dependentId)
+                            .getResultList();
+                    for (Claim claim : claimList) {
+                        if (!claim.getClaimId().equals(claimID)) {
+                            System.out.println("Claim does not exist");
+                        } else {
+                            claim.setClaimAmount(claimAmount);
+                            claim.getBankInfo().setBankName(bankName);
+                            claim.getBankInfo().setOwnerName(ownerName);
+                            claim.getBankInfo().setAccountNumber(accountNumber);
+
+                            session.getTransaction().commit();
+                            System.out.println("Update Sucessfully");
+                            return true; // Update successful
+
+                        }
                     }
-                    claim.setClaimAmount(claimAmount);
-                    claim.getBankInfo().setBankName(bankName);
-                    claim.getBankInfo().setOwnerName(ownerName);
-                    claim.getBankInfo().setAccountNumber(accountNumber);
-
-                    session.getTransaction().commit();
-                    System.out.println("Update Sucessfully");
-                    return true; // Update successful
-
                 } catch (Exception ex) {
                     // Rollback the transaction in case of an exception
                     session.getTransaction().rollback();

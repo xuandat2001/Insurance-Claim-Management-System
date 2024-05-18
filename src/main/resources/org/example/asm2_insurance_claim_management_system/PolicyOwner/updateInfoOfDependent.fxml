@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefHeight="347.0" prefWidth="239.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.PolicyOwnerGUI.CRUDForPolicyOwner">
+    <padding>
+        <Insets bottom="10" left="10" right="10" top="10" />
+    </padding>
+    <Label text="Enter the Dependent ID" />
+    <TextField fx:id="textFieldDependentID" />
+    <Label text="Enter the new full name" />
+    <TextField fx:id="textFieldFullName" />
+    <Label text="Enter the new password" />
+    <TextField fx:id="textFieldPassword" />
+    <Button mnemonicParsing="false" onAction="#updateInfoForDependent" text="Update" />
+</VBox>
