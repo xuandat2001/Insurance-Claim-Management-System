@@ -510,15 +510,14 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
 
     @Override
     public boolean retrieveClaimForDependent() {
-
         // Create a new stage (window)
         Stage codeStage = new Stage();
         codeStage.setTitle("Dependent Claim Details");
 
         // Create a VBox to hold the code
-        VBox codeContainer = new VBox();
-        codeContainer.setPadding(new Insets(10));
-        codeContainer.setSpacing(10);
+        VBox codeContainerClaimDependent = new VBox();
+        codeContainerClaimDependent.setPadding(new Insets(10));
+        codeContainerClaimDependent.setSpacing(10);
 
         String dependentId = textFieldDependentID.getText();
 
@@ -564,7 +563,7 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
                                     "Owner Name: " + claim.getBankInfo().getOwnerName() + "\n" +
                                     "Bank Account Number: " + claim.getBankInfo().getAccountNumber()
                     );
-                    codeContainer.getChildren().add(codeLabel);
+                    codeContainerClaimDependent.getChildren().add(codeLabel);
                 }
             }
 
@@ -579,19 +578,23 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
         }
         Button returnButton = new Button("Return");
         returnButton.setOnAction(this::goBackMainMenu);
-        codeContainer.getChildren().add(returnButton);
+        codeContainerClaimDependent.getChildren().add(returnButton);
+
         // Create a ScrollPane and set the VBox as its content
         ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setContent(codeContainer);
+        scrollPane.setContent(codeContainerClaimDependent);
         scrollPane.setFitToWidth(true);
-        // Create a scene with the code container
-        Scene codeScene = new Scene(scrollPane, 400, 1000);
+
+        // Create a scene with the scroll pane
+        Scene codeScene = new Scene(scrollPane, 400, 600); // Adjust height as needed
         codeStage.setScene(codeScene);
         codeStage.show();
+
         // Hide the current window
-//    viewPolicyHolderClaimsButton.getScene().getWindow().hide();
+        // viewPolicyHolderClaimsButton.getScene().getWindow().hide();
         return false;
     }
+
 
     @Override
     public boolean updateClaimForDependent() {
@@ -811,59 +814,6 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
 
     @Override
     public boolean showPolicyHolderInfo() {
-
-
-        // Create a new stage (window)
-        Stage codeStage = new Stage();
-        codeStage.setTitle("Policy Holder Information");
-
-        // Create a VBox to hold the code
-        VBox codeContainer = new VBox();
-        codeContainer.setPadding(new Insets(10));
-        codeContainer.setSpacing(10);
-
-        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
-        Session session = sessionFactory.openSession();
-
-        try {
-            // Begin a transaction
-            session.beginTransaction();
-
-            // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
-            String desiredPolicyHolder = "SELECT h FROM PolicyHolder h JOIN h.policyOwner o WHERE o.id = :policyOwnerId";
-            List<PolicyHolder> policyHolderList = session.createQuery(desiredPolicyHolder, PolicyHolder.class)
-                    .setParameter("policyOwnerId", policyOwner.getId())
-                    .getResultList();
-            for (PolicyHolder policyHolder : policyHolderList) {
-                Label codeLabel = new Label(
-                        "Policy Holder ID: " + policyHolder.getId() + "\n" +
-                                "Full Name: " + policyHolder.getFullName() + "\n" +
-                                "Password: " + policyHolder.getPassword()
-                );
-                codeContainer.getChildren().add(codeLabel);
-            }
-
-            // Commit the transaction
-            session.getTransaction().commit();
-            return true;
-        } catch (Exception ex) {
-            // Rollback the transaction in case of an exception
-            session.getTransaction().rollback();
-            ex.printStackTrace();
-        } finally {
-            // Close the session and session factory
-            if (session != null) {
-                session.close();
-            }
-        }
-        // Create a scene with the code container
-        Scene codeScene = new Scene(codeContainer, 400, 1000);
-        codeStage.setScene(codeScene);
-        codeStage.show();
-
-        // Hide the current window
-//    viewPolicyHolderClaimsButton.getScene().getWindow().hide();
-
         return false;
     }
 
@@ -1048,7 +998,6 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
         } finally {
             // Close the session and session factory
             session.close();
-            sessionFactory.close();
         }
         return false;
     }

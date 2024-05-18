@@ -200,6 +200,7 @@ public class PolicyHolderController implements SuperCustomer {
             List<Claim> claimList = session.createQuery(desiredClaim, Claim.class)
                     .getResultList();
             retrievePolicyHolderDetailsClaim(claimList);
+            session.getTransaction().commit();
         } catch (Exception ex) {
             // Rollback the transaction in case of an exception
             session.getTransaction().rollback();

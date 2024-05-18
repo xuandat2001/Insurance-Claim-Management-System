@@ -153,10 +153,10 @@ public class PolicyOwnerController {
             List<PolicyHolder> policyHolderList = session.createQuery(desiredPolicyHolder, PolicyHolder.class)
                     .setParameter("policyOwnerId", policyOwner.getId())
                     .getResultList();
-            retrievePolicyHolderDetails(policyHolderList);
+
             // Commit the transaction
             session.getTransaction().commit();
-
+            retrievePolicyHolderDetails(policyHolderList);
         } catch (Exception ex) {
             // Rollback the transaction in case of an exception
             session.getTransaction().rollback();
@@ -184,18 +184,22 @@ public class PolicyOwnerController {
                             "Claim Amount: " + policyHolder.getPassword()
             );
             codeContainer.getChildren().add(codeLabel);
-
-
         }
+
         Button returnButton = new Button("Return");
         returnButton.setOnAction(this::goBackMainMenu);
-        // Add the Close button to the VBox
         codeContainer.getChildren().add(returnButton);
+
         // Create a ScrollPane and set the VBox as its content
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(codeContainer);
         scrollPane.setFitToWidth(true);
-        // Create a scene with the code container
+        //scrollPane.setFitToHeight(true); // Enable vertical scrolling
+
+        // Set minimum sizes to ensure visibility
+
+
+        // Create a scene with the scroll pane
         Scene codeScene = new Scene(scrollPane, 400, 300);
         codeStage.setScene(codeScene);
         codeStage.show();
@@ -203,6 +207,8 @@ public class PolicyOwnerController {
         // Hide the current window
         retrieveInfoOfPolicyHolder.getScene().getWindow().hide();
     }
+
+
     @FXML
     protected void onUpdateInfoOfPolicyHolder() {
         String url = "/org/example/asm2_insurance_claim_management_system/PolicyOwner/updateInfoOfPolicyHolder.fxml";
