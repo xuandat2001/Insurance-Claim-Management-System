@@ -263,20 +263,14 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
 
     @Override
     public boolean updatePolicyHolderClaim() {
-        try {
+
             String policyHolderId = textFieldPolicyHolderID.getText();
             String claimID = textFieldClaimID.getText();
-            double claimAmount = Double.parseDouble(textFieldClaimAmount.getText());
+            String claimAmount = textFieldClaimAmount.getText();
             String bankName = textFieldBankName.getText();
             String ownerName = textFieldOwnerName.getText();
             String accountNumber = textFieldAccountNumber.getText();
 
-            if (policyHolderId.isEmpty() || claimID.isEmpty() || bankName.isEmpty() || ownerName.isEmpty() || accountNumber.isEmpty()) {
-                // If any required field is empty, show an alert message
-                ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
-                return false; // Abort the update operation
-            }
 
             SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
             Session session = sessionFactory.openSession();
@@ -310,9 +304,10 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
                 }
 
                 Claim claim = claimList.get(0);
-                if (!claimList.isEmpty()){
-                    claim.setClaimAmount(claimAmount);
+                if (!claimAmount.isEmpty()){
+                    claim.setClaimAmount(Double.parseDouble(claimAmount));
                 }
+                claim.setListOfDocument(fileData);
                 BankInfo bankInfo = claim.getBankInfo();
                 if (!bankName.isEmpty()){
                     bankInfo.setBankName(bankName);
@@ -342,11 +337,7 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
                     session.close();
                 }
             }
-        } catch (NumberFormatException e) {
-            ShowAlert showAlert = new ShowAlert();
-            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please enter a valid number for the claim amount.");
-            return false;
-        }
+
     }
 
 
@@ -603,17 +594,12 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
         try {
             String dependentId = textFieldDependentID.getText();
             String claimID = textFieldClaimID.getText();
-            double claimAmount = Double.parseDouble(textFieldClaimAmount.getText());
+            String claimAmount = textFieldClaimAmount.getText();
             String bankName = textFieldBankName.getText();
             String ownerName = textFieldOwnerName.getText();
             String accountNumber = textFieldAccountNumber.getText();
 
-            if (dependentId.isEmpty() || claimID.isEmpty() || bankName.isEmpty() || ownerName.isEmpty() || accountNumber.isEmpty()) {
-                // If any required field is empty, show an alert message
-                ShowAlert showAlert = new ShowAlert();
-                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
-                return false; // Abort the create operation
-            }
+
 
             // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
             String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyOwner o WHERE o.id = :policyOwnerId AND d.id = :dependentId";
@@ -640,9 +626,11 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
             }
 
             Claim claim = claimList.get(0);
+            if (!claimAmount.isEmpty()){
+                claim.setClaimAmount(Double.parseDouble(claimAmount));
+            }
 
-                claim.setClaimAmount(claimAmount);
-
+        claim.setListOfDocument(fileData);
             BankInfo bankInfo = claim.getBankInfo();
             if (!bankName.isEmpty()){
                 bankInfo.setBankName(bankName);

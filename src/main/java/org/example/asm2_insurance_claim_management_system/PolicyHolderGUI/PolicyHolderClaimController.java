@@ -218,8 +218,7 @@ public class PolicyHolderClaimController implements SuperCustomer {
             session = sessionFactory.openSession();
 
             String claimID = textFieldUpdateClaimID.getText();
-            Double claimAmount = null;
-            claimAmount = Double.parseDouble(textFieldUpdateClaimAmount.getText());
+            String claimAmount = textFieldUpdateClaimAmount.getText();
             String bankName = BankNameText.getText();
             String ownerName = BankHolderText.getText();
             String accountNumber = AccNumText.getText();
@@ -239,8 +238,9 @@ public class PolicyHolderClaimController implements SuperCustomer {
 
             Claim claim = claimList.get(0);
             if (!textFieldUpdateClaimAmount.getText().isEmpty()) {
-                claim.setClaimAmount(claimAmount);
+                claim.setClaimAmount(Double.parseDouble(claimAmount));
             }
+            claim.setListOfDocument(fileData);
             if (!bankName.isEmpty()) {
                 claim.getBankInfo().setBankName(bankName);
             }
@@ -450,10 +450,10 @@ public class PolicyHolderClaimController implements SuperCustomer {
     public boolean updateClaimForDependent() {
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         Session session = sessionFactory.openSession();
-        try {
+
             String dependentId = textCheckDependentID.getText();
             String claimID = textFieldCheckClaimDependentID.getText();
-            double claimAmount = Double.parseDouble(textUpdateFieldClaimAmountDependent.getText());
+            String claimAmount = textUpdateFieldClaimAmountDependent.getText();
             String bankName = updateBankNameTextDependent.getText();
             String ownerName = updateBankHolderTextDependent.getText();
             String accountNumber = updateAccNumTextDependent.getText();
@@ -493,9 +493,9 @@ public class PolicyHolderClaimController implements SuperCustomer {
 
                 Claim claim = claimList.get(0);
                 if (!textUpdateFieldClaimAmountDependent.getText().isEmpty()) {
-                    claim.setClaimAmount(claimAmount);
+                    claim.setClaimAmount(Double.parseDouble(claimAmount));
                 }
-
+                claim.setListOfDocument(fileData);
                 BankInfo bankInfo = claim.getBankInfo();
                 if (!bankName.isEmpty()) {
                     bankInfo.setBankName(bankName);
@@ -532,11 +532,7 @@ public class PolicyHolderClaimController implements SuperCustomer {
                     session.close();
                 }
             }
-        } catch (NumberFormatException e) {
-            ShowAlert showAlert = new ShowAlert();
-            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please enter a valid number for the claim amount.");
-            return false;
-        }
+
 
         return false;
     }

@@ -47,6 +47,7 @@
    <HBox prefHeight="10.0" prefWidth="219.0" spacing="122.0">
       <children>
           <Button mnemonicParsing="false" onAction="#updateClaimForDependent" text="Update" />
+          <Button fx:id="uploadPDF" mnemonicParsing="false"  text="Upload PDF file" />
           <Button mnemonicParsing="false" onAction="#goBackMainMenu" text="Back" />
       </children>
       <VBox.margin>
