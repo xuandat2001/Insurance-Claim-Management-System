@@ -67,6 +67,8 @@ public class AdminController{
     private Button viewManagerButton;
     @FXML
     private Button retrieveButton;
+    @FXML
+    private Button calculateSumSuccessfullyClaim;
     public void setAdmin(Admin admin) {
         this.admin = admin;
         // Optionally update the UI or other components with admin data
@@ -230,9 +232,9 @@ public class AdminController{
                 }
                 Label codeLabel = new Label("The total amount of Successfull Claim: " + totalClaimAmount);
                 codeContainer.getChildren().add(codeLabel);
-
+                calculateSumSuccessfullyClaim.getScene().getWindow().hide();
                 Button returnButton = new Button("Return");
-                returnButton.setOnAction(this::goBack);
+                returnButton.setOnAction(this::goBackMainMenu);
                 // Add the Close button to the VBox
                 codeContainer.getChildren().add(returnButton);
                 // Create a scene with the code container
@@ -250,6 +252,25 @@ public class AdminController{
             if (session != null) {
                 session.close();
             }
+        }
+    }
+    @FXML
+    private void goBackMainMenu(ActionEvent event) {
+        try {
+            // Load the previous FXML file (e.g., the main menu)
+            Parent root = FXMLLoader.load(getClass().getResource("/org/example/asm2_insurance_claim_management_system/Admin/Admin.fxml"));
+
+            // Get the source node of the event (the button)
+            Node source = (Node) event.getSource();
+
+            // Get the current stage (window)
+            Stage stage = (Stage) source.getScene().getWindow();
+
+            // Set the scene to the new root (previous page)
+            stage.setScene(new Scene(root));
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
     @FXML

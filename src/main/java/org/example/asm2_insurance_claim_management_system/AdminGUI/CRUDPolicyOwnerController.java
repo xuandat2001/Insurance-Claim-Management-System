@@ -294,7 +294,10 @@ public class CRUDPolicyOwnerController implements CRUDoperation {
 
         // Add the code label to the VBox
         codeContainer.getChildren().add(codeLabel);
-
+        Button returnButton = new Button("Return");
+        returnButton.setOnAction(this::goBack);
+        // Add the Close button to the VBox
+        codeContainer.getChildren().add(returnButton);
         // Set the scene of the new stage with the VBox
         codeStage.setScene(new Scene(codeContainer, 400, 200));
 

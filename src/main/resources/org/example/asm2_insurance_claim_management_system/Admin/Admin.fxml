@@ -124,7 +124,7 @@
     <HBox prefHeight="38.0" prefWidth="310.0" spacing="27.0">
         <children>
             <Button fx:id="retrieveButton" mnemonicParsing="false" onAction="#onRetrieveClaimButton" text="Retrieve Claim" />
-            <Button mnemonicParsing="false" onAction="#onSumUpSuccessfullyClaim" text="Calculate Sum Of Successful Claims" />
+            <Button fx:id="calculateSumSuccessfullyClaim" mnemonicParsing="false" onAction="#onSumUpSuccessfullyClaim" text="Calculate Sum Of Successful Claims" />
         </children>
         <VBox.margin>
             <Insets top="10.0" />

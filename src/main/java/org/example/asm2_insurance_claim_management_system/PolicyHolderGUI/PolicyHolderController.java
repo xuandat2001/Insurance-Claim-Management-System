@@ -420,7 +420,10 @@ public class PolicyHolderController implements SuperCustomer {
         // Add the Close button to the VBox
         codeContainer.getChildren().add(returnButton);
         // Create a scene with the code container
-        Scene codeScene = new Scene(codeContainer, 400, 300);
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(codeContainer);
+        scrollPane.setFitToWidth(true);
+        Scene codeScene = new Scene(scrollPane, 400, 300);
         codeStage.setScene(codeScene);
         codeStage.show();
 
