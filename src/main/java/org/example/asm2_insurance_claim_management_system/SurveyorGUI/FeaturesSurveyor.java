@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 import org.example.asm2_insurance_claim_management_system.Alert.ShowAlert;
 import org.example.asm2_insurance_claim_management_system.Claim.Claim;
 import org.example.asm2_insurance_claim_management_system.Claim.Status;
-import org.example.asm2_insurance_claim_management_system.Customers.HibernateSingleton;
+import org.example.asm2_insurance_claim_management_system.SingletonHibernate.HibernateSingleton;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
 
-
 public class FeaturesSurveyor {
     @FXML
     private VBox availableClaimsContainer;
@@ -33,22 +32,12 @@ public class FeaturesSurveyor {
     private VBox availableClaimsContainerForPropose;
     @FXML
     private TextField textClaimId;
-
-    @FXML
-    private Label availableClaims;
     @FXML
     private Button viewDocument;
-
-    String availableClaimsList = null;
-
     @FXML
     private TextField textRequiredInfo;
     @FXML
     private TextField textClaimIdForDocument;
-
-
-    @FXML
-    private Button loadclaimsbutton;
 
     public boolean requireMoreInfoOnClaim() {
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
@@ -56,7 +45,6 @@ public class FeaturesSurveyor {
 
         String claimId = textClaimId.getText();
         String comment = textRequiredInfo.getText();
-        String availableClaimsList = null;
 
         try {
             session = sessionFactory.openSession();
@@ -148,9 +136,6 @@ public class FeaturesSurveyor {
         }
     }
 
-    public static byte[] decodeBase64ToFile(String base64String) {
-        return Base64.getDecoder().decode(base64String);
-    }
     public boolean proposeClaim(){
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         Session session = null;

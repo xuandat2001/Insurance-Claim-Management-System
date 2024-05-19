@@ -16,7 +16,7 @@ import org.example.asm2_insurance_claim_management_system.Claim.BankInfo;
 import org.example.asm2_insurance_claim_management_system.Claim.Claim;
 import org.example.asm2_insurance_claim_management_system.Claim.Status;
 import org.example.asm2_insurance_claim_management_system.Customers.Dependent;
-import org.example.asm2_insurance_claim_management_system.Customers.HibernateSingleton;
+import org.example.asm2_insurance_claim_management_system.SingletonHibernate.HibernateSingleton;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyHolder;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyOwner;
 import org.example.asm2_insurance_claim_management_system.InsuranceCard.InsuranceCard;

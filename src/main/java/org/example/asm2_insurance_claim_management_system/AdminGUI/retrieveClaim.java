@@ -14,7 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.asm2_insurance_claim_management_system.Alert.ShowAlert;
 import org.example.asm2_insurance_claim_management_system.Claim.Claim;
-import org.example.asm2_insurance_claim_management_system.Customers.HibernateSingleton;
+import org.example.asm2_insurance_claim_management_system.SingletonHibernate.HibernateSingleton;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 

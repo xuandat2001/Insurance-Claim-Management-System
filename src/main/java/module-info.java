@@ -37,4 +37,6 @@ module org.example.asm2_insurance_claim_management_system {
     opens org.example.asm2_insurance_claim_management_system.SurveyorGUI to javafx.fxml, org.hibernate.orm.core;
     exports org.example.asm2_insurance_claim_management_system.ManagerGUI;
     opens org.example.asm2_insurance_claim_management_system.ManagerGUI to javafx.fxml, org.hibernate.orm.core;
+    exports org.example.asm2_insurance_claim_management_system.SingletonHibernate;
+    opens org.example.asm2_insurance_claim_management_system.SingletonHibernate to javafx.fxml, org.hibernate.orm.core;
 }

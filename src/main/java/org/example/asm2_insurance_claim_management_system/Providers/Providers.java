@@ -1,5 +1,7 @@
 package org.example.asm2_insurance_claim_management_system.Providers;
+
 import jakarta.persistence.*;
+
 @Entity
 @Table(name = "Provider")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -13,6 +15,14 @@ public abstract class Providers {
 
     @Column(name = "ProviderName")
     private String providerName;
+
+    public Providers() {}
+
+    public Providers(String providerId, String password, String providerName) {
+        this.providerId = providerId;
+        this.password = password;
+        this.providerName = providerName;
+    }
 
     public String getProviderId() {
         return providerId;

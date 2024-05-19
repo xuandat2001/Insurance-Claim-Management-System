@@ -1,4 +1,4 @@
-package org.example.asm2_insurance_claim_management_system.Customers;
+package org.example.asm2_insurance_claim_management_system.SingletonHibernate;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;

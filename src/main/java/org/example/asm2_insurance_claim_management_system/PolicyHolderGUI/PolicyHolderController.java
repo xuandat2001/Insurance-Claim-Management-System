@@ -15,7 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.asm2_insurance_claim_management_system.Claim.Claim;
 import org.example.asm2_insurance_claim_management_system.Customers.Dependent;
-import org.example.asm2_insurance_claim_management_system.Customers.HibernateSingleton;
+import org.example.asm2_insurance_claim_management_system.SingletonHibernate.HibernateSingleton;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyHolder;
 import org.example.asm2_insurance_claim_management_system.Interface.SuperCustomer;
 import org.hibernate.Session;
@@ -37,34 +37,12 @@ public class PolicyHolderController implements SuperCustomer {
 // Attributes for filePolicyHolderClaim() method
     @FXML
     private Button createFromClaim;
-
-
-// Attributes for updatePolicyHolderInfo()
-    @FXML
-    private TextField newPasswordText;
-    @FXML
-    private TextField newFullNameText;
     @FXML
     private Button createFromUpdateClaim;
     @FXML
     private Button createFromUpdate;
 
-
 // Attributes for createPolicyHolderClaim()
-
-    @FXML
-    private TextField newClaimIdText;
-    @FXML
-    private TextField newClaimAmountText;
-    @FXML
-    private TextField newBankIdText;
-    @FXML
-    private TextField newBankNameText;
-    @FXML
-    private TextField newBankHolderText;
-    @FXML
-    private TextField newAccNumText;
-// Attribute for getAllDependent()
     @FXML
     private Button viewAllDependentButton;
     @FXML
@@ -76,7 +54,6 @@ public class PolicyHolderController implements SuperCustomer {
     @FXML
     private Button updateDependent;
 
-    @FXML
     public void setPolicyHolder(PolicyHolder policyHolder) {
         this.policyHolder = policyHolder;
     }
@@ -86,7 +63,7 @@ public class PolicyHolderController implements SuperCustomer {
     }
 
     // Methods for filePolicyHolderClaim()
-    public  void createPolicyHolderClaimForm(String url, String titlePage, Button button ){
+    public  void createPolicyHolderClaimForm(String url, String titlePage, Button button){
 
 
         try {
@@ -183,8 +160,6 @@ public class PolicyHolderController implements SuperCustomer {
     public boolean updatePolicyHolderClaim() {
         return false;
     }
-
-
 
 
 // retrievePolicyHolderClaim()
@@ -336,8 +311,6 @@ public class PolicyHolderController implements SuperCustomer {
         // Show the new stage
         codeStage.show();
     }
-
-    //public boolean showPolicyHolderInfo()
 
     @Override
     public boolean fileClaimForDependent() {

@@ -3,8 +3,10 @@ package org.example.asm2_insurance_claim_management_system;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.asm2_insurance_claim_management_system.Admin.Admin;
@@ -32,9 +34,6 @@ public class LoginController {
     private TextField textField;
     @FXML
     private PasswordField passwordField;
-
-//    @FXML
-//    private Button createPolicyHolderButton;
 
     @FXML
     protected void onLoginButtonClick() throws IOException {

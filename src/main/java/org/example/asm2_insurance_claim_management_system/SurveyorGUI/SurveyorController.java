@@ -12,7 +12,6 @@ import javafx.stage.Stage;
 import org.example.asm2_insurance_claim_management_system.Providers.Surveyor;
 
 import java.io.IOException;
-
 public class SurveyorController {
     private Surveyor surveyor;
 

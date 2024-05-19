@@ -16,20 +16,17 @@ import org.example.asm2_insurance_claim_management_system.Claim.BankInfo;
 import org.example.asm2_insurance_claim_management_system.Claim.Claim;
 import org.example.asm2_insurance_claim_management_system.Claim.Status;
 import org.example.asm2_insurance_claim_management_system.Customers.Dependent;
-import org.example.asm2_insurance_claim_management_system.Customers.HibernateSingleton;
+import org.example.asm2_insurance_claim_management_system.SingletonHibernate.HibernateSingleton;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyHolder;
 import org.example.asm2_insurance_claim_management_system.Interface.SuperCustomer;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.w3c.dom.Document;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Base64;
 import java.util.List;
-import java.util.Scanner;
 
 public class PolicyHolderClaimController implements SuperCustomer {
     private String fileData; // This will store the encoded PDF file data
@@ -103,8 +100,6 @@ public class PolicyHolderClaimController implements SuperCustomer {
     //Attributes for retrieveClaimForDependent
     @FXML
     private TextField retrieveClaimForDependent;
-    @FXML
-    private Button viewDependentClaimsButton;
 
     // Attributes for updateInfoForDependent()
     @FXML
@@ -122,6 +117,10 @@ public class PolicyHolderClaimController implements SuperCustomer {
 
     public void setPolicyHolder(PolicyHolder policyHolder) {
         this.policyHolder = policyHolder;
+    }
+
+    public PolicyHolder getPolicyHolder() {
+        return policyHolder;
     }
 
     @Override

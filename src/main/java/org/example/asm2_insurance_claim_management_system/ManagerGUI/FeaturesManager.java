@@ -7,14 +7,13 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.example.asm2_insurance_claim_management_system.Alert.ShowAlert;
 import org.example.asm2_insurance_claim_management_system.Claim.Claim;
 import org.example.asm2_insurance_claim_management_system.Claim.Status;
-import org.example.asm2_insurance_claim_management_system.Customers.HibernateSingleton;
+import org.example.asm2_insurance_claim_management_system.SingletonHibernate.HibernateSingleton;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -34,16 +33,12 @@ public class FeaturesManager {
     @FXML
     private TextField textReasonForRejection;
 
-    @FXML
-    private Button loadclaimsbutton;
-
     public boolean rejectClaim() {
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         Session session = null;
 
         String claimId = textClaimId.getText();
         String comment = textReasonForRejection.getText();
-        String availableClaimsList = null;
 
         try {
             session = sessionFactory.openSession();
