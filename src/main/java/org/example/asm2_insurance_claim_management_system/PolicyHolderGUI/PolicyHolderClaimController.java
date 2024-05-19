@@ -7,10 +7,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -600,9 +597,13 @@ public class PolicyHolderClaimController implements SuperCustomer {
             // Create a scene with the code container
             Button returnButton = new Button("Return");
             returnButton.setOnAction(this::goBack);
+
             // Add the Close button to the VBox
             codeContainer.getChildren().add(returnButton);
-            Scene codeScene = new Scene(codeContainer, 400, 300);
+            ScrollPane scrollPane = new ScrollPane();
+            scrollPane.setContent(codeContainer);
+            scrollPane.setFitToWidth(true);
+            Scene codeScene = new Scene(scrollPane, 400, 600);
             codeStage.setScene(codeScene);
             codeStage.show();
         } else {
@@ -612,49 +613,6 @@ public class PolicyHolderClaimController implements SuperCustomer {
         }
 
         return false;
-    }
-
-    private void retrieveDependentDetailsClaim(List<Claim> claimList, Dependent dependent) {
-        // Create a new stage (window)
-        Stage codeStage = new Stage();
-        codeStage.setTitle("Dependent Details");
-
-        // Create a VBox to hold the code
-        VBox codeContainer = new VBox();
-        codeContainer.setPadding(new Insets(10));
-        codeContainer.setSpacing(10);
-
-        for (Claim claim : claimList) {
-            if (dependent.getId().equals(claim.getDependent().getId())) {
-                Label codeLabel = new Label(
-                        "Claim ID: " + claim.getClaimId() + "\n" +
-                                "Claim Date: " + claim.getClaimDate() + "\n" +
-                                "Claim Amount: " + claim.getClaimAmount() + "\n" +
-                                "List of Document: " + claim.getListOfDocument() + "\n" +
-                                "Claim Status: " + claim.getStatus() + "\n" +
-                                "Card Number: " + claim.getInsuranceCard().getCardNumber() + "\n" +
-                                "Policy Holder: " + claim.getPolicyHolder().getId() + "\n" +
-                                "Dependent: " + claim.getDependent().getId() + "\n" +
-                                "Bank ID: " + claim.getBankInfo().getBankID() + "\n" +
-                                "Bank Name: " + claim.getBankInfo().getBankName() + "\n" +
-                                "Owner Name: " + claim.getBankInfo().getOwnerName() + "\n" +
-                                "Bank Account Number: " + claim.getBankInfo().getAccountNumber()
-                );
-                codeContainer.getChildren().add(codeLabel);
-            }
-        }
-
-        // Create a scene with the code container
-        Button returnButton = new Button("Return");
-        returnButton.setOnAction(this::goBack);
-        // Add the Close button to the VBox
-        codeContainer.getChildren().add(returnButton);
-        Scene codeScene = new Scene(codeContainer, 400, 300);
-        codeStage.setScene(codeScene);
-        codeStage.show();
-
-        // Hide the current window
-        viewDependentClaimsButton.getScene().getWindow().hide();
     }
 
     @Override
