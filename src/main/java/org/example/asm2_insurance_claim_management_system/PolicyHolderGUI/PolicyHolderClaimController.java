@@ -64,13 +64,13 @@ public class PolicyHolderClaimController implements SuperCustomer {
     @FXML
     private TextField AccNumText;
 
-// Attribute for Update policyHolder Information
+    // Attribute for Update policyHolder Information
     @FXML
     private TextField textFieldUpdatePolicyHolderName;
     @FXML
     private TextField textFieldUpdatePolicyHolderPassword;
 
-// Attributes for FileClaimforDependent()
+    // Attributes for FileClaimforDependent()
     @FXML
     private TextField textDependentID;
     @FXML
@@ -88,7 +88,7 @@ public class PolicyHolderClaimController implements SuperCustomer {
     @FXML
     private Button uploadPDF = new Button();
 
-// Attributes for UpdateClaimForDependent
+    // Attributes for UpdateClaimForDependent
     @FXML
     private TextField textCheckDependentID;
     @FXML
@@ -118,10 +118,9 @@ public class PolicyHolderClaimController implements SuperCustomer {
     private TextField updateDependentPassword;
 
 
-
     // Attributes for getAll Dependent
     @FXML
-    private Button  viewAllDependentButton;
+    private Button viewAllDependentButton;
     private PolicyHolder policyHolder;
 
     public void setPolicyHolder(PolicyHolder policyHolder) {
@@ -283,6 +282,7 @@ public class PolicyHolderClaimController implements SuperCustomer {
         }
         return false;
     }
+
     @Override
     public boolean updatePolicyHolderInfo() {
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
@@ -315,9 +315,6 @@ public class PolicyHolderClaimController implements SuperCustomer {
     }
 
 
-
-
-
     @Override
     public boolean retrievePolicyHolderClaim() {
         return false;
@@ -327,6 +324,7 @@ public class PolicyHolderClaimController implements SuperCustomer {
     public boolean showPolicyHolderInfo() {
         return false;
     }
+
     @FXML
     public void initialize() {
         uploadPDF.setOnAction(e -> {
@@ -537,6 +535,15 @@ public class PolicyHolderClaimController implements SuperCustomer {
 
     @Override
     public boolean retrieveClaimForDependent() {
+        // Create a new stage (window)
+        Stage codeStage = new Stage();
+        codeStage.setTitle("Dependent Details");
+
+        // Create a VBox to hold the code
+        VBox codeContainer = new VBox();
+        codeContainer.setPadding(new Insets(10));
+        codeContainer.setSpacing(10);
+
         String dependentId = retrieveClaimForDependent.getText();
         if (dependentId.isEmpty()) {
             // If any required field is empty, show an alert message
@@ -547,39 +554,66 @@ public class PolicyHolderClaimController implements SuperCustomer {
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         Session session = sessionFactory.openSession();
 
-// Assuming policyHolderId is the ID of the PolicyHolder you want to retrieve dependents for
-        String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyHolder h WHERE h.id = :policyHolderId";
+        String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyHolder h WHERE h.id = :policyHolderId AND d.id = :dependentID";
         List<Dependent> dependentList = session.createQuery(desiredDependent, Dependent.class)
-                .setParameter("policyHolderId", policyHolder.getId())
+                .setParameter("policyHolderId", policyHolder.getId()).setParameter("dependentID", dependentId)
                 .getResultList();
-        for (Dependent dependent : dependentList) {
-            if (dependent.getId().equals(dependentId)) {
-                try {
-                    session.beginTransaction();
-                    String desiredClaim = "SELECT c FROM Claim c WHERE c.dependent IS NOT NULL";
-                    List<Claim> claimList = session.createQuery(desiredClaim, Claim.class)
-                            .getResultList();
-                    retrieveDependentDetailsClaim(claimList,dependent);
-                    retrieveClaimForDependent.clear();
-                } catch (Exception ex) {
-                    // Rollback the transaction in case of an exception
-                    session.getTransaction().rollback();
-                    ex.printStackTrace();
-                } finally {
-                    // Close the session and session factory
-//            sessionFactory.close();
-                    if (session != null) {
-                        session.close();
+
+        if (!dependentList.isEmpty()) {
+            try {
+                session.beginTransaction();
+                String desiredClaim = "SELECT c FROM Claim c JOIN c.policyHolder h WHERE h.id = :policyHolderId AND c.dependent IS NOT NULL";
+                List<Claim> claimList = session.createQuery(desiredClaim, Claim.class)
+                        .setParameter("policyHolderId", policyHolder.getId()).getResultList();
+                for (Claim claim : claimList) {
+
+
+                    if (dependentList.get(0).getId().equals(claim.getDependent().getId())) {
+                        Label codeLabel = new Label(
+                                "Claim ID: " + claim.getClaimId() + "\n" +
+                                        "Claim Date: " + claim.getClaimDate() + "\n" +
+                                        "Claim Amount: " + claim.getClaimAmount() + "\n" +
+                                        "List of Document: " + claim.getListOfDocument() + "\n" +
+                                        "Claim Status: " + claim.getStatus() + "\n" +
+                                        "Card Number: " + claim.getInsuranceCard().getCardNumber() + "\n" +
+                                        "Policy Holder: " + claim.getPolicyHolder().getId() + "\n" +
+                                        "Dependent: " + claim.getDependent().getId() + "\n" +
+                                        "Bank ID: " + claim.getBankInfo().getBankID() + "\n" +
+                                        "Bank Name: " + claim.getBankInfo().getBankName() + "\n" +
+                                        "Owner Name: " + claim.getBankInfo().getOwnerName() + "\n" +
+                                        "Bank Account Number: " + claim.getBankInfo().getAccountNumber()
+                        );
+                        codeContainer.getChildren().add(codeLabel);
                     }
                 }
+            } catch (Exception ex) {
+                // Rollback the transaction in case of an exception
+                session.getTransaction().rollback();
+                ex.printStackTrace();
+            } finally {
+                // Close the session and session factory
+//            sessionFactory.close();
+                if (session != null) {
+                    session.close();
+                }
             }
+            // Create a scene with the code container
+            Button returnButton = new Button("Return");
+            returnButton.setOnAction(this::goBack);
+            // Add the Close button to the VBox
+            codeContainer.getChildren().add(returnButton);
+            Scene codeScene = new Scene(codeContainer, 400, 300);
+            codeStage.setScene(codeScene);
+            codeStage.show();
+        } else {
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Dependent does not exist");
+            return false;
         }
-        for (Dependent dependent : dependentList){
-            ShowAlert successfulAlert = new ShowAlert();
-            successfulAlert.showAlert(Alert.AlertType.ERROR,"ERROR", "Dependent Not Found");
-        }
+
         return false;
     }
+
     private void retrieveDependentDetailsClaim(List<Claim> claimList, Dependent dependent) {
         // Create a new stage (window)
         Stage codeStage = new Stage();
@@ -625,56 +659,51 @@ public class PolicyHolderClaimController implements SuperCustomer {
 
     @Override
     public boolean updateInfoForDependent() {
-
-
-        String dependentId =checkDependentId.getText() ;
-
-        String newDependentName = updateDependentName.getText() ;
-
-        String newPassword = updateDependentPassword.getText() ;
-
-
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         Session session = sessionFactory.openSession();
 
-// Assuming policyHolderId is the ID of the PolicyHolder you want to retrieve dependents for
-        String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyHolder h WHERE h.id = :policyHolderId";
+
+        String dependentId = checkDependentId.getText();
+        String newDependentName = updateDependentName.getText();
+        String newPassword = updateDependentPassword.getText();
+
+        String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyHolder h WHERE h.id = :policyHolderId AND d.id = :dependentID";
         List<Dependent> dependentList = session.createQuery(desiredDependent, Dependent.class)
                 .setParameter("policyHolderId", policyHolder.getId())
+                .setParameter("dependentID", dependentId)
                 .getResultList();
-        for (Dependent dependent : dependentList) {
-            if (!dependent.getId().equals(dependentId)) {
-                ShowAlert successfulAlert = new ShowAlert();
-                successfulAlert.showAlert(Alert.AlertType.ERROR,"ERROR", "Dependent Not Found");
-            } else {
-                try {
-                    session = sessionFactory.openSession();
-                    session.beginTransaction();
 
-                    dependent = session.get(Dependent.class, dependentId);
-                    dependent.setFullName(newDependentName);
-                    dependent.setPassword(newPassword);
+        if (dependentList.isEmpty()) {
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Dependent does not exist.");
+            return false;
+        }
+        Dependent dependent = dependentList.get(0);
+        try {
+            session = sessionFactory.openSession();
+            session.beginTransaction();
 
-                    session.getTransaction().commit();
-                    ShowAlert successfulAlert = new ShowAlert();
-                    successfulAlert.showAlert(Alert.AlertType.INFORMATION,"Successful", "Update Successfully");
-                    checkDependentId.clear();
-                    updateDependentPassword.clear();
-                    updateDependentName.clear();
-                    return true; // Update successful
-                } catch (Exception ex) {
-                    // Rollback the transaction in case of an exception
-                    session.getTransaction().rollback();
-                    ex.printStackTrace();
-                } finally {
-                    // Close the session and session factory
+            dependent = session.get(Dependent.class, dependentId);
+            dependent.setFullName(newDependentName);
+            dependent.setPassword(newPassword);
+
+            session.getTransaction().commit();
+            ShowAlert successfulAlert = new ShowAlert();
+            successfulAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Update Successfully");
+            checkDependentId.clear();
+            updateDependentPassword.clear();
+            updateDependentName.clear();
+            return true; // Update successful
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            // Close the session and session factory
 //            session.close();
 //            sessionFactory.close();
-                    if (session != null) {
-                        session.close();
-                    }
-                }
-
+            if (session != null) {
+                session.close();
             }
 
         }
@@ -687,7 +716,6 @@ public class PolicyHolderClaimController implements SuperCustomer {
 
         // Create a Hibernate SessionFactory
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
-
         // Obtain a Hibernate Session
         Session session = sessionFactory.openSession();
 
@@ -717,6 +745,7 @@ public class PolicyHolderClaimController implements SuperCustomer {
 
         return false;
     }
+
     private void retrieveDependentDetails(List<Dependent> dependentList) {
         // Create a new stage (window)
         Stage codeStage = new Stage();
@@ -745,6 +774,7 @@ public class PolicyHolderClaimController implements SuperCustomer {
         // Hide the current window
         viewAllDependentButton.getScene().getWindow().hide();
     }
+
     @FXML
     private void goBack(ActionEvent event) {
         try {

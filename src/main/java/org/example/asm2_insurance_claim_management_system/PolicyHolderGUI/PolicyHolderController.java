@@ -142,7 +142,7 @@ public class PolicyHolderController implements SuperCustomer {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/asm2_insurance_claim_management_system/PolicyHolder/retrieveClaimForDependent.fxml"));
 
             // Load the root element (in this case, VBox)
-            ScrollPane root = loader.load();
+            VBox root = loader.load();
 
             // Get the controller associated with CreateClaim.fxml
             PolicyHolderClaimController policyHolderClaimController = loader.getController();
