@@ -247,7 +247,7 @@ public class CRUDForPolicyOwner extends PolicyOwner implements SuperCustomer {
             scrollPane.setContent(codeContainer);
             scrollPane.setFitToWidth(true);
             // Create a scene with the code container
-            Scene codeScene = new Scene(scrollPane, 400, 1000);
+            Scene codeScene = new Scene(scrollPane, 400, 600);
             codeStage.setScene(codeScene);
             codeStage.show();
 
