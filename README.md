@@ -1,72 +1,46 @@
 # Project Name
-
+Insurance Claiming Management System
 ## Table of Contents
 
 - [Introduction](#introduction)
 - [Features](#features)
 - [Installation](#installation)
-- [Usage](#usage)
 - [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
+
 
 ## Introduction
 
-Provide a brief introduction to your project. Explain what the project does, its purpose, and any relevant background information.
+The Insurance CLaiming System allows different users to interact with the Supabase online database to perform tasks related to Claims and Users information, such as Create and Update Claims.
 
 ## Features
 
-List the main features of your project.
+Real-time Supabase Online Database Connection.
+
+Admin can perform Create, Retrieve, Update and Delete (CRUD) Operations on most classes other than Claim.
+
+Customers (Policy Owner, Policy Holder and Dependent) can interact with Claims and their information given the correct authority, with Policy Owner having the highest authority.
+
+Providers (Surveyor and Manager) can Process, Approve, Reject a Claim given appropriate authority.
 
 ## Installation
 
-Provide step-by-step instructions to set up the project locally.
+Step 1: Download the "Group22.zip" file submitted on Canvas of Team 22.
 
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/your-username/project-name.git
-    ```
-2. Navigate to the project directory:
-    ```bash
-    cd project-name
-    ```
-3. Build the project using Maven:
-    ```bash
-    mvn clean install
-    ```
-4. Run the application:
-    ```bash
-    java -jar target/project-name.jar
-    ```
+Step 2: Extract all contents from the .zip file.
 
-## Usage
+Step 3a: First Priority Option: Run the "Group22.exe" file contained within the submitted .zip file. (Java version 21)
 
-Explain how to use the project. Include examples and code snippets if necessary.
+Step 3b: If the program doesn't execute as intended, open the Project in IntelliJ and run the "LoginApplication.java" with directory "Insurance-Claim-Management-System\src\main\java\org\example\asm2_insurance_claim_management_system\LoginApplication.java"
 
 ## Contributing
 
-Outline the guidelines for contributing to the project.
+Group 22 Members:
 
-1. Fork the repository.
-2. Create a new branch:
-    ```bash
-    git checkout -b feature-branch
-    ```
-3. Make your changes.
-4. Commit your changes:
-    ```bash
-    git commit -m "Describe your changes"
-    ```
-5. Push to the branch:
-    ```bash
-    git push origin feature-branch
-    ```
-6. Open a pull request.
+Ung Xuan Dat
 
-## License
+Pham Quang Huy
 
-Specify the license under which the project is distributed.
+Hong Thieu Kiet
 
-## Contact
-
-Provide contact information or links to relevant resources.
+## Demonstration Video
+Link to the Demonstration Video of Group22: 
