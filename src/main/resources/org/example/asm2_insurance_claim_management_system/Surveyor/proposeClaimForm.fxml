@@ -4,19 +4,22 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="800.0" prefWidth="503.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.SurveyorGUI.FeaturesSurveyor">
+<VBox prefHeight="477.0" prefWidth="503.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.SurveyorGUI.FeaturesSurveyor">
     <children>
         <Label prefHeight="37.0" prefWidth="141.0" text="Propose A Claim">
             <font>
                 <Font name="System Bold Italic" size="15.0" />
             </font>
         </Label>
-        <Button fx:id="loadclaimsbutton" mnemonicParsing="false" onAction="#initializeClaimList" text="Load New Claims" />
+        <Button mnemonicParsing="false" onAction="#initializeClaimListForPropose" text="Load New Claims" />
         <Label text="All New Available Claims:">
             <font>
                 <Font name="System Bold" size="14.0" />
-            </font></Label>
-        <Label fx:id="availableClaims" alignment="TOP_LEFT" prefHeight="661.0" prefWidth="503.0" text="No New Available Claim" />
+            </font>
+        </Label>
+        <VBox fx:id="availableClaimsContainerForPropose" alignment="TOP_LEFT" prefHeight="300.0" prefWidth="503.0">
+            <Label />
+        </VBox>
         <Label text="Enter ClaimID (6 digits):" />
         <TextField fx:id="textClaimId" alignment="CENTER" prefHeight="25.0" prefWidth="428.0" promptText="ClaimId" scaleShape="false" />
         <Button alignment="CENTER" centerShape="false" contentDisplay="CENTER" onAction="#proposeClaim" scaleShape="false" text="Propose" textAlignment="CENTER">

@@ -1,7 +1,10 @@
 package org.example.asm2_insurance_claim_management_system.ManagerGUI;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
@@ -53,6 +56,26 @@ public class ManagerController {
 
             // Close the current stage (the one containing the button)
             button.getScene().getWindow().hide();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    private void goBackLogin(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            // Load the previous FXML file (e.g., the main menu)
+            Parent root = FXMLLoader.load(getClass().getResource("/org/example/asm2_insurance_claim_management_system/login.fxml"));
+
+            // Get the source node of the event (the button)
+            Node source = (Node) event.getSource();
+
+            // Get the current stage (window)
+            Stage stage = (Stage) source.getScene().getWindow();
+
+            // Set the scene to the new root (previous page)
+            stage.setScene(new Scene(root));
+
         } catch (IOException e) {
             e.printStackTrace();
         }

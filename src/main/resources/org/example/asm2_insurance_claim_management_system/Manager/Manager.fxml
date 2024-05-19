@@ -25,5 +25,10 @@
                 <Insets left="10" top="10.0" />
             </VBox.margin>
         </Button>
+        <Button  mnemonicParsing="false" onAction="#goBackLogin" text="Back">
+            <VBox.margin>
+                <Insets left="10" top="10.0" />
+            </VBox.margin>
+        </Button>
     </children>
 </VBox>

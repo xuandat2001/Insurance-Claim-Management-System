@@ -8,7 +8,6 @@
         <Label alignment="CENTER" text="Require More Information On A Claim" textAlignment="CENTER"/>
       <TextField fx:id="textClaimIdForDocument" />
         <Button mnemonicParsing="false" onAction="#downloadDocument" text="Download Document" />
-        <Button mnemonicParsing="false" onAction="#goBack" text="  Document" />
-
+        <Button mnemonicParsing="false" onAction="#goBack" text=" Back" />
     </children>
 </VBox>

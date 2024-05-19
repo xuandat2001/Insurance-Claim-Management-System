@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.asm2_insurance_claim_management_system.Admin.Admin;
@@ -106,14 +107,14 @@ public class LoginController {
                     surveyorStage.show();
                 }
                 else if (user instanceof Manager) {
-                    fxmlFile = "/org/example/asm2_insurance_claim_management_system/PolicyOwner/PolicyOwner.fxml";
+                    fxmlFile = "/org/example/asm2_insurance_claim_management_system/Manager/Manager.fxml";
                     loader.setLocation(getClass().getResource(fxmlFile));
-                    VBox policyOwnerRoot = loader.load();
+                    VBox managerControllerRoot = loader.load();
                     ManagerController controller = loader.getController();
                     controller.setManager((Manager) user);
                     Stage managerStage = new Stage();
-                    managerStage.setTitle("Managerr Page");
-                    managerStage.setScene(new Scene(policyOwnerRoot, 520, 440));
+                    managerStage.setTitle("Manager Page");
+                    managerStage.setScene(new Scene(managerControllerRoot, 520, 440));
                     managerStage.show();
                 }
 

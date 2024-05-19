@@ -15,7 +15,6 @@ import org.example.asm2_insurance_claim_management_system.Alert.ShowAlert;
 import org.example.asm2_insurance_claim_management_system.Claim.Claim;
 import org.example.asm2_insurance_claim_management_system.Claim.Status;
 import org.example.asm2_insurance_claim_management_system.Customers.HibernateSingleton;
-import org.example.asm2_insurance_claim_management_system.PolicyHolderGUI.PolicyHolderClaimController;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -30,6 +29,8 @@ import java.util.List;
 public class FeaturesSurveyor {
     @FXML
     private VBox availableClaimsContainer;
+    @FXML
+    private VBox availableClaimsContainerForPropose;
     @FXML
     private TextField textClaimId;
 
@@ -216,6 +217,63 @@ public class FeaturesSurveyor {
             viewDocument.getScene().getWindow().hide();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+    @FXML
+    private void initializeClaimListForPropose() {
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        Session session = null;
+
+        try {
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+
+            // List of documents
+            String desiredClaimList = "SELECT c FROM Claim c WHERE c.status = :status";
+            List<Claim> claimList = session.createQuery(desiredClaimList, Claim.class)
+                    .setParameter("status", Status.NEW)
+                    .getResultList();
+            VBox codeContainer = new VBox();
+            codeContainer.setPadding(new Insets(10));
+            codeContainer.setSpacing(10);
+
+            if (claimList.isEmpty()) {
+                Label noClaimsLabel = new Label("No New Claims Available");
+                codeContainer.getChildren().add(noClaimsLabel);
+            } else {
+                for (Claim claim : claimList) {
+                    Label codeLabel = new Label(
+                            "Claim ID: " + claim.getClaimId() + "\n" +
+                                    "Claim Date: " + claim.getClaimDate() + "\n" +
+                                    "Claim Amount: " + claim.getClaimAmount() + "\n" +
+                                    "Claim Status: " + claim.getStatus() + "\n" +
+                                    "Card Number: " + claim.getInsuranceCard().getCardNumber() + "\n" +
+                                    "Policy Holder: " + claim.getPolicyHolder().getId() + "\n" +
+                                    "Bank ID: " + claim.getBankInfo().getBankID() + "\n" +
+                                    "Bank Name: " + claim.getBankInfo().getBankName() + "\n" +
+                                    "Owner Name: " + claim.getBankInfo().getOwnerName() + "\n" +
+                                    "Bank Account Number: " + claim.getBankInfo().getAccountNumber()
+                    );
+                    codeContainer.getChildren().add(codeLabel);
+                }
+            }
+            ScrollPane scrollPane = new ScrollPane();
+            scrollPane.setContent(codeContainer);
+            scrollPane.setFitToWidth(true);
+            availableClaimsContainerForPropose.getChildren().clear();
+            availableClaimsContainerForPropose.getChildren().add(scrollPane);
+
+            session.getTransaction().commit();
+
+        } catch (HibernateException e) {
+            if (session != null) {
+                session.getTransaction().rollback();
+            }
+            throw new RuntimeException(e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
     @FXML
