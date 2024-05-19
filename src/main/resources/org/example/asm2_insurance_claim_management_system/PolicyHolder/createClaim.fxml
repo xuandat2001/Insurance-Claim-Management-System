@@ -1,24 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="383.0" prefWidth="279.0" xmlns="http://javafx.com/javafx/17.0.2-ea" fx:controller="org.example.asm2_insurance_claim_management_system.PolicyHolderGUI.PolicyHolderClaimController" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="424.0" prefWidth="279.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.PolicyHolderGUI.PolicyHolderClaimController">
    <children>
-      <Label text="Enter the Claim ID (6 digits)" textAlignment="CENTER" />
-      <TextField fx:id="textFieldClaimID" />
-      <Label text="Enter the Claim Amount " />
-      <TextField fx:id="textFieldClaimAmount" />
-      <Label text="Enter the Bank ID " />
-      <TextField fx:id="newBankIdText" />
-      <Label text="Enter the Bank Name " />
-      <TextField fx:id="newBankNameText" />
-      <Label text="Enter the Bank Holder " />
-      <TextField fx:id="newBankHolderText" />
-      <Label text="Enter the Account Number " />
-      <TextField fx:id="newAccNumText" />
-      <Button fx:id="uploadPDF"  mnemonicParsing="false"   text="UploadDocument" />
-      <Button  mnemonicParsing="false" onAction="#filePolicyHolderClaim"  text="Create" />
-      <Button  mnemonicParsing="false" onAction="#goBack"  text="Back" />
+      <Label alignment="CENTER" prefHeight="21.0" prefWidth="267.0" text="Create Claim">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <Label text="Enter the ClaimID (6 digits)" textAlignment="CENTER">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin></Label>
+      <TextField fx:id="textFieldClaimID" promptText="Ex: cl123" />
+      <Label text="Enter the Claim amount">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin></Label>
+      <TextField fx:id="textFieldClaimAmount" promptText="Ex: 20000" />
+      <Label text="Enter the Bank ID ">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin></Label>
+      <TextField fx:id="newBankIdText" promptText="Ex: b12345" />
+      <Label text="Enter the Bank name ">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin></Label>
+      <TextField fx:id="newBankNameText" promptText="Ex: TPBank" />
+      <Label text="Enter the Bank holder ">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin></Label>
+      <TextField fx:id="newBankHolderText" promptText="Bank holder" />
+      <Label text="Enter the Account number ">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin></Label>
+      <TextField fx:id="newAccNumText" promptText="Account number" />
+      <HBox prefHeight="22.0" prefWidth="259.0" spacing="70.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#filePolicyHolderClaim" text="Create" />
+            <Button fx:id="uploadPDF" mnemonicParsing="false" text="Upload PDF Document" />
+         </children>
+         <VBox.margin>
+            <Insets bottom="10.0" top="10.0" />
+         </VBox.margin>
+      </HBox>
+      <Button mnemonicParsing="false" onAction="#goBack" text="Back">
+         <VBox.margin>
+            <Insets bottom="10.0" />
+         </VBox.margin></Button>
    </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
 </VBox>

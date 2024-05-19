@@ -3,15 +3,34 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<VBox prefHeight="169.0" prefWidth="365.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.PolicyOwnerGUI.CRUDForPolicyOwner">
+<VBox prefHeight="180.0" prefWidth="321.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.PolicyOwnerGUI.CRUDForPolicyOwner">
     <padding>
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
-    <Label text="Enter the Dependent ID you want to delete his/her Claim" />
-    <TextField fx:id="textFieldDependentID" />
-    <Label text="Enter the Claim ID you want to delete" />
-    <TextField fx:id="textFieldClaimID" />
-    <Button mnemonicParsing="false" onAction="#deleteClaimOfDependent" text="Delete" />
-    <Button mnemonicParsing="false" onAction="#goBackMainMenu" text="Back" />
+   <Label alignment="CENTER" prefHeight="21.0" prefWidth="341.0" text="Delete Claim From Dependent">
+      <font>
+         <Font name="System Bold" size="15.0" />
+      </font>
+   </Label>
+    <Label text="Enter the Dependent ID you want to delete a Claim from">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+    <TextField fx:id="textFieldDependentID" promptText="Dependent ID" />
+    <Label text="Enter the ClaimID you want to delete">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+    <TextField fx:id="textFieldClaimID" promptText="ClaimID" />
+   <HBox prefHeight="100.0" prefWidth="200.0" spacing="208.0">
+      <children>
+          <Button mnemonicParsing="false" onAction="#deleteClaimOfDependent" text="Delete" />
+          <Button mnemonicParsing="false" onAction="#goBackMainMenu" text="Back" />
+      </children>
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin>
+   </HBox>
 </VBox>
