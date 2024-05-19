@@ -9,19 +9,19 @@
     <padding>
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
-    <Label alignment="CENTER" prefHeight="21.0" prefWidth="197.0" text="View Surveyor">
+    <Label alignment="CENTER" prefHeight="21.0" prefWidth="197.0" text="Retrieve Claim">
         <font>
             <Font name="System Bold" size="15.0" />
         </font>
     </Label>
-    <Label text="Enter Username (ID)">
+    <Label text="Enter ClaimID">
         <VBox.margin>
             <Insets top="10.0" />
         </VBox.margin></Label>
-    <TextField fx:id="textClaimId" />
-    <HBox prefHeight="0.0" prefWidth="200.0" spacing="115.0">
+    <TextField fx:id="textClaimId" promptText="ClaimID" />
+    <HBox prefHeight="0.0" prefWidth="200.0" spacing="100.0">
         <children>
-            <Button fx:id="button" mnemonicParsing="false" onAction="#retrieveClaim" text="View" />
+            <Button fx:id="button" mnemonicParsing="false" onAction="#retrieveClaim" text="Retrieve" />
             <Button onAction="#goBack" text="Back" />
         </children>
         <VBox.margin>
@@ -29,4 +29,3 @@
         </VBox.margin>
     </HBox>
 </VBox>
-

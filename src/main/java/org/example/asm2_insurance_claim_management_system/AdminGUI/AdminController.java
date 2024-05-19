@@ -214,23 +214,28 @@ public class AdminController{
             session = sessionFactory.openSession();
             session.beginTransaction();
 
+            int count = 0;
+
             // List of documents
-            String desiredClaimList = "SELECT c FROM Claim c WHERE c.status = :status";
+            String desiredClaimList = "SELECT c FROM Claim c WHERE c.approval = :approval";
             List<Claim> claimList = session.createQuery(desiredClaimList, Claim.class)
-                    .setParameter("status", Status.DONE)
+                    .setParameter("approval", "YES")
                     .getResultList();
             VBox codeContainer = new VBox();
             codeContainer.setPadding(new Insets(10));
             codeContainer.setSpacing(10);
 
             if (claimList.isEmpty()) {
-                Label noClaimsLabel = new Label("No New Successfull Claims ");
+                Label noClaimsLabel = new Label("No New Successful Claims ");
                 codeContainer.getChildren().add(noClaimsLabel);
             } else {
                 for (Claim claim : claimList) {
+                    count++;
                     totalClaimAmount += claim.getClaimAmount();
                 }
-                Label codeLabel = new Label("The total amount of Successfull Claim: " + totalClaimAmount);
+                Label codeLabel = new Label("The total amount of Successful Claim: " + totalClaimAmount
+                + "\n" + "Total No. of Successful Claims: " + count);
+
                 codeContainer.getChildren().add(codeLabel);
                 calculateSumSuccessfullyClaim.getScene().getWindow().hide();
                 Button returnButton = new Button("Return");
