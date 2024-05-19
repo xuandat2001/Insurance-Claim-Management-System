@@ -256,11 +256,14 @@ public class FeaturesSurveyor {
                     codeContainer.getChildren().add(codeLabel);
                 }
             }
-
+            ScrollPane scrollPane = new ScrollPane();
+            scrollPane.setContent(codeContainer);
+            scrollPane.setFitToWidth(true);
             availableClaimsContainer.getChildren().clear();
-            availableClaimsContainer.getChildren().add(codeContainer);
+            availableClaimsContainer.getChildren().add(scrollPane);
 
             session.getTransaction().commit();
+
         } catch (HibernateException e) {
             if (session != null) {
                 session.getTransaction().rollback();
