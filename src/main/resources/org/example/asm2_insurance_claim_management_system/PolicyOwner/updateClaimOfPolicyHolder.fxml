@@ -3,23 +3,54 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <VBox prefHeight="347.0" prefWidth="239.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.PolicyOwnerGUI.CRUDForPolicyOwner">
     <padding>
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
-    <Label text="Enter the policy Holder ID" />
-    <TextField fx:id="textFieldPolicyHolderID" />
-    <Label text="Enter the Claim ID" />
-    <TextField fx:id="textFieldClaimID" />
-    <Label text="Enter the new Claim Amount" />
-    <TextField fx:id="textFieldClaimAmount" />
-    <Label text="Enter the Bank Name" />
-    <TextField fx:id="textFieldBankName" />
-    <Label text="Enter the new Owner Name" />
-    <TextField fx:id="textFieldOwnerName" />
-    <Label text="Enter the new Account Number" />
-    <TextField fx:id="textFieldAccountNumber" />
-    <Button mnemonicParsing="false" onAction="#updatePolicyHolderClaim" text="Update" />
-    <Button mnemonicParsing="false" onAction="#goBackMainMenu" text="Back" />
+   <Label alignment="CENTER" prefHeight="21.0" prefWidth="253.0" text="Update Claim Of Policy Holder">
+      <font>
+         <Font name="System Bold" size="15.0" />
+      </font>
+   </Label>
+    <Label text="Enter the Policy Holder ID">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+    <TextField fx:id="textFieldPolicyHolderID" promptText="Policy Holder ID" />
+    <Label text="Enter the ClaimID">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+    <TextField fx:id="textFieldClaimID" promptText="ClaimID" />
+    <Label text="Enter the new Claim Amount">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+    <TextField fx:id="textFieldClaimAmount" promptText="Claim Amount" />
+    <Label text="Enter the new Bank Name">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+    <TextField fx:id="textFieldBankName" promptText="Bank Name" />
+    <Label text="Enter the new Bank Holder">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+    <TextField fx:id="textFieldOwnerName" promptText="Bank Holder" />
+    <Label text="Enter the new Account Number">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+    <TextField fx:id="textFieldAccountNumber" promptText="Account Number" />
+   <HBox prefHeight="0.0" prefWidth="219.0" spacing="122.0">
+      <children>
+          <Button mnemonicParsing="false" onAction="#updatePolicyHolderClaim" text="Update" />
+          <Button mnemonicParsing="false" onAction="#goBackMainMenu" text="Back" />
+      </children>
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin>
+   </HBox>
 </VBox>

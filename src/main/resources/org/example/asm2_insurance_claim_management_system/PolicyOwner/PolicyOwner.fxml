@@ -1,34 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.PolicyOwnerGUI.PolicyOwnerController">
+<HBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.PolicyOwnerGUI.PolicyOwnerController">
    <children>
-      <Label text="Policy Owner Page" />
-      <Button mnemonicParsing="false" fx:id="fileClaimForPolicyHolder" onAction="#onFileClaimForPolicyHolder" text="File Claim for Policy Holder" />
-      <Button mnemonicParsing="false" fx:id="retrieveClaimOfPolicyHolder" onAction="#onRetrieveClaimOfPolicyHolder" text="Retrieve Claim of Policy Holder" />
-      <Button mnemonicParsing="false" fx:id="updateClaimOfPolicyHolder" onAction="#onUpdateClaimOfPolicyHolder" text="Update Claim of Policy Holder " />
-      <Button mnemonicParsing="false" fx:id="deleteClaimOfPolicyHolder" onAction="#onDeleteClaimOfPolicyHolder" text="Delete Claim of Policy Holder" />
-      <Button mnemonicParsing="false" fx:id="fileClaimForDependent" onAction="#onFileClaimForDependent" text="File Claim for Dependent" />
-      <Button mnemonicParsing="false" fx:id="retrieveClaimOfDependent" onAction="#onRetrieveClaimOfDependent" text="Retrieve Claim of Dependent" />
-      <Button mnemonicParsing="false" fx:id="updateClaimOfDependent" onAction="#onUpdateClaimOfDependent" text="Update Claim of Dependent" />
-      <Button mnemonicParsing="false" fx:id="deleteClaimOfDependent" onAction="#onDeleteClaimOfDependent" text="Delete Claim of Dependent" />
+      <VBox alignment="CENTER" spacing="10.0">
+         <Label alignment="TOP_LEFT" prefHeight="22.0" prefWidth="141.0" text="Policy Owner Page">
+            <font>
+               <Font name="System Bold" size="15.0" />
+            </font>
+            <VBox.margin>
+               <Insets />
+            </VBox.margin>
+         </Label>
 
 
 
-      <Button mnemonicParsing="false" fx:id="createPolicyHolder" onAction="#onCreatePolicyHolder" text="Create Policy Holder" />
+         <Button fx:id="createPolicyHolder" mnemonicParsing="false" onAction="#onCreatePolicyHolder" text="Create Policy Holder" />
 
-      <Button mnemonicParsing="false" fx:id="retrieveInfoOfPolicyHolder" onAction="#onShowInfoPolicyHolder" text="Retrieve Information of Policy Holder" />
-      <Button mnemonicParsing="false" fx:id="updateInfoOfPolicyHolder" onAction="#onUpdateInfoOfPolicyHolder" text="Update Information of Policy Holder" />
-      <Button mnemonicParsing="false" fx:id="deletePolicyHolder" onAction="#onDeletePolicyHolder" text="Delete Policy Holder" />
-      <Button mnemonicParsing="false" fx:id="createDependent" onAction="#onCreateDependent" text="Create Dependent for Policy Holder" />
+            <Button fx:id="retrieveInfoOfPolicyHolder" mnemonicParsing="false" onAction="#onShowInfoPolicyHolder" text="Retrieve Information of Policy Holder" />
+         <Button fx:id="updateInfoOfPolicyHolder" mnemonicParsing="false" onAction="#onUpdateInfoOfPolicyHolder" text="Update Information of Policy Holder" />
+         <Button fx:id="deletePolicyHolder" mnemonicParsing="false" onAction="#onDeletePolicyHolder" text="Delete Policy Holder" />
+         <Button fx:id="fileClaimForPolicyHolder" mnemonicParsing="false" onAction="#onFileClaimForPolicyHolder" text="File Claim for Policy Holder" />
+         <Button fx:id="retrieveClaimOfPolicyHolder" mnemonicParsing="false" onAction="#onRetrieveClaimOfPolicyHolder" text="Retrieve Claim of Policy Holder" />
+         <Button fx:id="updateClaimOfPolicyHolder" mnemonicParsing="false" onAction="#onUpdateClaimOfPolicyHolder" text="Update Claim of Policy Holder " />
+         <Button fx:id="deleteClaimOfPolicyHolder" mnemonicParsing="false" onAction="#onDeleteClaimOfPolicyHolder" text="Delete Claim of Policy Holder" />
+         <Button fx:id="calcInsuranceFee" mnemonicParsing="false" onAction="#onCalcInsuranceFee" text="Calculate Total Insurance Fee " />
+      </VBox>
+      <VBox alignment="CENTER" prefHeight="316.0" prefWidth="226.0" spacing="10.0">
+         <children>
+            <Button fx:id="createDependent" mnemonicParsing="false" onAction="#onCreateDependent" text="Create Dependent for Policy Holder" />
 
 
-      <Button mnemonicParsing="false" fx:id="retrieveInfoOfDependent" onAction="#onGetAllDependent" text="Retrieve Information of Dependent" />
-      <Button mnemonicParsing="false" fx:id="updateInfoOfDependent" onAction="#onUpdateInfoOfDependent" text="Update Information of Dependent" />
-      <Button mnemonicParsing="false" fx:id="deleteDependent" onAction="#onDeleteDependent" text="Delete Dependent" />
-      <Button mnemonicParsing="false" fx:id="calcInsuranceFee" onAction="#onCalcInsuranceFee" text="Calculate total Insurance Fee " />
-      <Button mnemonicParsing="false"  onAction="#goBackLogin" text="Back" />
+            <Button fx:id="retrieveInfoOfDependent" mnemonicParsing="false" onAction="#onGetAllDependent" text="Retrieve Information of Dependent" />
+            <Button fx:id="updateInfoOfDependent" mnemonicParsing="false" onAction="#onUpdateInfoOfDependent" text="Update Information of Dependent" />
+            <Button fx:id="deleteDependent" mnemonicParsing="false" onAction="#onDeleteDependent" text="Delete Dependent" />
+            <Button fx:id="fileClaimForDependent" mnemonicParsing="false" onAction="#onFileClaimForDependent" text="File Claim for Dependent" />
+            <Button fx:id="retrieveClaimOfDependent" mnemonicParsing="false" onAction="#onRetrieveClaimOfDependent" text="Retrieve Claim of Dependent" />
+            <Button fx:id="updateClaimOfDependent" mnemonicParsing="false" onAction="#onUpdateClaimOfDependent" text="Update Claim of Dependent" />
+            <Button fx:id="deleteClaimOfDependent" mnemonicParsing="false" onAction="#onDeleteClaimOfDependent" text="Delete Claim of Dependent" />
+            <Button mnemonicParsing="false" onAction="#goBackLogin" text="Back" />
+         </children>
+         <HBox.margin>
+            <Insets top="30.0" />
+         </HBox.margin>
+      </VBox>
    </children>
-</VBox>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</HBox>

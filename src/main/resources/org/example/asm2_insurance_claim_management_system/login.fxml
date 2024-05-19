@@ -3,14 +3,23 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.2-ea" fx:controller="org.example.asm2_insurance_claim_management_system.LoginController">
+<VBox alignment="CENTER" prefHeight="166.0" prefWidth="317.0" spacing="15.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.LoginController">
     <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
+    <Label alignment="TOP_LEFT" text="Insurance Claiming Management System">
+        <font>
+            <Font name="System Bold" size="15.0" />
+        </font>
+    </Label>
 
 
-   <TextField fx:id="textField" promptText="Username (Id)" />
-   <PasswordField fx:id="passwordField" promptText="Password" />
-    <Button fx:id="loginButton" onAction="#onLoginButtonClick" text="Login!" />
+    <TextField fx:id="textField" promptText="Username (ID)" />
+    <PasswordField fx:id="passwordField" promptText="Password" />
+    <Button fx:id="loginButton" alignment="CENTER" onAction="#onLoginButtonClick" text="Login">
+        <VBox.margin>
+            <Insets top="10.0" />
+        </VBox.margin></Button>
 </VBox>

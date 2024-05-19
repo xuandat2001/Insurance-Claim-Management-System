@@ -3,21 +3,49 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<VBox prefHeight="347.0" prefWidth="239.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.PolicyOwnerGUI.CRUDForPolicyOwner">
+<VBox prefHeight="340.0" prefWidth="239.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.PolicyOwnerGUI.CRUDForPolicyOwner">
     <padding>
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
-    <Label text="Enter the Policy Holder ID" />
-    <TextField fx:id="textFieldPolicyHolderID" />
-    <Label text="Enter the Dependent ID" />
-    <TextField fx:id="textFieldDependentID" />
-    <Label text="Enter the password" />
-    <TextField fx:id="textFieldPassword" />
-    <Label text="Enter the full name" />
-    <TextField fx:id="textFieldFullName" />
-    <Label text="Enter a expirationDate (YYYY-MM-DD)" />
-    <TextField fx:id="textFieldExpirationDate" />
-    <Button mnemonicParsing="false" onAction="#createDependent" text="Create" />
-    <Button mnemonicParsing="false" onAction="#goBackMainMenu" text="Back" />
+   <Label alignment="CENTER" prefHeight="21.0" prefWidth="234.0" text="Create Dependent">
+      <font>
+         <Font name="System Bold" size="15.0" />
+      </font>
+   </Label>
+    <Label text="Enter the Policy Holder ID">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+    <TextField fx:id="textFieldPolicyHolderID" promptText="Ex: h1234" />
+    <Label text="Enter the Dependent ID">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+    <TextField fx:id="textFieldDependentID" promptText="Ex: d1234" />
+    <Label text="Enter the Password">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+    <TextField fx:id="textFieldPassword" promptText="Password" />
+    <Label text="Enter the Full Name">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+    <TextField fx:id="textFieldFullName" promptText="Full Name" />
+    <Label text="Enter Expiry Date (YYYY-MM-DD)">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
+    <TextField fx:id="textFieldExpirationDate" promptText="Ex: 2025-11-25" />
+   <HBox prefHeight="10.0" prefWidth="219.0" spacing="127.0">
+      <children>
+          <Button mnemonicParsing="false" onAction="#createDependent" text="Create" />
+          <Button mnemonicParsing="false" onAction="#goBackMainMenu" text="Back" />
+      </children>
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin>
+   </HBox>
 </VBox>

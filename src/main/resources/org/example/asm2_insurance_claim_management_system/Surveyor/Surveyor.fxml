@@ -5,25 +5,25 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="392.0" prefWidth="529.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.SurveyorGUI.SurveyorController">
+<VBox prefHeight="120.0" prefWidth="259.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.SurveyorGUI.SurveyorController">
     <children>
-        <Label alignment="TOP_LEFT" prefHeight="20.0" prefWidth="92.0" text="Surveyor Page">
-            <padding>
-                <Insets bottom="10.0" left="5.0" right="5.0" top="5.0" />
-            </padding>
+        <Label alignment="TOP_LEFT" prefHeight="21.0" prefWidth="110.0" text="Surveyor Page">
             <font>
-                <Font name="System Bold" size="12.0" />
+                <Font name="System Bold" size="15.0" />
             </font>
         </Label>
-        <Button fx:id="RequireMoreInfoOnClaimButton" mnemonicParsing="false" onAction="#requireMoreInfoForm" text="Require More Information On A Claim">
-            <VBox.margin>
-                <Insets left="10" top="10.0" />
-            </VBox.margin>
-        </Button>
         <Button fx:id="ProposeClaimFormButton" mnemonicParsing="false" onAction="#proposeClaimForm" text="Propose a Claim">
             <VBox.margin>
                 <Insets left="10" top="10.0" />
             </VBox.margin>
         </Button>
+        <Button fx:id="RequireMoreInfoOnClaimButton" mnemonicParsing="false" onAction="#requireMoreInfoForm" text="Require More Information On A Claim">
+            <VBox.margin>
+                <Insets left="10" top="10.0" />
+            </VBox.margin>
+        </Button>
     </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
 </VBox>

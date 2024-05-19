@@ -3,13 +3,32 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<VBox prefHeight="169.0" prefWidth="365.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.PolicyOwnerGUI.CRUDForPolicyOwner">
+<VBox prefHeight="140.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.PolicyOwnerGUI.CRUDForPolicyOwner">
     <padding>
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
-    <Label text="Enter the Policy Holder ID you want to delete" />
+   <Label alignment="CENTER" prefHeight="21.0" prefWidth="203.0" text="Delete Policy Holder">
+      <VBox.margin>
+         <Insets />
+      </VBox.margin>
+      <font>
+         <Font name="System Bold" size="15.0" />
+      </font>
+   </Label>
+    <Label text="Enter the Policy Holder ID">
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin></Label>
     <TextField fx:id="textFieldPolicyHolderID" />
-    <Button mnemonicParsing="false" onAction="#deletePolicyHolder" text="Delete" />
-    <Button mnemonicParsing="false" onAction="#goBackMainMenu" text="Back" />
+   <HBox prefHeight="7.0" prefWidth="345.0" spacing="85.0">
+      <children>
+          <Button mnemonicParsing="false" onAction="#deletePolicyHolder" text="Delete" />
+          <Button mnemonicParsing="false" onAction="#goBackMainMenu" text="Back" />
+      </children>
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin>
+   </HBox>
 </VBox>

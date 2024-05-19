@@ -7,72 +7,72 @@
 
 <VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.PolicyHolderGUI.PolicyHolderController">
    <children>
-      <Label text="Policy Holder page">
-         <padding>
-            <Insets bottom="10.0" left="5.0" right="5.0" top="5.0" />
-         </padding>
+      <Label alignment="CENTER" prefHeight="22.0" prefWidth="167.0" text="Policy Holder Page">
          <VBox.margin>
-            <Insets left="14.0" />
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </VBox.margin>
          <font>
-            <Font name="System Bold" size="12.0" />
+            <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Button fx:id="viewPolicyHolderClaimsButton" mnemonicParsing="false" text="Retrieve PolicyHolder's Claims" onAction="#retrievePolicyHolderClaim">
+      <Button fx:id="createFromClaim" mnemonicParsing="false" onAction="#createFilePolicyHolderClaimForm" text="File Claim">
          <VBox.margin>
-            <Insets left="28.0" />
+            <Insets left="10.0" right="10.0" />
          </VBox.margin>
       </Button>
-      <Button fx:id="viewPolicyHolderButton" mnemonicParsing="false" text="Retrieve Information PolicyHolder" onAction="#showPolicyHolderInfo">
+      <Button fx:id="viewPolicyHolderButton" mnemonicParsing="false" onAction="#showPolicyHolderInfo" text="Retrieve My Information">
          <VBox.margin>
-            <Insets left="28.0" />
+            <Insets left="10.0" right="10.0" top="10.0" />
          </VBox.margin>
       </Button>
-      <Button fx:id="createFromClaim" mnemonicParsing="false" text="File Claim" onAction="#createFilePolicyHolderClaimForm">
+      <Button fx:id="viewPolicyHolderClaimsButton" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#retrievePolicyHolderClaim" prefHeight="26.0" prefWidth="118.0" text="Retrieve My Claims">
          <VBox.margin>
-            <Insets left="28.0" />
+            <Insets left="10.0" right="10.0" top="10.0" />
          </VBox.margin>
       </Button>
-      <Button fx:id="createFromUpdateClaim" mnemonicParsing="false" text="Update Claim" onAction="#createUpdatePolicyHolderClaimForm">
+      <Button fx:id="createFromUpdateClaim" mnemonicParsing="false" onAction="#createUpdatePolicyHolderClaimForm" text="Update My Claims">
          <VBox.margin>
-            <Insets left="28.0" />
+            <Insets left="10.0" right="10.0" top="10.0" />
          </VBox.margin>
       </Button>
-      <Button fx:id="createFromUpdate" mnemonicParsing="false" text="Update PolicyHolder" onAction="#createUpdatePolicyHolderForm">
+      <Button fx:id="createFromUpdate" mnemonicParsing="false" onAction="#createUpdatePolicyHolderForm" text="Update My Account">
          <VBox.margin>
-            <Insets left="28.0" />
+            <Insets left="10.0" right="10.0" top="10.0" />
          </VBox.margin>
       </Button>
-      <Button fx:id="viewAllDependentButton" mnemonicParsing="false" text="Get All Dependent" onAction="#getAllDependent">
+      <Button fx:id="viewAllDependentButton" mnemonicParsing="false" onAction="#getAllDependent" text="Get All Dependent(s)">
          <VBox.margin>
-            <Insets left="28.0" />
+            <Insets left="10.0" right="10.0" top="10.0" />
          </VBox.margin>
       </Button>
-      <Button fx:id="createFromFileClaimForDependent" mnemonicParsing="false" text="File Claim For Dependent" onAction="#fileClaimForDependentForm">
+      <Button fx:id="updateDependent" mnemonicParsing="false" onAction="#updateForDependentForm" text="Update Dependent Infomation">
          <VBox.margin>
-            <Insets left="28.0" />
+            <Insets left="10.0" right="10.0" top="10.0" />
          </VBox.margin>
       </Button>
-      <Button fx:id="updateFromFileClaimForDependent" mnemonicParsing="false" text="Update Claim For Dependent" onAction="#updateClaimForDependentForm">
+      <Button fx:id="createFromFileClaimForDependent" mnemonicParsing="false" onAction="#fileClaimForDependentForm" text="File Claim For A Dependent">
          <VBox.margin>
-            <Insets left="28.0" />
+            <Insets left="10.0" right="10.0" top="10.0" />
          </VBox.margin>
       </Button>
-      <Button fx:id="retrieveFromFileClaimForDependent" mnemonicParsing="false" text="Retrieve Claim For Dependent" onAction="#retrieveClaimForDependentForm">
+      <Button fx:id="updateFromFileClaimForDependent" mnemonicParsing="false" onAction="#updateClaimForDependentForm" text="Update Claim For A Dependent">
          <VBox.margin>
-            <Insets left="28.0" />
+            <Insets left="10.0" right="10.0" top="10.0" />
          </VBox.margin>
       </Button>
-      <Button fx:id="updateDependent" mnemonicParsing="false" text="Update Dependent Infomation" onAction="#updateForDependentForm">
+      <Button fx:id="retrieveFromFileClaimForDependent" mnemonicParsing="false" onAction="#retrieveClaimForDependentForm" text="Retrieve Claim For A Dependent">
          <VBox.margin>
-            <Insets left="28.0" />
+            <Insets left="10.0" right="10.0" top="10.0" />
          </VBox.margin>
       </Button>
-      <Button  mnemonicParsing="false" text="Back" onAction="#goBackLogin">
+      <Button mnemonicParsing="false" onAction="#goBackLogin" text="Back">
          <VBox.margin>
-            <Insets left="28.0" />
+            <Insets left="10.0" right="10.0" top="10.0" />
          </VBox.margin>
       </Button>
 
    </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
 </VBox>

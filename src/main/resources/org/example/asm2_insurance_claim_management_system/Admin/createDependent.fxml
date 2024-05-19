@@ -9,39 +9,38 @@
     <padding>
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
-   <Label text="Create Dependent Account">
-      <font>
-         <Font name="System Bold" size="15.0" />
-      </font>
-   </Label>
+    <Label text="Create Dependent Account">
+        <font>
+            <Font name="System Bold" size="15.0" />
+        </font>
+    </Label>
     <Label text="Set the Username (ID)">
-      <VBox.margin>
-         <Insets top="10.0" />
-      </VBox.margin></Label>
+        <VBox.margin>
+            <Insets top="10.0" />
+        </VBox.margin></Label>
     <TextField fx:id="textFieldId" promptText="Username" />
     <Label text="Set password">
-      <VBox.margin>
-         <Insets top="10.0" />
-      </VBox.margin></Label>
+        <VBox.margin>
+            <Insets top="10.0" />
+        </VBox.margin></Label>
     <TextField fx:id="textFieldPassword" promptText="Password" />
     <Label text="Set Full Name">
-      <VBox.margin>
-         <Insets top="10.0" />
-      </VBox.margin></Label>
+        <VBox.margin>
+            <Insets top="10.0" />
+        </VBox.margin></Label>
     <TextField fx:id="textFieldFullName" promptText="Full Name" />
     <Label text="PolicyHolder ID">
-      <VBox.margin>
-         <Insets top="10.0" />
-      </VBox.margin></Label>
-    <TextField fx:id="textFieldPolicyHolder" promptText="Ex: p12345" />
-    <Button mnemonicParsing="false" onAction="#createEntity" text="Create">
-      <VBox.margin>
-         <Insets top="10.0" />
-      </VBox.margin>
-    </Button>
-    <Button mnemonicParsing="false" onAction="#goBack" text="Back">
+        <VBox.margin>
+            <Insets top="10.0" />
+        </VBox.margin></Label>
+    <TextField fx:id="textFieldPolicyHolder" promptText="Ex: h12345" />
+    <HBox prefHeight="0.0" prefWidth="200.0" spacing="107.0">
+        <children>
+            <Button mnemonicParsing="false" onAction="#createEntity" text="Create" />
+            <Button mnemonicParsing="false" onAction="#goBack" text="Back" />
+        </children>
         <VBox.margin>
             <Insets top="10.0" />
         </VBox.margin>
-    </Button>
+    </HBox>
 </VBox>
