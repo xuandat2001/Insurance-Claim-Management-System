@@ -1,5 +1,7 @@
 package org.example.asm2_insurance_claim_management_system.Providers;
-
+/**
+ * @author <Group 22>
+ */
 import jakarta.persistence.Entity;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;

@@ -1,5 +1,7 @@
 package org.example.asm2_insurance_claim_management_system;
-
+/**
+ * @author <Group 22>
+ */
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

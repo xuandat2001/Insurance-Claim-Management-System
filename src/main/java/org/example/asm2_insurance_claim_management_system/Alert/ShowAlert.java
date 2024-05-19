@@ -1,5 +1,7 @@
 package org.example.asm2_insurance_claim_management_system.Alert;
-
+/**
+ * @author <Group 22>
+ */
 import javafx.scene.control.Alert;
 
 public class ShowAlert {

@@ -1,5 +1,7 @@
 package org.example.asm2_insurance_claim_management_system.Login;
-
+/**
+ * @author <Group 22>
+ */
 import org.example.asm2_insurance_claim_management_system.Admin.Admin;
 import org.example.asm2_insurance_claim_management_system.Customers.Dependent;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyHolder;

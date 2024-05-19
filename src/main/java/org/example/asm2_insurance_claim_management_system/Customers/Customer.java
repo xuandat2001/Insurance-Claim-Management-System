@@ -1,5 +1,7 @@
 package org.example.asm2_insurance_claim_management_system.Customers;
-
+/**
+ * @author <Group 22>
+ */
 import jakarta.persistence.*;
 import org.example.asm2_insurance_claim_management_system.Interface.UserAuthentication;
 

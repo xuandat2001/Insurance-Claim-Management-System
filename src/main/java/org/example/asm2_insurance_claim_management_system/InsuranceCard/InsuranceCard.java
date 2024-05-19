@@ -1,5 +1,7 @@
 package org.example.asm2_insurance_claim_management_system.InsuranceCard;
-
+/**
+ * @author <Group 22>
+ */
 import jakarta.persistence.*;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyHolder;
 import org.example.asm2_insurance_claim_management_system.Customers.PolicyOwner;

@@ -1,5 +1,7 @@
 package org.example.asm2_insurance_claim_management_system.SingletonHibernate;
-
+/**
+ * @author <Group 22>
+ */
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
