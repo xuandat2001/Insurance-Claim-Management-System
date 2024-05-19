@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.asm2_insurance_claim_management_system.Customers.Dependent;
@@ -71,13 +72,13 @@ public class PolicyOwnerController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(url));
 
             // Load the root element (in this case, VBox)
-            VBox policyOwnerRoot = loader.load();
+            HBox policyOwnerRoot = loader.load();
             CRUDForPolicyOwner crudForPolicyOwner = loader.getController();
             crudForPolicyOwner.setPolicyOwner(policyOwner);
             // Create a new stage for the Policy Owner UI
             Stage adminStage = new Stage();
             adminStage.setTitle("Policy Owner Page");
-            adminStage.setScene(new Scene(policyOwnerRoot, 400, 320));
+            adminStage.setScene(new Scene(policyOwnerRoot, 500, 350));
 
             // Show the Policy Owner UI stage
             adminStage.show();
