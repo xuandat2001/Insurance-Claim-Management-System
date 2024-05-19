@@ -4,9 +4,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="800.0" prefWidth="503.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.ManagerGUI.FeaturesManager">
+<VBox prefHeight="553.0" prefWidth="503.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.ManagerGUI.FeaturesManager">
     <children>
-        <Label prefHeight="37.0" prefWidth="141.0" text="Approve A Claim">
+        <Label prefHeight="28.0" prefWidth="130.0" text="Approve A Claim">
             <font>
                 <Font name="System Bold Italic" size="15.0" />
             </font>
@@ -16,7 +16,7 @@
             <font>
                 <Font name="System Bold" size="14.0" />
             </font></Label>
-        <Label fx:id="availableClaims" alignment="TOP_LEFT" prefHeight="661.0" prefWidth="503.0" text="No Processing Claim Available" />
+        <Label fx:id="availableClaims" alignment="TOP_LEFT" prefHeight="367.0" prefWidth="503.0" text="No Processing Claim Available" />
         <Label text="Enter ClaimID (6 digits):" />
         <TextField fx:id="textClaimId" alignment="CENTER" prefHeight="25.0" prefWidth="428.0" promptText="ClaimId" scaleShape="false" />
         <Button alignment="CENTER" centerShape="false" contentDisplay="CENTER" onAction="#approveClaim" scaleShape="false" text="Approve" textAlignment="CENTER">

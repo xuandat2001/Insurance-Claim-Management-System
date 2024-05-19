@@ -72,13 +72,13 @@ public class PolicyOwnerController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(url));
 
             // Load the root element (in this case, VBox)
-            HBox policyOwnerRoot = loader.load();
+            VBox policyOwnerRoot = loader.load();
             CRUDForPolicyOwner crudForPolicyOwner = loader.getController();
             crudForPolicyOwner.setPolicyOwner(policyOwner);
             // Create a new stage for the Policy Owner UI
             Stage adminStage = new Stage();
             adminStage.setTitle("Policy Owner Page");
-            adminStage.setScene(new Scene(policyOwnerRoot, 500, 350));
+            adminStage.setScene(new Scene(policyOwnerRoot, 500, 750));
 
             // Show the Policy Owner UI stage
             adminStage.show();

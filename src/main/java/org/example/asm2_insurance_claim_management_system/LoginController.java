@@ -77,12 +77,12 @@ public class LoginController {
                 } else if (user instanceof PolicyOwner) {
                     fxmlFile = "/org/example/asm2_insurance_claim_management_system/PolicyOwner/PolicyOwner.fxml";
                     loader.setLocation(getClass().getResource(fxmlFile));
-                    HBox policyOwnerRoot = loader.load();
+                    VBox policyOwnerRoot = loader.load();
                     PolicyOwnerController controller = loader.getController();
                     controller.setPolicyOwner((PolicyOwner) user);
                     Stage policyOwnerStage = new Stage();
                     policyOwnerStage.setTitle("Policy Owner Page");
-                    policyOwnerStage.setScene(new Scene(policyOwnerRoot, 500, 400));
+                    policyOwnerStage.setScene(new Scene(policyOwnerRoot, 500, 750));
                     policyOwnerStage.show();
                 }else if (user instanceof Dependent) {
                     fxmlFile = "/org/example/asm2_insurance_claim_management_system/Dependent/Dependent.fxml";

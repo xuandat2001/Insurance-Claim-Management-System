@@ -1,31 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="800.0" prefWidth="503.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.SurveyorGUI.FeaturesSurveyor">
+<VBox prefHeight="565.0" prefWidth="496.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.SurveyorGUI.FeaturesSurveyor">
     <children>
-        <Label alignment="CENTER" text="Require More Information On A Claim" textAlignment="CENTER">
-            <font>
-                <Font name="System Bold Italic" size="15.0" />
-            </font>
-        </Label>
-        <Button fx:id="loadclaimsbutton" mnemonicParsing="false" onAction="#initializeClaimList" text="Load New Claims" />
-        <Label text="All New Available Claims:">
+        <Label alignment="CENTER" prefHeight="22.0" prefWidth="501.0" text="Require More Information On A Claim" textAlignment="CENTER">
             <font>
                 <Font name="System Bold" size="15.0" />
             </font>
         </Label>
-        <VBox fx:id="availableClaimsContainer" alignment="TOP_LEFT" prefHeight="617.0" prefWidth="503.0">
+        <Button fx:id="loadclaimsbutton" mnemonicParsing="false" onAction="#initializeClaimList" text="Load New Claims">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin></Button>
+        <Label text="All New Available Claims">
+            <font>
+                <Font name="System Bold" size="13.0" />
+            </font>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+        </Label>
+        <VBox fx:id="availableClaimsContainer" alignment="TOP_LEFT" prefHeight="288.0" prefWidth="503.0">
             <Label text="No New Claim Available" />
         </VBox>
-        <Button fx:id="viewDocument" onAction="#onViewDocument" scaleShape="false" text="View Document" />
-        <Label text="Enter ClaimID (6 digits):" />
-        <TextField fx:id="textClaimId" alignment="CENTER" prefHeight="25.0" prefWidth="428.0" promptText="ClaimId" scaleShape="false" />
-        <Label text="Comment on what information should be added for approval:" />
-        <TextField fx:id="textRequiredInfo" alignment="CENTER" promptText="Comment" />
-        <Button alignment="BOTTOM_CENTER" contentDisplay="CENTER" onAction="#requireMoreInfoOnClaim" scaleShape="false" text="Enter" textAlignment="CENTER" />
-        <Button alignment="BOTTOM_LEFT" contentDisplay="RIGHT" onAction="#goBack" text="Back" />
+        <Button fx:id="viewDocument" onAction="#onViewDocument" scaleShape="false" text="View Document">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin></Button>
+        <Label text="Enter ClaimID (6 digits)">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin></Label>
+        <TextField fx:id="textClaimId" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="428.0" promptText="ClaimID" scaleShape="false" />
+        <Label text="Comment on what information should be added for approval">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin></Label>
+        <TextField fx:id="textRequiredInfo" alignment="TOP_LEFT" promptText="Comment" />
+      <HBox prefHeight="0.0" prefWidth="482.0" spacing="390.0">
+         <children>
+              <Button alignment="BOTTOM_CENTER" contentDisplay="CENTER" onAction="#requireMoreInfoOnClaim" scaleShape="false" text="Enter" textAlignment="CENTER" />
+              <Button alignment="BOTTOM_LEFT" contentDisplay="RIGHT" onAction="#goBack" text="Back" />
+         </children>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </HBox>
     </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
 </VBox>

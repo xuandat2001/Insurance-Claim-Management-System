@@ -5,15 +5,13 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<HBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.PolicyOwnerGUI.PolicyOwnerController">
-   <children>
-      <VBox alignment="CENTER" spacing="10.0">
+<VBox alignment="CENTER" prefHeight="698.0" prefWidth="459.0" spacing="10.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.asm2_insurance_claim_management_system.PolicyOwnerGUI.PolicyOwnerController">
          <Label alignment="TOP_LEFT" prefHeight="22.0" prefWidth="141.0" text="Policy Owner Page">
             <font>
                <Font name="System Bold" size="15.0" />
             </font>
             <VBox.margin>
-               <Insets />
+               <Insets top="10.0" />
             </VBox.margin>
          </Label>
 
@@ -29,27 +27,15 @@
          <Button fx:id="updateClaimOfPolicyHolder" mnemonicParsing="false" onAction="#onUpdateClaimOfPolicyHolder" text="Update Claim of Policy Holder " />
          <Button fx:id="deleteClaimOfPolicyHolder" mnemonicParsing="false" onAction="#onDeleteClaimOfPolicyHolder" text="Delete Claim of Policy Holder" />
          <Button fx:id="calcInsuranceFee" mnemonicParsing="false" onAction="#onCalcInsuranceFee" text="Calculate Total Insurance Fee " />
-      </VBox>
-      <VBox alignment="CENTER" prefHeight="316.0" prefWidth="226.0" spacing="10.0">
-         <children>
-            <Button fx:id="createDependent" mnemonicParsing="false" onAction="#onCreateDependent" text="Create Dependent for Policy Holder" />
+         <Button fx:id="createDependent" mnemonicParsing="false" onAction="#onCreateDependent" text="Create Dependent for Policy Holder" />
 
 
-            <Button fx:id="retrieveInfoOfDependent" mnemonicParsing="false" onAction="#onGetAllDependent" text="Retrieve Information of Dependent" />
-            <Button fx:id="updateInfoOfDependent" mnemonicParsing="false" onAction="#onUpdateInfoOfDependent" text="Update Information of Dependent" />
-            <Button fx:id="deleteDependent" mnemonicParsing="false" onAction="#onDeleteDependent" text="Delete Dependent" />
-            <Button fx:id="fileClaimForDependent" mnemonicParsing="false" onAction="#onFileClaimForDependent" text="File Claim for Dependent" />
-            <Button fx:id="retrieveClaimOfDependent" mnemonicParsing="false" onAction="#onRetrieveClaimOfDependent" text="Retrieve Claim of Dependent" />
-            <Button fx:id="updateClaimOfDependent" mnemonicParsing="false" onAction="#onUpdateClaimOfDependent" text="Update Claim of Dependent" />
-            <Button fx:id="deleteClaimOfDependent" mnemonicParsing="false" onAction="#onDeleteClaimOfDependent" text="Delete Claim of Dependent" />
-            <Button mnemonicParsing="false" onAction="#goBackLogin" text="Back" />
-         </children>
-         <HBox.margin>
-            <Insets top="30.0" />
-         </HBox.margin>
+         <Button fx:id="retrieveInfoOfDependent" mnemonicParsing="false" onAction="#onGetAllDependent" text="Retrieve Information of Dependent" />
+         <Button fx:id="updateInfoOfDependent" mnemonicParsing="false" onAction="#onUpdateInfoOfDependent" text="Update Information of Dependent" />
+         <Button fx:id="deleteDependent" mnemonicParsing="false" onAction="#onDeleteDependent" text="Delete Dependent" />
+         <Button fx:id="fileClaimForDependent" mnemonicParsing="false" onAction="#onFileClaimForDependent" text="File Claim for Dependent" />
+         <Button fx:id="retrieveClaimOfDependent" mnemonicParsing="false" onAction="#onRetrieveClaimOfDependent" text="Retrieve Claim of Dependent" />
+         <Button fx:id="updateClaimOfDependent" mnemonicParsing="false" onAction="#onUpdateClaimOfDependent" text="Update Claim of Dependent" />
+         <Button fx:id="deleteClaimOfDependent" mnemonicParsing="false" onAction="#onDeleteClaimOfDependent" text="Delete Claim of Dependent" />
+         <Button mnemonicParsing="false" onAction="#goBackLogin" text="Back" />
       </VBox>
-   </children>
-   <padding>
-      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-   </padding>
-</HBox>
