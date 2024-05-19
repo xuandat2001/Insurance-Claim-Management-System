@@ -43,4 +43,4 @@ Pham Quang Huy
 Hong Thieu Kiet
 
 ## Demonstration Video
-Link to the Demonstration Video of Group22: 
+Link to the Demonstration Video of Group22: https://rmiteduau.sharepoint.com/:v:/s/PhamQuangHuy/EXgbd5qPu5lAum501OCBbk8By0ivaaQQQM4CnfbsfNMz6Q?e=AWoyqA&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D
