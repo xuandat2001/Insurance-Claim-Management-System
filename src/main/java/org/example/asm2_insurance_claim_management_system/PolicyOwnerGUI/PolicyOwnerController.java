@@ -181,8 +181,8 @@ public class PolicyOwnerController {
         for (PolicyHolder policyHolder : policyHolderList) {
             Label codeLabel = new Label(
                     "PolicyHolder ID: " + policyHolder.getId() + "\n" +
-                            "Claim Date: " + policyHolder.getFullName() + "\n" +
-                            "Claim Amount: " + policyHolder.getPassword()
+                            "Full Name: " + policyHolder.getFullName() + "\n" +
+                            "Password: " + policyHolder.getPassword()
             );
             codeContainer.getChildren().add(codeLabel);
         }

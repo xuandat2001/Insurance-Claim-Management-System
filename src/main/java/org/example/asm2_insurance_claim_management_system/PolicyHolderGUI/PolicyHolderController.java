@@ -408,8 +408,8 @@ public class PolicyHolderController implements SuperCustomer {
         for (Dependent dependent : dependentList) {
                 Label codeLabel = new Label(
                         "Dependent ID: " + dependent.getId() + "\n" +
-                                "Claim Date: " + dependent.getFullName() + "\n" +
-                                "Claim Amount: " + dependent.getPassword()
+                                "Full Name: " + dependent.getFullName() + "\n" +
+                                "Password: " + dependent.getPassword()
                 );
                 codeContainer.getChildren().add(codeLabel);
 
