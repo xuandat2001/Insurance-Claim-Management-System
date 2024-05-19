@@ -130,24 +130,42 @@ public class PolicyHolderClaimController implements SuperCustomer {
 
     @Override
     public boolean filePolicyHolderClaim() {
+        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
+        Session session = sessionFactory.openSession();
+
         String claimID = textFieldClaimID.getText();
         double claimAmount = Double.parseDouble(textFieldClaimAmount.getText());
         String bankID = newBankIdText.getText();
-
         String bankName = newBankNameText.getText();
-
-        String ownerName = newBankHolderText.getText() ;
-
+        String ownerName = newBankHolderText.getText();
         String accountNumber = newAccNumText.getText();
+
         if (claimID.isEmpty() || textFieldClaimAmount.getText().isEmpty() || bankID.isEmpty() || bankName.isEmpty() || ownerName.isEmpty() || accountNumber.isEmpty()) {
             // If any required field is empty, show an alert message
             ShowAlert showAlert = new ShowAlert();
             showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
             return false; // Abort the create operation
         }
-        SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
-        Session session = sessionFactory.openSession();
 
+        List<Claim> claimList = session.createQuery("FROM Claim WHERE claimId = :claimID", Claim.class)
+                .setParameter("claimID", claimID)
+                .getResultList();
+
+        if (!claimList.isEmpty()) {
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Claim has been existed.");
+            return false;
+        }
+
+        List<BankInfo> bankInfoList = session.createQuery("FROM BankInfo WHERE bankID = :bankID", BankInfo.class)
+                .setParameter("bankID", bankID)
+                .getResultList();
+
+        if (!bankInfoList.isEmpty()) {
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Bank ID has been existed.");
+            return false;
+        }
         BankInfo bank = new BankInfo();
         bank.setBankID(bankID);
         bank.setBankName(bankName);
@@ -168,7 +186,7 @@ public class PolicyHolderClaimController implements SuperCustomer {
             session.beginTransaction();
             session.save(claim);
             ShowAlert successfulAlert = new ShowAlert();
-            successfulAlert.showAlert(Alert.AlertType.INFORMATION,"Successful", "File Claim Successfully");
+            successfulAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "File Claim Successfully");
             session.getTransaction().commit();
             textFieldClaimID.clear();
             textFieldClaimAmount.clear();
@@ -203,58 +221,50 @@ public class PolicyHolderClaimController implements SuperCustomer {
         try {
             session = sessionFactory.openSession();
 
-
-            String claimID = textFieldUpdateClaimID.getText() ;
-            Double claimAmount =  null;
+            String claimID = textFieldUpdateClaimID.getText();
+            Double claimAmount = null;
             claimAmount = Double.parseDouble(textFieldUpdateClaimAmount.getText());
             String bankName = BankNameText.getText();
-
-            String ownerName = BankHolderText.getText() ;
-
+            String ownerName = BankHolderText.getText();
             String accountNumber = AccNumText.getText();
             // List of document
 
             session.beginTransaction();
-            String desiredClaim = "SELECT c FROM Claim c JOIN c.policyHolder h WHERE h.id = :policyHolderId AND c.dependent IS NULL";
+            String desiredClaim = "SELECT c FROM Claim c JOIN c.policyHolder h WHERE h.id = :policyHolderId AND c.dependent IS NULL AND c.id = :claimId";
             List<Claim> claimList = session.createQuery(desiredClaim, Claim.class)
-                    .setParameter("policyHolderId", policyHolder.getId())
+                    .setParameter("policyHolderId", policyHolder.getId()).setParameter("claimId", claimID)
                     .getResultList();
-            for (Claim claim : claimList) {
-                if (claim.getClaimId().equals(claimID)) {
-                    if (!textFieldUpdateClaimAmount.getText().isEmpty()){
-                        claim.setClaimAmount(claimAmount);
-                    }
-                    if (!bankName.isEmpty()){
-                        claim.getBankInfo().setBankName(bankName);
-                    }
-                    if (!ownerName.isEmpty()){
-                        claim.getBankInfo().setOwnerName(ownerName);
-                    }
-                    if (!accountNumber.isEmpty()){
-                        claim.getBankInfo().setAccountNumber(accountNumber);
-                    }
 
-                    session.getTransaction().commit();
-                    ShowAlert successfulAlert = new ShowAlert();
-                    successfulAlert.showAlert(Alert.AlertType.INFORMATION,"Successful", "Update Claim Successfully");
-                    textFieldUpdateClaimID.clear();
-                    textFieldUpdateClaimAmount.clear();
-                    BankNameText.clear();
-                    BankHolderText.clear();
-                    AccNumText.clear();
-                    return true;
-                    // Update successful
-                }
-
-            }
-            for (Claim claim : claimList){
-                if (!claim.getClaimId().equals(claimID)) {
-                    ShowAlert showAlert = new ShowAlert();
-                    showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Claim does not exist.");
-                    return false;
-                }
+            if (claimList.isEmpty()) {
+                ShowAlert showAlert = new ShowAlert();
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Claim does not exist.");
+                return false;
             }
 
+            Claim claim = claimList.get(0);
+            if (!textFieldUpdateClaimAmount.getText().isEmpty()) {
+                claim.setClaimAmount(claimAmount);
+            }
+            if (!bankName.isEmpty()) {
+                claim.getBankInfo().setBankName(bankName);
+            }
+            if (!ownerName.isEmpty()) {
+                claim.getBankInfo().setOwnerName(ownerName);
+            }
+            if (!accountNumber.isEmpty()) {
+                claim.getBankInfo().setAccountNumber(accountNumber);
+            }
+
+            session.getTransaction().commit();
+            ShowAlert successfulAlert = new ShowAlert();
+            successfulAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Update Claim Successfully");
+            textFieldUpdateClaimID.clear();
+            textFieldUpdateClaimAmount.clear();
+            BankNameText.clear();
+            BankHolderText.clear();
+            AccNumText.clear();
+            return true;
+            // Update successful
 
         } catch (Exception ex) {
             // Rollback the transaction in case of an exception
@@ -284,10 +294,10 @@ public class PolicyHolderClaimController implements SuperCustomer {
             session.beginTransaction();
 
             PolicyHolder policyHolderToUpdate = session.get(PolicyHolder.class, policyHolder.getId());
-            if (!newPolicyHolderName.isEmpty()){
+            if (!newPolicyHolderName.isEmpty()) {
                 policyHolderToUpdate.setFullName(newPolicyHolderName);
             }
-            if (!newPassword.isEmpty()){
+            if (!newPassword.isEmpty()) {
                 policyHolderToUpdate.setPassword(newPassword);
             }
             textFieldUpdatePolicyHolderName.clear();
@@ -303,6 +313,7 @@ public class PolicyHolderClaimController implements SuperCustomer {
             return false; // Update failed
         }
     }
+
 
 
 
@@ -340,39 +351,61 @@ public class PolicyHolderClaimController implements SuperCustomer {
 
     @Override
     public boolean fileClaimForDependent() {
-
-        String dependentId = textDependentID.getText();
-
-        String claimID = textFieldClaimDependentID.getText();
-
-        double claimAmount = Double.parseDouble(textFieldClaimAmountDependent.getText());
-
-
-        String bankID = newBankIdTextDependent.getText() ;
-
-        String bankName = newBankNameTextDependent.getText() ;
-
-        String ownerName = newBankHolderTextDependent.getText() ;
-
-        String accountNumber = newAccNumTextDependent.getText() ;
-
-
-        if (dependentId.isEmpty()|| claimID.isEmpty() || textFieldClaimAmountDependent.getText().isEmpty() || bankID.isEmpty() || bankName.isEmpty() || ownerName.isEmpty() || accountNumber.isEmpty()) {
-            // If any required field is empty, show an alert message
-            ShowAlert showAlert = new ShowAlert();
-            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
-            return false; // Abort the create operation
-        }
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         Session session = sessionFactory.openSession();
 
-// Assuming policyHolderId is the ID of the PolicyHolder you want to retrieve dependents for
-        String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyHolder h WHERE h.id = :policyHolderId";
-        List<Dependent> dependentList = session.createQuery(desiredDependent, Dependent.class)
-                .setParameter("policyHolderId", policyHolder.getId())
-                .getResultList();
-        for (Dependent dependent : dependentList) {
-            if (dependent.getId().equals(dependentId)) {
+
+        try {
+            String dependentId = textDependentID.getText();
+            String claimID = textFieldClaimDependentID.getText();
+            double claimAmount = Double.parseDouble(textFieldClaimAmountDependent.getText());
+            String bankID = newBankIdTextDependent.getText();
+            String bankName = newBankNameTextDependent.getText();
+            String ownerName = newBankHolderTextDependent.getText();
+            String accountNumber = newAccNumTextDependent.getText();
+
+            if (dependentId.isEmpty() || claimID.isEmpty() || bankID.isEmpty() || bankName.isEmpty() || ownerName.isEmpty() || accountNumber.isEmpty()) {
+                // If any required field is empty, show an alert message
+                ShowAlert showAlert = new ShowAlert();
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please fill in all required fields.");
+                return false; // Abort the create operation
+            }
+
+            try {
+                session.beginTransaction();
+                // Assuming policyOwnerId is the ID of the PolicyOwner you want to retrieve PolicyHolder for
+                String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyHolder h WHERE h.id = :policyHolderId AND d.id = :dependentID";
+                List<Dependent> dependentList = session.createQuery(desiredDependent, Dependent.class)
+                        .setParameter("policyHolderId", policyHolder.getId())
+                        .setParameter("dependentID", dependentId)
+                        .getResultList();
+
+                if (dependentList.isEmpty()) {
+                    ShowAlert showAlert = new ShowAlert();
+                    showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Dependent does not exist.");
+                    return false;
+                }
+                Dependent dependent = dependentList.get(0);
+
+                List<Claim> claimList = session.createQuery("FROM Claim WHERE claimId = :claimID", Claim.class)
+                        .setParameter("claimID", claimID)
+                        .getResultList();
+
+                if (!claimList.isEmpty()) {
+                    ShowAlert showAlert = new ShowAlert();
+                    showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Claim has been existed.");
+                    return false;
+                }
+
+                List<BankInfo> bankInfoList = session.createQuery("FROM BankInfo WHERE bankID = :bankID", BankInfo.class)
+                        .setParameter("bankID", bankID)
+                        .getResultList();
+
+                if (!bankInfoList.isEmpty()) {
+                    ShowAlert showAlert = new ShowAlert();
+                    showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Bank ID has been existed.");
+                    return false;
+                }
                 BankInfo bankInfo = new BankInfo();
                 bankInfo.setBankID(bankID);
                 bankInfo.setBankName(bankName);
@@ -383,134 +416,124 @@ public class PolicyHolderClaimController implements SuperCustomer {
                 claim.setClaimDate(LocalDate.now());
                 claim.setStatus(Status.NEW);
                 claim.setListOfDocument(fileData);
-                claim.setInsuranceCard(policyHolder.getInsuranceCard());
-                claim.setPolicyHolder(policyHolder);
+                claim.setInsuranceCard(dependent.getPolicyHolder().getInsuranceCard());
+                claim.setPolicyHolder(dependent.getPolicyHolder());
                 claim.setClaimAmount(claimAmount);
                 claim.setDependent(dependent);
                 claim.setBankInfo(bankInfo);
-//         List of document
 
-                try {
-                    session.beginTransaction();
-                    session.save(bankInfo);
-                    session.save(claim);
-                    session.getTransaction().commit();
-                    ShowAlert successfulAlert = new ShowAlert();
-                    successfulAlert.showAlert(Alert.AlertType.INFORMATION,"Successful", "Create Claim Successfully");
-                    textDependentID.clear();
-                    textFieldClaimDependentID.clear();
-                    textFieldClaimAmountDependent.clear();
-                    newBankIdTextDependent.clear();
-                    newBankNameTextDependent.clear();
-                    newBankHolderTextDependent.clear();
-                    newAccNumTextDependent.clear();
-                    return true;
+                // Save the bankInfo and claim
+                session.save(bankInfo);
+                session.save(claim);
 
-                } catch (Exception ex) {
-                    // Rollback the transaction in case of an exception
-                    session.getTransaction().rollback();
-                    ex.printStackTrace();
-                    ShowAlert successfulAlert = new ShowAlert();
-                    successfulAlert.showAlert(Alert.AlertType.ERROR,"ERROR", "Something Wrong");
-                } finally {
-                    // Close the session and session factory
-                    if (session != null) {
-                        session.close();
-                    }
+                session.getTransaction().commit();
+
+                ShowAlert showAlert = new ShowAlert();
+                showAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Create Successfully");
+                return true;
+
+
+            } catch (Exception ex) {
+                session.getTransaction().rollback();
+                ex.printStackTrace();
+                ShowAlert showAlert = new ShowAlert();
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while filing the claim.");
+                return false;
+            } finally {
+                if (session != null) {
+                    session.close();
                 }
             }
+        } catch (NumberFormatException e) {
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Please enter a valid number for the claim amount.");
+            return false;
         }
-        for (Dependent dependent : dependentList){
-            if (!dependent.getId().equals(dependentId)) {
-                ShowAlert successfulAlert = new ShowAlert();
-                successfulAlert.showAlert(Alert.AlertType.ERROR,"ERROR", "Dependent Not Found");
-            }
-        }
-        return false;
     }
 
     @Override
     public boolean updateClaimForDependent() {
-
-        String dependentId = textCheckDependentID.getText();
-
-        String claimID = textFieldCheckClaimDependentID.getText() ;
-
-        double claimAmount = Double.parseDouble(textUpdateFieldClaimAmountDependent.getText());
-
-
-        String bankName = updateBankNameTextDependent.getText() ;
-
-        String ownerName = updateBankHolderTextDependent.getText() ;
-
-        String accountNumber = updateAccNumTextDependent.getText() ;
-
-
         SessionFactory sessionFactory = HibernateSingleton.getSessionFactory();
         Session session = sessionFactory.openSession();
 
-// Assuming policyHolderId is the ID of the PolicyHolder you want to retrieve dependents for
-        String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyHolder h WHERE h.id = :policyHolderId";
+        String dependentId = textCheckDependentID.getText();
+        String claimID = textFieldCheckClaimDependentID.getText();
+        double claimAmount = Double.parseDouble(textUpdateFieldClaimAmountDependent.getText());
+        String bankName = updateBankNameTextDependent.getText();
+        String ownerName = updateBankHolderTextDependent.getText();
+        String accountNumber = updateAccNumTextDependent.getText();
+
+        String desiredDependent = "SELECT d FROM Dependent d JOIN d.policyHolder h WHERE h.id = :policyHolderId AND d.id = :dependentID";
         List<Dependent> dependentList = session.createQuery(desiredDependent, Dependent.class)
                 .setParameter("policyHolderId", policyHolder.getId())
+                .setParameter("dependentID", dependentId)
                 .getResultList();
-        for (Dependent dependent : dependentList) {
-            if (dependent.getId().equals(dependentId)) {
-                try {
-                    session.beginTransaction();
-                    Claim claim = session.get(Claim.class, claimID);
-                    if (claimID == null) {
-                        ShowAlert successfulAlert = new ShowAlert();
-                        successfulAlert.showAlert(Alert.AlertType.ERROR,"ERROR", "Claim Not Found");
-                        return false;
-                    }
-                    if (!textUpdateFieldClaimAmountDependent.getText().isEmpty()){
-                        claim.setClaimAmount(claimAmount);
-                    }
 
-                    BankInfo bankInfo = claim.getBankInfo();
-                    if (!bankName.isEmpty()){
-                        bankInfo.setBankName(bankName);
-                    }
-                    if (!ownerName.isEmpty()){
-                        bankInfo.setOwnerName(ownerName);
-                    }
-                    if (!accountNumber.isEmpty()){
-                        bankInfo.setAccountNumber(accountNumber);
-                    }
+        if (dependentList.isEmpty()) {
+            ShowAlert showAlert = new ShowAlert();
+            showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Dependent does not exist.");
+            return false;
+        }
 
-                    session.getTransaction().commit();
-                    ShowAlert successfulAlert = new ShowAlert();
-                    successfulAlert.showAlert(Alert.AlertType.INFORMATION,"Successful", "Create Claim Successfully");
-                    textCheckDependentID.clear();
-                    textFieldCheckClaimDependentID.clear();
-                    textUpdateFieldClaimAmountDependent.clear();
-                    updateBankNameTextDependent.clear();
-                    updateBankHolderTextDependent.clear();
-                    updateAccNumTextDependent.clear();
-                    return true; // Update successful
+        try {
+            session.beginTransaction();
+            String desiredClaim = "SELECT c FROM Claim c JOIN c.dependent d WHERE d.id = :dependentId AND c.id = :claimId";
+            List<Claim> claimList = session.createQuery(desiredClaim, Claim.class)
+                    .setParameter("dependentId", dependentId)
+                    .setParameter("claimId", claimID)
+                    .getResultList();
 
-                } catch (Exception ex) {
-                    // Rollback the transaction in case of an exception
-                    session.getTransaction().rollback();
-                    ex.printStackTrace();
-                    ShowAlert successfulAlert = new ShowAlert();
-                    successfulAlert.showAlert(Alert.AlertType.ERROR,"ERROR", "Something Wrong ");
-                } finally {
-                    // Close the session and session factory
-//            session.close();
-//            sessionFactory.close();
-                    if (session != null) {
-                        session.close();
-                    }
-                }
-
+            if (claimList.isEmpty()) {
+                ShowAlert showAlert = new ShowAlert();
+                showAlert.showAlert(Alert.AlertType.ERROR, "Error", "Claim does not exist.");
+                return false;
             }
 
+            Claim claim = claimList.get(0);
+            if (!textUpdateFieldClaimAmountDependent.getText().isEmpty()) {
+                claim.setClaimAmount(claimAmount);
+            }
+
+            BankInfo bankInfo = claim.getBankInfo();
+            if (!bankName.isEmpty()) {
+                bankInfo.setBankName(bankName);
+            }
+            if (!ownerName.isEmpty()) {
+                bankInfo.setOwnerName(ownerName);
+            }
+            if (!accountNumber.isEmpty()) {
+                bankInfo.setAccountNumber(accountNumber);
+            }
+
+            session.getTransaction().commit();
+            ShowAlert successfulAlert = new ShowAlert();
+            successfulAlert.showAlert(Alert.AlertType.INFORMATION, "Successful", "Create Claim Successfully");
+            textCheckDependentID.clear();
+            textFieldCheckClaimDependentID.clear();
+            textUpdateFieldClaimAmountDependent.clear();
+            updateBankNameTextDependent.clear();
+            updateBankHolderTextDependent.clear();
+            updateAccNumTextDependent.clear();
+            return true; // Update successful
+
+        } catch (Exception ex) {
+            // Rollback the transaction in case of an exception
+            session.getTransaction().rollback();
+            ex.printStackTrace();
+            ShowAlert successfulAlert = new ShowAlert();
+            successfulAlert.showAlert(Alert.AlertType.ERROR, "ERROR", "Something Wrong ");
+        } finally {
+            // Close the session and session factory
+//            session.close();
+//            sessionFactory.close();
+            if (session != null) {
+                session.close();
+            }
         }
 
         return false;
     }
+
 
     @Override
     public boolean retrieveClaimForDependent() {
